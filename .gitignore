@@ -1,7 +1,6 @@
 node_modules
 .DS_Store
 *~
-newrelic_agent.log
 *.swp
 npm-debug.log
 dump.rdb
