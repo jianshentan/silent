@@ -12,6 +12,7 @@
       this.visitorCount = visitorCount;
       this.guest = guest;
       this.active = active;
+      this.message = " is present";
     }
 
     /* private properties */

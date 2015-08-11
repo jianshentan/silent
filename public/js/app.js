@@ -68,7 +68,6 @@
                               data.user.username, 
                               data.user.visitor_count, 
                               data.user.guest, 
-                              data.user.guest, 
                               data.user.active );
 
       for( var i in data.users ) {
@@ -118,6 +117,5 @@
       templateUrl: 'templates/user-tab.html'
     };
   });
-
 
 })();

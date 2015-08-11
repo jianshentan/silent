@@ -74,18 +74,34 @@ exports.start = function( io ) {
 
     // client closes connection
     socket.on( 'disconnect', function() {
-      socket.broadcast.to( roomId ).emit( 'visitor left',
-        { user_id: userId } );
+
+      setInactive( userId, roomId, function() {
+        socket.broadcast.to( roomId ).emit( 'visitor left',
+          { user_id: userId } ); 
+      });
+
     });
 
   });
 
 };
 
+
+/* db methods */
+
 function addUser( user, roomId, callback ) {
   if( !(roomId in db) ) {
     db[ roomId ] = [];
   }
   db[ roomId ].push( user );
+  callback();
+};
+
+function setInactive( userId, roomId, callback ) {
+  for( var i in db[ roomId ] ) {
+    if( db[ roomId ][i].user_id == userId ) {
+      db[ roomId ][i].active = false;
+    }
+  }
   callback();
 };
