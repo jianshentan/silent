@@ -40,15 +40,23 @@
           }
         }
       }
-      console.log( selectedUsers );
       return selectedUsers;
+    };
+
+    this.setInactive = function( userId ) {
+      var users = userListController.users;
+      for( var i in users ) {
+        if( users[i].userId == userId ) {
+          users[i].active = false;
+        }
+      }
+      userListController.updateUserList();
     };
 
     /* private function > updates active/inactive user lists to views */
     this.updateUserList = function() {
       $scope.activeUsers = userListController.getUsers( true );
       $scope.inactiveUsers = userListController.getUsers( false );
-      console.log( "update user list!" );
     };
 
     // emit 'enter' - TODO decide if this is the right place for this
@@ -81,6 +89,10 @@
                                                data.user.guest,
                                                data.user.active ) );
       userListController.updateUserList();
+    });
+
+    socket.on( 'visitor left', function( data ) {
+      userListController.setInactive( data.user_id );
     });
 
 

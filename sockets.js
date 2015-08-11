@@ -51,11 +51,12 @@ exports.start = function( io ) {
         guest: guest,
         active: true
       };
+
       addUser( user, roomId, function() {
 
         // sending to all clients in <roomId> channel except sender
         socket.broadcast.to( roomId ).emit( 'visitor entered', 
-          { guest: true, user: user } );
+          { user: user } );
 
         // send to current request socket client
         socket.emit( 'entered',  
@@ -73,6 +74,8 @@ exports.start = function( io ) {
 
     // client closes connection
     socket.on( 'disconnect', function() {
+      socket.broadcast.to( roomId ).emit( 'visitor left',
+        { user_id: userId } );
     });
 
   });
