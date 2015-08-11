@@ -15,6 +15,9 @@ https://github.com/socketio/socket.io/blob/master/examples/chat/index.js
 
 =========================================================== */
 
+// tentative storage (should be replaced with redis)
+var db = {};
+
 exports.start = function( io ) {
 
   // active user count
@@ -23,16 +26,49 @@ exports.start = function( io ) {
 
   // client is connected - 'socket' refers to the client
   io.on( 'connection', function( socket ) { 
+    var roomId, userId, guest;
 
     var socketIp = socket.request.connection.remoteAddress;
     var url = socket.request.headers.referer; // full url
-    var guest; 
 
     // client enters (hits the url as a guest)
     socket.on( 'enter', function( data ) {
       guest = true;
       visitorCount++;
-      socket.join( data.room_id );
+      roomId = data.room_id;
+      guestId = 'guest' + visitorCount; // tentative username for guests / guestId 
+      userId = roomId+":"+guestId;
+
+      // join room
+      socket.join( roomId );
+
+      user = {
+        user_id: userId,
+        username: guestId, 
+        visitor_count: visitorCount,
+        guest: guest,
+        active: true
+      };
+      addUser( user, roomId, function() {
+
+        // sending to all clients in <roomId> channel except sender
+        socket.broadcast.to( roomId ).emit( 'visitor entered', 
+          { guest: true, username: guestId } );
+
+        // send to current request socket client
+        socket.emit( 'entered', { 
+            user: { 
+              user_id: userId, 
+              username: guestId, 
+              visitor_count: visitorCount, 
+              guest: guest, 
+              active: true 
+            }, 
+            users: db[ roomId ]
+        } );
+
+      });
+      
     });
     
     // client joins (as a user)
@@ -49,3 +85,10 @@ exports.start = function( io ) {
 
 };
 
+function addUser( user, roomId, callback ) {
+  if( !(roomId in db) ) {
+    db[ roomId ] = [];
+  }
+  db[ roomId ].push( user );
+  callback();
+};

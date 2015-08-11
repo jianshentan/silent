@@ -1,13 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="Silent">
   <head>
     <title>silent</title>
+    <link rel='stylesheet' href='/stylesheets/basscss.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/js/lib/angular.min.js"></script>
   </head>
-  <body>
-    <h1>Silent</h1>
-    <p>Welcome to Silent</p>
+  <body class="bg-darken-1">
+    <nav class="bg-white flex flex-baseline px3 py2" ng-controller="NavigationController">
+      <div class="nav-options">Silent</div>
+      <div class="flex-auto bold h3 center">{{ room_name }}</div>
+      <div class="nav-options right-align">
+        <div class="nav-option circle center border inline-block p2">?</div>
+        <div class="nav-option circle center border inline-block p2">!</div>
+      </div>
+    </nav>
+
+    <div class="flex flex-wrap clearfix m2 justify-center" ng-controller="UserListController">
+
+      <!-- user tabs -->
+      <join-tab class=""></join-tab>
+      <user-tab ng-repeat="user in activeUsers" info="user"></user-tab>
+      <user-tab class="muted" ng-repeat="user in inactiveUsers" info="user"></user-tab>
+
+      <!-- empty tabs to left-align last row (TODO: find more elegant solution)-->
+      <div class="tab m1 empty-tab"></div>
+      <div class="tab m1 empty-tab"></div>
+      <div class="tab m1 empty-tab"></div>
+    </div>
+
+    <!-- libraries -->
+    <script src="/js/lib/jquery-2.1.4.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/room.js"></script>
+
+    <!-- global roomId variable -->
+    <% if( typeof room != 'undefined') { %>
+      <script>roomId = '<%= room %>';</script>
+    <% } %>
+    
+    <!-- scripts -->
+    <script src="/js/services.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/app.js"></script>
+
   </body>
 </html>

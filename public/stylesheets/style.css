@@ -1,8 +1,44 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: 100%;
 }
-
-a {
-  color: #00B7FF;
+.shadow {
+  box-shadow: 1px 1px 8px #eee;
 }
+.tab {
+  width: 295px;
+  height: 80px;
+}
+.empty-tab {
+  height: 0px;
+}
+.tab-image {
+  width: 36px;
+  height: 36px;
+}
+.tab-tags {
+  right: 4px;
+  top: 4px;
+}
+.tab-tag {
+  width: 8px;
+  height: 8px;
+}
+.tab-data {
+  bottom: 4px;
+  right: 4px; 
+}
+.nav-options {
+  width: 8em;
+}
+.nav-option {
+  width: 10px;
+  height: 10px;
+  line-height: 10px;
+}
+.h7 {
+  font-size: .675rem;
+}
+.justify-center { justify-content: center; }
+.justify-flex-end { justify-content: flex-end; }
+.justify-flex-start { justify-content: flex-start; }
