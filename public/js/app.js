@@ -2,6 +2,7 @@
 
   var app = angular.module( 'Silent', [ 'Services', 'User' ] );
 
+  /* test TODO: delete */
   app.factory( 'room', [ '$http', function( $http ) {
     return $http.get( '/' )
       .success( function( data ) { return data; })
@@ -26,21 +27,28 @@
     $scope.user;
 
     /* private variables */
-    var users = [];
+    this.users = [];
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
+      var users = userListController.users;
       var selectedUsers = [];
       for( var i in users ) {
-        console.log( users[i].userId );
-        console.log( $scope.user.userId );
         if( users[i].userId !== $scope.user.userId ) {
           if( active ? users[i].active : !users[i].active ) {
             selectedUsers.push( users[i] );
           }
         }
       }
+      console.log( selectedUsers );
       return selectedUsers;
+    };
+
+    /* private function > updates active/inactive user lists to views */
+    this.updateUserList = function() {
+      $scope.activeUsers = userListController.getUsers( true );
+      $scope.inactiveUsers = userListController.getUsers( false );
+      console.log( "update user list!" );
     };
 
     // emit 'enter' - TODO decide if this is the right place for this
@@ -56,22 +64,25 @@
                               data.user.active );
 
       for( var i in data.users ) {
-        users.push( new user( 
-                      data.users[i].user_id, 
-                      data.users[i].username, 
-                      data.users[i].visitor_count, 
-                      data.users[i].guest,
-                      data.users[i].active ) );
+        userListController.users.push( new user( data.users[i].user_id, 
+                                                 data.users[i].username, 
+                                                 data.users[i].visitor_count, 
+                                                 data.users[i].guest,
+                                                 data.users[i].active ) );
       }
 
-      $scope.activeUsers = userListController.getUsers( true );
-      $scope.inactiveUsers = userListController.getUsers( false );
-
+      userListController.updateUserList();
     });
 
     socket.on( 'visitor entered', function( data ) {
-      console.log( data.username );
+      userListController.users.push( new user( data.user.user_id,
+                                               data.user.username, 
+                                               data.user.visitor_count, 
+                                               data.user.guest,
+                                               data.user.active ) );
+      userListController.updateUserList();
     });
+
 
   }]);
 
@@ -96,68 +107,5 @@
     };
   });
 
-  app.directive( 'inactiveTab', function() {
-    return {
-      restrict: 'E',
-      scope: { 
-        info: '='
-      },
-      templateUrl: 'templates/inactive-tab.html'
-    };
-  });
 
-  userlist = {
-    activeUsers: [
-      {
-        name: 'jstanactive',
-        message: 'is present'
-      },
-      {
-        name: 'jjtan',
-        message: 'is present'
-      },
-      {
-        name: 'minsoo',
-        message: 'is present'
-      },
-      {
-        name: 'kevin',
-        message: 'is present'
-      },
-      {
-        name: 'lukas',
-        message: 'is present'
-      },
-      {
-        name: 'david',
-        message: 'is present'
-      }
-    ],
-    inactiveUsers: [
-      {
-        name: 'jstaninactive',
-        message: 'is present'
-      },
-      {
-        name: 'jjtan',
-        message: 'is present'
-      },
-      {
-        name: 'minsoo',
-        message: 'is present'
-      },
-      {
-        name: 'kevin',
-        message: 'is present'
-      },
-      {
-        name: 'lukas',
-        message: 'is present'
-      },
-      {
-        name: 'david',
-        message: 'is present'
-      }
-    ]
-  };
 })();

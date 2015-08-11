@@ -39,6 +39,8 @@ exports.start = function( io ) {
       guestId = 'guest' + visitorCount; // tentative username for guests / guestId 
       userId = roomId+":"+guestId;
 
+      console.log( "username '" + guestId + "' entered '" + roomId + "'" );
+
       // join room
       socket.join( roomId );
 
@@ -53,19 +55,11 @@ exports.start = function( io ) {
 
         // sending to all clients in <roomId> channel except sender
         socket.broadcast.to( roomId ).emit( 'visitor entered', 
-          { guest: true, username: guestId } );
+          { guest: true, user: user } );
 
         // send to current request socket client
-        socket.emit( 'entered', { 
-            user: { 
-              user_id: userId, 
-              username: guestId, 
-              visitor_count: visitorCount, 
-              guest: guest, 
-              active: true 
-            }, 
-            users: db[ roomId ]
-        } );
+        socket.emit( 'entered',  
+          { user: user, users: db[ roomId ] });
 
       });
       
