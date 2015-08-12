@@ -64,16 +64,17 @@
 
     socket.on( 'entered', function( data ) {
 
-      $scope.user = new user( data.user.user_id, 
+      console.log( data.user );
+      $scope.user = new user( data.user.userId, 
                               data.user.username, 
-                              data.user.visitor_count, 
+                              data.user.visitorCount, 
                               data.user.guest, 
                               data.user.active );
 
       for( var i in data.users ) {
-        userListController.users.push( new user( data.users[i].user_id, 
+        userListController.users.push( new user( data.users[i].userId, 
                                                  data.users[i].username, 
-                                                 data.users[i].visitor_count, 
+                                                 data.users[i].visitorCount, 
                                                  data.users[i].guest,
                                                  data.users[i].active ) );
       }
@@ -82,16 +83,16 @@
     });
 
     socket.on( 'visitor entered', function( data ) {
-      userListController.users.push( new user( data.user.user_id,
+      userListController.users.push( new user( data.user.userId,
                                                data.user.username, 
-                                               data.user.visitor_count, 
+                                               data.user.visitorCount, 
                                                data.user.guest,
                                                data.user.active ) );
       userListController.updateUserList();
     });
 
     socket.on( 'visitor left', function( data ) {
-      userListController.setInactive( data.user_id );
+      userListController.setInactive( data.userId );
     });
 
 
