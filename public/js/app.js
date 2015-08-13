@@ -1,6 +1,6 @@
 (function() {
 
-  var app = angular.module( 'Silent', [ 'Services', 'User' ] );
+  var app = angular.module( 'Silent', [ 'Services', 'User', 'angularMoment' ] );
 
   /* test TODO: delete */
   app.factory( 'room', [ '$http', function( $http ) {
@@ -64,37 +64,23 @@
 
     socket.on( 'entered', function( data ) {
 
-      console.log( data.user );
-      $scope.user = new user( data.user.userId, 
-                              data.user.username, 
-                              data.user.visitorCount, 
-                              data.user.guest, 
-                              data.user.active );
+      $scope.user = new user( data.user );
 
       for( var i in data.users ) {
-        userListController.users.push( new user( data.users[i].userId, 
-                                                 data.users[i].username, 
-                                                 data.users[i].visitorCount, 
-                                                 data.users[i].guest,
-                                                 data.users[i].active ) );
+        userListController.users.push( new user( data.users[i] ) );
       }
 
       userListController.updateUserList();
     });
 
     socket.on( 'visitor entered', function( data ) {
-      userListController.users.push( new user( data.user.userId,
-                                               data.user.username, 
-                                               data.user.visitorCount, 
-                                               data.user.guest,
-                                               data.user.active ) );
+      userListController.users.push( new user( data.user ) );
       userListController.updateUserList();
     });
 
     socket.on( 'visitor left', function( data ) {
       userListController.setInactive( data.userId );
     });
-
 
   }]);
 

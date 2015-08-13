@@ -43,6 +43,7 @@ function setInactive( userId, roomId, callback ) {
   for( var i in db[ roomId ] ) {
     if( db[ roomId ][i].userId == userId ) {
       db[ roomId ][i].active = false;
+      db[ roomId ][i].exitTimes.push( Date.now() );
     }
   }
   callback();

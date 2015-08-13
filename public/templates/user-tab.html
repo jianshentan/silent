@@ -6,7 +6,7 @@
   </div>
 
   <div class="absolute tab-data h7 muted">
-    6 mins | 1st visitor
+    {{ info.getActiveDuration() | amDurationFormat : 'minute' }} | 1st visitor
   </div>
 
   <div class="table-cell h6 align-middle">
