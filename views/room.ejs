@@ -11,7 +11,7 @@
       <div class="sil-nav-options">Silent</div>
       <div class="flex-auto bold h3 center">{{ room_name }}</div>
       <div class="sil-nav-options right-align">
-        <div class="sil-nav-option circle center sil-border-green2 inline-block p1">?</div>
+        <div class="sil-nav-option circle center sil-border-green2 inline-block p1" ng-click="openShareModal()">?</div>
         <div class="sil-nav-option circle center sil-border-green2 inline-block p1">!</div>
       </div>
     </nav>
@@ -31,7 +31,6 @@
 
     <!-- libraries -->
     <script src="/js/lib/jquery-2.1.4.min.js"></script>
-    <script src="/js/lib/angular-modal-service.min.js"></script>
     <script src="/js/lib/moment.min.js"></script>
     <script src="/js/lib/angular-moment.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>

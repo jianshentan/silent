@@ -1,6 +1,10 @@
 (function() {
 
-  var app = angular.module( 'Silent', [ 'Services', 'User', 'angularMoment' ] );
+  var app = angular.module( 'Silent', [ 
+    'Services', 
+    'User', 
+    'angularMoment'
+  ] );
 
   /* test TODO: delete */
   app.factory( 'room', [ '$http', function( $http ) {
@@ -9,9 +13,17 @@
       .error( function( err ) { return err; });
   }]);
 
-  app.controller( 'NavigationController', 
-    [ '$scope', 'room', function( $scope, room ) {
+  app.controller( 'ShareModalController', [ '$scope', function( $scope ) {
+  }]);
+
+  app.controller( 'NavigationController', [ '$scope', function( $scope ) {
     $scope.room_name = roomId;
+
+    // open share modal
+    $scope.openShareModal = function() {
+       
+    };
+
   }]);
 
   app.controller( 'UserListController', 
@@ -19,19 +31,19 @@
     function( $scope, socket, user ) {
 
     /* reference to self */
-    var userListController = this;
+    var self = this;
 
     /* public variables */
     $scope.activeUsers = [];
     $scope.inactiveUsers = [];
-    $scope.user = {};
+    $scope.user;
 
     /* private variables */
     this.users = [];
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
-      var users = userListController.users;
+      var users = self.users;
       var selectedUsers = [];
       for( var i in users ) {
         if( users[i].userId !== $scope.user.userId ) {
@@ -44,19 +56,20 @@
     };
 
     this.setInactive = function( userId ) {
-      var users = userListController.users;
+      var users = self.users;
       for( var i in users ) {
         if( users[i].userId == userId ) {
           users[i].active = false;
         }
       }
-      userListController.updateUserList();
+      self.updateUserList();
     };
 
     /* private function > updates active/inactive user lists to views */
     this.updateUserList = function() {
-      $scope.activeUsers = userListController.getUsers( true );
-      $scope.inactiveUsers = userListController.getUsers( false );
+      $scope.activeUsers = self.getUsers( true );
+      $scope.inactiveUsers = self.getUsers( false );
+      console.log( this.users );
     };
 
     // emit 'enter' - TODO decide if this is the right place for this
@@ -68,20 +81,20 @@
 
       for( var i in data.users ) {
         if( data.users[i].userId != $scope.user.userId ) {
-          userListController.users.push( new user( data.users[i] ) );
+          self.users.push( new user( data.users[i] ) );
         }
       }
 
-      userListController.updateUserList();
+      self.updateUserList();
     });
 
     socket.on( 'visitor entered', function( data ) {
-      userListController.users.push( new user( data.user ) );
-      userListController.updateUserList();
+      self.users.push( new user( data.user ) );
+      self.updateUserList();
     });
 
     socket.on( 'visitor left', function( data ) {
-      userListController.setInactive( data.userId );
+      self.setInactive( data.userId );
     });
 
   }]);
