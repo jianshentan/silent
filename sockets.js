@@ -26,7 +26,7 @@ function User( userId, username, visitorCount, guest, active ) {
   this.enterTimes = [];
   this.exitTimes = [];
   this.enterTimes.push( Date.now() );
-};
+}
 
 /* tentative db methods (TODO should be replaced with redis) */
 var db = {};
@@ -37,7 +37,7 @@ function addUser( user, roomId, callback ) {
   }
   db[ roomId ].push( user );
   callback();
-};
+}
 
 function setInactive( userId, roomId, callback ) {
   for( var i in db[ roomId ] ) {
@@ -47,7 +47,7 @@ function setInactive( userId, roomId, callback ) {
     }
   }
   callback();
-};
+}
 
 exports.start = function( io ) {
 
