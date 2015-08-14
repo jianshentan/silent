@@ -86,7 +86,7 @@
 
   }]);
 
-  app.directive( 'joinTab', function() {
+  app.directive( 'silentJoinTab', function() {
     return {
       restrict: 'E',
       scope: {},
@@ -97,7 +97,7 @@
     };
   });
 
-  app.directive( 'userTab', function() {
+  app.directive( 'silentUserTab', function() {
     return {
       restrict: 'E',
       scope: { 

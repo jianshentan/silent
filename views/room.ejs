@@ -19,9 +19,9 @@
     <div class="flex flex-wrap clearfix m2 justify-center" ng-controller="UserListController">
 
       <!-- user tabs -->
-      <join-tab class=""></join-tab>
-      <user-tab ng-repeat="user in activeUsers" info="user"></user-tab>
-      <user-tab class="muted" ng-repeat="user in inactiveUsers" info="user"></user-tab>
+      <silent-join-tab class=""></silent-join-tab>
+      <silent-user-tab ng-repeat="user in activeUsers" info="user"></silent-user-tab>
+      <silent-user-tab class="muted" ng-repeat="user in inactiveUsers" info="user"></silent-user-tab>
 
       <!-- empty tabs to left-align last row (TODO: find more elegant solution)-->
       <div class="tab m1 empty-tab"></div>
