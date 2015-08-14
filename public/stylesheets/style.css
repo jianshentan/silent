@@ -39,6 +39,18 @@ body {
 .sil-h7 {
   font-size: .675rem;
 }
+.sil-green {
+  color: #39B54A
+}
+.sil-bg-green {
+  background-color: #39B54A
+}
+.sil-border-green {
+  border: 1px solid #39B54A;
+}
+.sil-border-green2 {
+  border: 2px solid #39B54A;
+}
 .sil-justify-center { justify-content: center; }
 .sil-justify-flex-end { justify-content: flex-end; }
 .sil-justify-flex-start { justify-content: flex-start; }
