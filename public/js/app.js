@@ -67,7 +67,9 @@
       $scope.user = new user( data.user );
 
       for( var i in data.users ) {
-        userListController.users.push( new user( data.users[i] ) );
+        if( data.users[i].userId != $scope.user.userId ) {
+          userListController.users.push( new user( data.users[i] ) );
+        }
       }
 
       userListController.updateUserList();

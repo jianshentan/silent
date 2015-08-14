@@ -21,6 +21,10 @@
       this.active = user.active;
 
       this.message = " is present";
+
+      /* this.time is used for 'am-time-ago' which updates active 
+         state duration in real time */
+      this.time = new Date( Date.now() - this.getActiveDuration() );
     }
 
     /* private function */
@@ -28,15 +32,16 @@
 
     /* public function */
     User.prototype.getActiveDuration = function() {
-      if( enterTimes.length - exitTimes.length == 1 ) {
+      if( Math.abs(enterTimes.length - exitTimes.length) < 2 ) {
         var accumulator = 0;
         for( var i in exitTimes ) {
-          accumulator += enterTimes[i] - exitTimes[i]; 
+          accumulator += exitTimes[i] - enterTimes[i]; 
         }
+        console.log( accumulator );
         return accumulator;
       } else {
-        console.log( "enterTimes and exitTimes do not match up" );
-        return 'unavailable';
+        console.error( this.userId + " has incorrect enter/exit times." );
+        return null;
       }
       
     };

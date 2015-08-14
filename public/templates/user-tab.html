@@ -5,8 +5,8 @@
     <div class="inline-block circle bg-gray tab-tag"></div>
   </div>
 
-  <div class="absolute tab-data h7 muted">
-    {{ info.getActiveDuration() | amDurationFormat : 'minute' }} | 1st visitor
+  <div class="absolute tab-data h7 muted" am-time-ago="info.time">
+    <span class="" am-time-ago="info.time"></span> | 1st visitor
   </div>
 
   <div class="table-cell h6 align-middle">
