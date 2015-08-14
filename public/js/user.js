@@ -37,7 +37,6 @@
         for( var i in exitTimes ) {
           accumulator += exitTimes[i] - enterTimes[i]; 
         }
-        console.log( accumulator );
         return accumulator;
       } else {
         console.error( this.userId + " has incorrect enter/exit times." );
