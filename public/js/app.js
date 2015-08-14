@@ -86,24 +86,24 @@
 
   }]);
 
-  app.directive( 'silentJoinTab', function() {
+  app.directive( 'silJoinTab', function() {
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/join-tab.html',
+      templateUrl: 'templates/sil-join-tab.html',
       link: function( scope, el, attrs ) {
         scope.roomId = roomId;
       }
     };
   });
 
-  app.directive( 'silentUserTab', function() {
+  app.directive( 'silUserTab', function() {
     return {
       restrict: 'E',
       scope: { 
         info: '='
       },
-      templateUrl: 'templates/user-tab.html'
+      templateUrl: 'templates/sil-user-tab.html'
     };
   });
 

@@ -2,43 +2,43 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   min-height: 100%;
 }
-.shadow {
+.sil-shadow {
   box-shadow: 1px 1px 8px #eee;
 }
-.tab {
+.sil-tab {
   width: 295px;
   height: 80px;
 }
-.empty-tab {
+.sil-empty-tab {
   height: 0px;
 }
-.tab-image {
+.sil-tab-image {
   width: 36px;
   height: 36px;
 }
-.tab-tags {
+.sil-tab-tags {
   right: 4px;
   top: 4px;
 }
-.tab-tag {
+.sil-tab-tag {
   width: 8px;
   height: 8px;
 }
-.tab-data {
+.sil-tab-data {
   bottom: 4px;
   right: 4px; 
 }
-.nav-options {
+.sil-nav-options {
   width: 8em;
 }
-.nav-option {
+.sil-nav-option {
   width: 10px;
   height: 10px;
   line-height: 10px;
 }
-.h7 {
+.sil-h7 {
   font-size: .675rem;
 }
-.justify-center { justify-content: center; }
-.justify-flex-end { justify-content: flex-end; }
-.justify-flex-start { justify-content: flex-start; }
+.sil-justify-center { justify-content: center; }
+.sil-justify-flex-end { justify-content: flex-end; }
+.sil-justify-flex-start { justify-content: flex-start; }

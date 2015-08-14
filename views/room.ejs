@@ -8,25 +8,25 @@
   </head>
   <body class="bg-darken-1">
     <nav class="bg-white flex flex-baseline px3 py2" ng-controller="NavigationController">
-      <div class="nav-options">Silent</div>
+      <div class="sil-nav-options">Silent</div>
       <div class="flex-auto bold h3 center">{{ room_name }}</div>
-      <div class="nav-options right-align">
-        <div class="nav-option circle center border inline-block p2">?</div>
-        <div class="nav-option circle center border inline-block p2">!</div>
+      <div class="sil-nav-options right-align">
+        <div class="sil-nav-option circle center border inline-block p2">?</div>
+        <div class="sil-nav-option circle center border inline-block p2">!</div>
       </div>
     </nav>
 
-    <div class="flex flex-wrap clearfix m2 justify-center" ng-controller="UserListController">
+    <div class="flex flex-wrap clearfix m2 sil-justify-center" ng-controller="UserListController">
 
       <!-- user tabs -->
-      <silent-join-tab class=""></silent-join-tab>
-      <silent-user-tab ng-repeat="user in activeUsers" info="user"></silent-user-tab>
-      <silent-user-tab class="muted" ng-repeat="user in inactiveUsers" info="user"></silent-user-tab>
+      <sil-join-tab class=""></sil-join-tab>
+      <sil-user-tab ng-repeat="user in activeUsers" info="user"></sil-user-tab>
+      <sil-user-tab class="muted" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
 
       <!-- empty tabs to left-align last row (TODO: find more elegant solution)-->
-      <div class="tab m1 empty-tab"></div>
-      <div class="tab m1 empty-tab"></div>
-      <div class="tab m1 empty-tab"></div>
+      <div class="sil-tab m1 sil-empty-tab"></div>
+      <div class="sil-tab m1 sil-empty-tab"></div>
+      <div class="sil-tab m1 sil-empty-tab"></div>
     </div>
 
     <!-- libraries -->
