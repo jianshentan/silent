@@ -38,7 +38,7 @@
     /* public variables */
     $scope.activeUsers = [];
     $scope.inactiveUsers = [];
-    $scope.user;
+    $scope.user = {};
 
     /* private variables */
     this.users = [];
