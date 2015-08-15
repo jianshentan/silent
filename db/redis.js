@@ -35,9 +35,7 @@ var async = require('async');
  *
  */
 exports.getUser = function( userId, cb ) {
-  rc.hgetall( userId, function( user ) {
-    cb( null,  user );
-  } );
+  rc.hgetall( 'user:' + userId, cb );
 };
 
 /* 
@@ -47,13 +45,13 @@ exports.getUser = function( userId, cb ) {
  *
  */
 exports.createUser = function( username, passwordHash, cb ) {
-  rc.incr( 'user-id-seq', function( userId ) {
-    rc.hmset( {
+  rc.incr( 'user-id-seq', function( err, userId ) {
+    rc.hmset( 'user:' + userId, {
       'username': username,
       'password': passwordHash
+    }, function (err, _) {
+      cb( null, userId );
     } );
-    
-    cb( null, userId );
   });
 };
 
@@ -72,8 +70,31 @@ exports.addUserToRoom = function( userId, roomId, cb ) {
 };
 
 /*
- *
+ * userId::integer
+ * roomId::string
+ * cb::function( string )
  */
-exports.removeUserFromRoom = function( userId, roomId ) {
+exports.removeUserFromRoom = function( userId, roomId, cb ) {
   var multi = rc.multi();
+  multi.srem( 'room-users:' + roomId, userId );
+  multi.srem( 'user-rooms:' + userId, roomId );
+  multi.exec( function( err, replies ) {
+    cb( err );
+  } );
+};
+
+/*
+ * userId::integer
+ * cb::function( string, [int] )
+ */
+exports.userRooms = function( userId, cb ) {
+  rc.smembers( 'user-rooms:' + userId, cb );
+};
+
+/*
+ * roomId::string
+ * cb::function( int, [string] )
+ */
+exports.roomUsers = function( roomId, cb ) {
+  rc.smembers( 'room-users:' + roomId, cb );
 };
