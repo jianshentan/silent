@@ -1,6 +1,5 @@
 /*
  * user-id-seq INT
- * room-id-seq INT
  * 
  * user:[user_id] HASH<
  *   username STRING
@@ -25,28 +24,56 @@ var rc = redis.createClient();
 var async = require('async');
 
 /*
- * int -> {
- *   username: string,
- *   password: string, -- pgp
+ * userId::int
+ * cb::function( string, user )
+ *
+ * where
+ * user::{
+ *   username::string,
+ *   password::string, -- pgp
  * }
  *
  */
-exports.getUser = function( userId ) {
+exports.getUser = function( userId, cb ) {
   rc.hgetall( userId, function( user ) {
-    return user;
+    cb( null,  user );
   } );
 };
 
 /* 
- * string -> string -> int
+ * username::string
+ * passwordHash::string
+ * cb::function( string, int )
+ *
  */
-exports.createUser = function( username, passwordHash ) {
-  rc.incr( 'user-id-seq', function( id ) {
+exports.createUser = function( username, passwordHash, cb ) {
+  rc.incr( 'user-id-seq', function( userId ) {
     rc.hmset( {
       'username': username,
       'password': passwordHash
     } );
     
-    return id;
+    cb( null, userId );
   });
+};
+
+/*
+ * userId::integer
+ * roomId::string
+ * cb::function( string )
+ */
+exports.addUserToRoom = function( userId, roomId, cb ) {
+  var multi = rc.multi();
+  multi.sadd( 'room-users:' + roomId, userId );
+  multi.sadd( 'user-rooms:' + userId, roomId);
+  multi.exec( function( err, replies ) {
+    cb( err );
+  } );
+};
+
+/*
+ *
+ */
+exports.removeUserFromRoom = function( userId, roomId ) {
+  var multi = rc.multi();
 };
