@@ -13,17 +13,18 @@
       .error( function( err ) { return err; });
   }]);
 
-  app.controller( 'ShareModalController', [ '$scope', function( $scope ) {
-  }]);
-
-  app.controller( 'NavigationController', [ '$scope', function( $scope ) {
-    $scope.room_name = roomId;
+  app.controller( 'MainController', [ '$scope', function( $scope ) {
+    $scope.showShareModal = false;
+    $scope.room = roomId;
 
     // open share modal
     $scope.openShareModal = function() {
-       
+      $scope.showShareModal = true;
     };
 
+  }]);
+
+  app.controller( 'NavigationController', [ '$scope', function( $scope ) {
   }]);
 
   app.controller( 'UserListController', 
@@ -69,7 +70,6 @@
     this.updateUserList = function() {
       $scope.activeUsers = self.getUsers( true );
       $scope.inactiveUsers = self.getUsers( false );
-      console.log( this.users );
     };
 
     // emit 'enter' - TODO decide if this is the right place for this
@@ -99,14 +99,36 @@
 
   }]);
 
+  app.directive( 'silModal', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        show: '='
+      },
+      replace: true, // Replace with the template below
+      transclude: true, // we want to insert custom content inside the directive
+      templateUrl: 'templates/sil-modal.html', 
+      link: function( scope, element, attrs ) {
+        scope.hideModal = function() {
+          scope.show = false;
+        };
+      }
+    };
+  });
+
+  app.directive( 'silShareModal', function() {
+    return {
+      restrict: 'E',
+      scope: {},
+      templateUrl: 'templates/sil-share-modal.html'
+    }
+  });
+
   app.directive( 'silJoinTab', function() {
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-join-tab.html',
-      link: function( scope, el, attrs ) {
-        scope.roomId = roomId;
-      }
+      templateUrl: 'templates/sil-join-tab.html'
     };
   });
 
