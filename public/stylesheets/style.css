@@ -51,6 +51,9 @@ body {
 .sil-border-green2 {
   border: 2px solid #39B54A;
 }
+.sil-pointer {
+  cursor: pointer;
+}
 .sil-justify-center { 
   justify-content: center; 
 }
@@ -78,5 +81,9 @@ body {
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
+}
+.sil-fa {
+  margin-top: -2px;
+  margin-left: -1px;
 }
 

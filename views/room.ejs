@@ -4,6 +4,7 @@
     <title>silent</title>
     <link rel='stylesheet' href='/stylesheets/basscss.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href='/stylesheets/font-awesome-4.3.0/css/font-awesome.css'>
     <script src="/js/lib/angular.min.js"></script>
   </head>
   <body class="bg-darken-1" ng-controller="MainController">
@@ -16,7 +17,7 @@
       <div class="sil-nav-options">Silent</div>
       <div class="flex-auto bold h3 center">{{ room }}</div>
       <div class="sil-nav-options right-align">
-        <div class="sil-nav-option circle center sil-border-green2 inline-block p1" ng-click="openShareModal()">?</div>
+        <div class="sil-nav-option sil-pointer circle center sil-border-green2 inline-block p1" ng-click="openShareModal()"><i class="fa fa-share-alt sil-fa"></i></div>
         <div class="sil-nav-option circle center sil-border-green2 inline-block p1">!</div>
       </div>
     </nav>
@@ -29,6 +30,7 @@
       <sil-user-tab class="muted" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
 
       <!-- empty tabs to left-align last row (TODO: find more elegant solution)-->
+      <div class="sil-tab m1 sil-empty-tab"></div>
       <div class="sil-tab m1 sil-empty-tab"></div>
       <div class="sil-tab m1 sil-empty-tab"></div>
       <div class="sil-tab m1 sil-empty-tab"></div>
