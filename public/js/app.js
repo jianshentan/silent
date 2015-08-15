@@ -37,7 +37,7 @@
     /* public variables */
     $scope.activeUsers = [];
     $scope.inactiveUsers = [];
-    $scope.user;
+    $scope.user = {};
 
     /* private variables */
     this.users = [];
@@ -121,7 +121,7 @@
       restrict: 'E',
       scope: {},
       templateUrl: 'templates/sil-share-modal.html'
-    }
+    };
   });
 
   app.directive( 'silJoinTab', function() {
