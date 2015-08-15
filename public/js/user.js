@@ -28,7 +28,7 @@
     }
 
     /* private function */
-    function somePrivateFunction() {};
+    function somePrivateFunction() {}
 
     /* public function */
     User.prototype.getActiveDuration = function() {
