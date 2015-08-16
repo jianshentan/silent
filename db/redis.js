@@ -7,7 +7,10 @@
  * >
  *
  * // for users signing on without external provider
- * user-password:[username] -> password STRING
+ * user-password:[user_id] -> HASH<
+ *   passwordHash STRING,
+ *   salt STRING
+ * >
  *
  * // mapping of provider and external id to our internal user id
  * user-id:ext-id:[provider]:[ext_id] -> user_id INT
@@ -58,16 +61,25 @@ exports.getUserIdFromExtId = function( provider, extId, cb ) {
 /*
  * userId::int
  * cb::function( string, user )
- *
- * where
- * user::{
- *   username::string,
- *   password::string, -- pgp
- * }
- *
  */
 exports.getUser = function( userId, cb ) {
   rc.hgetall( 'user:' + userId, cbThrow( cb ) );
+};
+
+/*
+ * provider::string
+ * extId::string
+ * cb::function( string, boolean )
+ */
+exports.userExists = function( provider, extId, cb ) {
+  rc.exists( 'user-id:ext-id:' + provider + ':' + extId, cbThrow( cb ) );
+};
+
+/*
+ *
+ */
+exports.internalUserPassword = function( userId, cb ) {
+  rc.get( 'user-password:' + userId, cbThrow( cb ) );
 };
 
 /* 
@@ -85,7 +97,7 @@ exports.getOrCreateInternalUser = function( username, passwordHash, cb ) {
       rc.incr( 'user-id-seq', cbThrow( function( err, userId ) {
         var multi = rc.multi();
         multi.set( rkey, userId );
-        multi.hmset( 'user-password:' + username, {
+        multi.hmset( 'user-password:' + userId, {
           'username': username,
           'password': passwordHash
         });
