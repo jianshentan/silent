@@ -76,9 +76,17 @@ exports.userExists = function( provider, extId, cb ) {
 };
 
 /*
+ * userId::int
+ * cb::function( string, passwordData )
+ *
+ * where
+ * passwordData::{
+ *   'passwordHash' : str
+ *   'salt' : str
+ * }
  *
  */
-exports.internalUserPassword = function( userId, cb ) {
+exports.internalUserPasswordData = function( userId, cb ) {
   rc.get( 'user-password:' + userId, cbThrow( cb ) );
 };
 
@@ -88,7 +96,7 @@ exports.internalUserPassword = function( userId, cb ) {
  * cb::function( string, int )
  *
  */
-exports.getOrCreateInternalUser = function( username, passwordHash, cb ) {
+exports.getOrCreateInternalUser = function( username, passwordHash, salt, cb ) {
   var rkey = 'user-id:ext-id:silent:' + username;
   rc.get( rkey, cbThrow( function( err, userId ) {
     if( userId ) {

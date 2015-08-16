@@ -2,7 +2,8 @@ var express = require( 'express' );
 var router = express.Router();
 var passport = require( 'passport');
 var async = require( 'async' );
-var rc = require( './db/redis.js' );
+var rc = require( '../db/redis.js' );
+var crypto = require( 'crypto' );
 
 router.get( '/', function( req, res, next ) {
   res.render( 'index' );
@@ -21,34 +22,35 @@ var LocalStrategy = require('passport-local').Strategy;
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    async.seq(
-      rc.userExists.curry( 'silent' ) /* fn( userId, cb ) */ ,
-      function( exists, cb ) {
-        if (!exists) {
-          cb( true );
-        } else {
-          var userId = rc.getOrCreateInternalUser(username);
-          cb( null, userId );
+    async.waterfall( [
+        rc.userExists.curry( 'silent' ) /* fn( userId, cb ) */ ,
+        function( exists, cb ) {
+          if (exists) {
+            var userId = rc.getOrCreateInternalUser(username);
+            cb( null, userId );
+          } else {
+            cb( true );
+          }
+        },
+        function( userId, cb ) {
+          rc.internalUserPassword( userId, function( err, passwordHash ) {
+            crypto.pbkdf2( password, salt, 10000, 512, 'sha512', function( err, derivedKey ) {
+              if( passwordHash == derivedKey ) {
+                cb( null, userId );
+              } else {
+                cb( true );
+              }
+            });
+          });
         }
-      },
-      function( userId ) {
-        var passwordHash = rc.internalUserPassword( userId ); 
-
-      }
-    ),
-
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
+    ], function( err, result ) {
+       if( err ) {
+         done( null, false );
+       } else {
+         done( null, userId );
+       }
     });
-  }
-));
+}));
 
 router.post('/login',
   passport.authenticate('local', { successRedirect: '/',
