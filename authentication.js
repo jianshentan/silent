@@ -1,4 +1,4 @@
-var rc = require( './db/redis.js' );
+var rc = require( './db/redis' );
 var async = require( 'async' );
 var crypto = require( 'crypto' );
 
@@ -13,31 +13,31 @@ exports.authenticate = function ( username, password, done ) {
   console.log( 'Authenticating with { username: ' + username + ', password: ' + password + ' }');
   async.seq(
 
-      // Check if user exists
-      rc.userExists,
+    // Check if user exists
+    rc.userExists,
 
-      // If exists, get user id, else done
-      function( exists, cb ) {
-        if( exists ) {
-          var userId = rc.getOrCreateInternalUser( username, null, null, cb );
-        } else {
-          cb( true );
-        }
-      },
-
-      // Once we have user id, get and compare passwords
-      function( userId, cb ) {
-        rc.internalUserPasswordData( userId, function( err, passwordData ) {
-          generateHash( password, passwordData.salt, function( err, derivedKey ) {
-            // If the hashes match then we're good
-            if( passwordData.passwordHash == derivedKey ) {
-              cb( null, userId );
-            } else {
-              cb( true );
-            }
-          });
-        });
+    // If exists, get user id, else done
+    function( exists, cb ) {
+      if( exists ) {
+        var userId = rc.getOrCreateInternalUser( username, null, null, cb );
+      } else {
+        cb( true );
       }
+    },
+
+    // Once we have user id, get and compare passwords
+    function( userId, cb ) {
+      rc.internalUserPasswordData( userId, function( err, passwordData ) {
+        generateHash( password, passwordData.salt, function( err, derivedKey ) {
+          // If the hashes match then we're good
+          if( passwordData.passwordHash == derivedKey ) {
+            cb( null, userId );
+          } else {
+            cb( true );
+          }
+        });
+      });
+    }
 
   )( 'silent', username, function( err, userId ) {
     console.log( 'ERR: ' + err );
