@@ -87,12 +87,13 @@ exports.userExists = function( provider, extId, cb ) {
  *
  */
 exports.internalUserPasswordData = function( userId, cb ) {
-  rc.get( 'user-password:' + userId, cbThrow( cb ) );
+  rc.hgetall( 'user-password:' + userId, cbThrow( cb ) );
 };
 
 /* 
  * username::string
  * passwordHash::string
+ * salt::string
  * cb::function( string, int )
  *
  */
@@ -106,8 +107,8 @@ exports.getOrCreateInternalUser = function( username, passwordHash, salt, cb ) {
         var multi = rc.multi();
         multi.set( rkey, userId );
         multi.hmset( 'user-password:' + userId, {
-          'username': username,
-          'password': passwordHash
+          'passwordHash': passwordHash,
+          'salt': salt,
         });
         multi.exec( cbThrow( function ( err, _ ) {
           cb( null, userId );
