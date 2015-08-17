@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
+var passport = require('passport');
 
 var app = express();
 
@@ -15,10 +16,22 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+//app.use(passport.session());
+  
+// TODO: 
+passport.serializeUser(function(userId, done) {
+  done(null, userId);
+});
+
+// TODO
+passport.deserializeUser(function(userId, done) {
+  done(null, userId);
+});
 
 app.use('/', routes);
 
