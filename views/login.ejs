@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="Silent">
 
   <head>
     <% include partials/head %>
     <script src="/js/lib/angular.min.js"></script>
   </head>
 
-  <body>
+  <body ng-controller="LoginController">
 
     <nav class="bg-white sil-green flex flex-baseline px3 py2 border-bottom">
       <div class="flex-auto">Silent</div>
@@ -18,9 +18,9 @@
     <div class="sil-absolute-center absolute sm-col sm-col-6 md-col-4 lg-col-3 ">
       <div class="h1 sil-green mb1">Login to Silent</div>
       <div class="h5 gray">Let your presence speak loudly</div>
-      <form class="mt2 mb2" action="/login" method="post">
+      <form class="mt2 mb2" action="/login" method="post" name="loginForm">
         <div class="mt2 mb2">
-          <input class="field col-12" type="text" name="username" placeholder="username"/>
+          <input class="field col-12" type="email" name="username" placeholder="email"/>
         </div>
         <div class="mt2 mb2">
           <input class="field col-12" type="password" name="password" placeholder="password"/>
@@ -34,6 +34,18 @@
         <input class="btn btn-primary col-12 p1" type="submit" value="Log In via Facebook"/>
       </div>
     </div>
+
+    <!-- libraries -->
+    <script src="/js/lib/jquery-2.1.4.min.js"></script>
+    <script src="/js/lib/moment.min.js"></script>
+    <script src="/js/lib/angular-moment.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- scripts -->
+    <script src="/js/services.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/app.js"></script>
 
   </body>
 

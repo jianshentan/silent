@@ -5,7 +5,7 @@
     'User', 
     'Modal',
     'angularMoment'
-  ] );
+  ]);
 
   /* test TODO: delete */
   app.factory( 'room', [ '$http', function( $http ) {
@@ -14,7 +14,7 @@
       .error( function( err ) { return err; });
   }]);
 
-  app.controller( 'MainController', [ '$scope', function( $scope ) {
+  app.controller( 'RoomController', [ '$scope', function( $scope ) {
     $scope.showShareModal = false;
     $scope.room = roomId;
 
@@ -23,6 +23,9 @@
       $scope.showShareModal = true;
     };
 
+  }]);
+
+  app.controller( 'LoginController', [ '$scope', function( $scope ) {
   }]);
 
   app.controller( 'NavigationController', [ '$scope', function( $scope ) {
