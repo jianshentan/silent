@@ -25,6 +25,15 @@
 
   }]);
 
+  app.controller( 'SignupController', [ '$scope', function( $scope ) {
+    $scope.isValid = false;
+    $scope.confirmPassword = function() {
+      if( $scope.password == $scope.confirmation ) {
+        $scope.isValid = true; 
+      } 
+    };
+  }]);
+
   app.controller( 'LoginController', [ '$scope', function( $scope ) {
   }]);
 

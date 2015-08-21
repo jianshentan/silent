@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="Silent">
 
   <head>
     <% include partials/head %>
     <script src="/js/lib/angular.min.js"></script>
   </head>
 
-  <body>
+  <body ng-controller="SignupController">
 
     <nav class="bg-white sil-green flex flex-baseline px3 py2 border-bottom">
       <div class="flex-auto">Silent</div>
@@ -20,18 +20,16 @@
       <div class="h5 gray">Let your presence speak loudly</div>
       <form class="mt2 mb2" action="/signup" method="post">
         <div class="mt2 mb2">
-          <input class="field col-12" type="text" name="username" placeholder="username"/>
+          <input class="field col-12" type="email" name="email" placeholder="email" ng-model="email"/>
         </div>
         <div class="mt2 mb2">
-          <input class="field col-12" type="password" name="password" placeholder="password"/>
+          <input class="field col-12" type="password" pattern=".{3,}" name="password" placeholder="password" ng-model="password"/>
         </div>
-        <!--
         <div class="mt2 mb2">
-          <input class="field col-12" type="password" name="confirm" placeholder="confirm password"/>
+          <input class="field col-12" type="password" name="confirm" placeholder="confirm password" ng-model="confirmation" ng-model-options="{debounce: 1000}" ng-change="confirmPassword()"/>
         </div>
-        -->
         <div class="mt2 mb2">
-          <input class="btn sil-bg-green btn-primary col-12 p1" type="submit" value="Sign Up"/>
+          <input class="btn sil-bg-green btn-primary col-12 p1" type="submit" value="Sign Up" ng-disabled="!isValid"/>
         </div>
       </form>
       <hr class="mt2 mb2">
@@ -39,6 +37,18 @@
         <input class="btn btn-primary col-12 p1" type="submit" value="Sign Up via Facebook"/>
       </div>
     </div>
+
+    <!-- libraries -->
+    <script src="/js/lib/jquery-2.1.4.min.js"></script>
+    <script src="/js/lib/moment.min.js"></script>
+    <script src="/js/lib/angular-moment.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- scripts -->
+    <script src="/js/services.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/app.js"></script>
 
   </body>
 
