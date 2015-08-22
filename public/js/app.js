@@ -27,14 +27,42 @@
 
   app.controller( 'SignupController', [ '$scope', function( $scope ) {
     $scope.isValid = false;
-    $scope.confirmPassword = function() {
-      if( $scope.password == $scope.confirmation ) {
+
+    // form fields
+    $scope.username = "";
+    $scope.password = "";
+    $scope.confirmation = "";
+
+    // called when form fields are updated
+    $scope.updateForm = function() {
+      if( $scope.password.length > 0 &&
+          $scope.username.length > 0 &&
+          $scope.password == $scope.confirmation ) {
         $scope.isValid = true; 
-      } 
+      } else {
+        $scope.isValid = false; 
+      }
     };
   }]);
 
   app.controller( 'LoginController', [ '$scope', function( $scope ) {
+    $scope.isValid = false;
+
+    // form fields
+    $scope.username = "";
+    $scope.password = "";
+
+    // called when form fields are updated
+    $scope.updateForm = function() {
+      if( $scope.username.length > 0 &&
+          $scope.password.length > 0 ) {
+        $scope.isValid = true; 
+      } else {
+        $scope.isValid = false; 
+      }
+    };
+
+
   }]);
 
   app.controller( 'NavigationController', [ '$scope', function( $scope ) {

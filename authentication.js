@@ -9,14 +9,14 @@ var generateHash = function( password, salt, cb ) {
   });
 };
 
-exports.authenticate = function ( username, password, done ) {
+exports.login = function ( username, password, done ) {
   console.log( 'Authenticating with { username: ' + username + ', password: ' + password + ' }');
   async.seq(
 
-    // Check if user exists
+    // check if user exists
     rc.userExists,
 
-    // If exists, get user id, else done
+    // if exists, get user id, else done
     function( exists, cb ) {
       if( exists ) {
         var userId = rc.getOrCreateInternalUser( username, null, null, cb );
@@ -25,7 +25,7 @@ exports.authenticate = function ( username, password, done ) {
       }
     },
 
-    // Once we have user id, get and compare passwords
+    // once we have user id, get and compare passwords
     function( userId, cb ) {
       rc.internalUserPasswordData( userId, function( err, passwordData ) {
         generateHash( password, passwordData.salt, function( err, derivedKey ) {

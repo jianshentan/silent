@@ -20,13 +20,13 @@
       <div class="h5 gray">Let your presence speak loudly</div>
       <form class="mt2 mb2" action="/login" method="post" ng-model="loginForm">
         <div class="mt2 mb2">
-          <input class="field col-12" ng-model="email" type="email" name="username" placeholder="email"/>
+          <input class="field col-12" ng-model="username" type="text" name="username" placeholder="username" ng-change="updateForm()"/>
         </div>
         <div class="mt2 mb2">
-          <input class="field col-12" type="password" pattern=".{3,}" name="password" placeholder="password" ng-model="password"/>
+          <input class="field col-12" type="password" pattern=".{3,}" name="password" placeholder="password" ng-model="password" ng-change="updateForm()"/>
         </div>
         <div class="mt2 mb2">
-          <input class="btn sil-bg-green btn-primary col-12 p1" type="submit" value="Log In"/>
+          <input class="btn sil-bg-green btn-primary col-12 p1" type="submit" value="Log In" ng-disabled="!isValid"/>
         </div>
       </form>
       <hr class="mt2 mb2">
