@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Muli';
+    src: url('../media/fonts/muli-light/muli_light-webfont.eot');
+    src: url('../media/fonts/muli-light/muli_light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../media/fonts/muli-light/muli_light-webfont.woff2') format('woff2'),
+         url('../media/fonts/muli-light/muli_light-webfont.woff') format('woff'),
+         url('../media/fonts/muli-light/muli_light-webfont.ttf') format('truetype'),
+         url('../media/fonts/muli-light/muli_light-webfont.svg#mulilight') format('svg');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Muli';
+    src: url('../media/fonts/muli-regular/muli_regular-webfont.eot');
+    src: url('../media/fonts/muli-regular/muli_regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../media/fonts/muli-regular/muli_regular-webfont.woff2') format('woff2'),
+         url('../media/fonts/muli-regular/muli_regular-webfont.woff') format('woff'),
+         url('../media/fonts/muli-regular/muli_regular-webfont.ttf') format('truetype'),
+         url('../media/fonts/muli-regular/muli_regular-webfont.svg#muliregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}

@@ -1,8 +1,9 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Muli", Helvetica, Arial, sans-serif;
   min-height: 100%;
   min-width: 560px;
   width: 100%;
+  font-weight: normal;
 }
 .sil-shadow {
   box-shadow: 1px 1px 8px #eee;
