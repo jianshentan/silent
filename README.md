@@ -5,6 +5,7 @@
 1. install node + npm
 2. run npm install
 3. create a config.js with the contents:
+    
     module.exports = {
      'secret': 'your-password'
     };
