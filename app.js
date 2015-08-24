@@ -46,10 +46,10 @@ passport.deserializeUser(function(userId, done) {
 });
 
 // configure Passport
-require('./passport')(passport);
+require( './passport' )( passport) ;
 
 // set application secret
-app.set('secret', config.secret); 
+app.set( 'secret', config.secret ); 
 
 /* ================================================= 
    Routes ------------------------------------------
@@ -59,8 +59,8 @@ app.set('secret', config.secret);
 // pass in our app and fully configured passport
 require( './routes/auth' )( app, passport );
 
-app.use('/', routes); // does not require token auth
-app.use('/user', user); // requires token auth
+app.use( '/', routes ); // does not require token auth
+app.use( '/user', user ); // requires token auth
 
 /* ================================================= 
    Error Management --------------------------------
