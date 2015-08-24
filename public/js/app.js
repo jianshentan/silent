@@ -7,13 +7,6 @@
     'angularMoment'
   ]);
 
-  /* test TODO: delete */
-  app.factory( 'room', [ '$http', function( $http ) {
-    return $http.get( '/' )
-      .success( function( data ) { return data; })
-      .error( function( err ) { return err; });
-  }]);
-
   app.controller( 'RoomController', [ '$scope', function( $scope ) {
     $scope.showShareModal = false;
     $scope.room = roomId;
@@ -25,7 +18,10 @@
 
   }]);
 
-  app.controller( 'SignupController', [ '$scope', function( $scope ) {
+  app.controller( 'SignupController', [ '$scope', 'auth', function( $scope, auth ) {
+
+    var MIN_PASSWORD_LENGTH = 3;
+    var MIN_USERNAME_LENGTH = 3;
     $scope.isValid = false;
 
     // form fields
@@ -35,17 +31,23 @@
 
     // called when form fields are updated
     $scope.updateForm = function() {
-      if( $scope.password.length > 0 &&
-          $scope.username.length > 0 &&
+      if( $scope.password.length >= MIN_PASSWORD_LENGTH &&
+          $scope.username.length >= MIN_USERNAME_LENGTH &&
           $scope.password == $scope.confirmation ) {
         $scope.isValid = true; 
       } else {
         $scope.isValid = false; 
       }
     };
+
+    // called on submit
+    $scope.submitSignupForm = function() {
+      auth.login( $scope.username, $scope.password );
+    };
+
   }]);
 
-  app.controller( 'LoginController', [ '$scope', function( $scope ) {
+  app.controller( 'LoginController', [ '$scope', 'auth', function( $scope, auth ) {
     $scope.isValid = false;
 
     // form fields
@@ -62,6 +64,10 @@
       }
     };
 
+    // called on submit
+    $scope.submitLoginForm = function() {
+      auth.login( $scope.username, $scope.password );
+    };
 
   }]);
 

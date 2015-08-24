@@ -21,7 +21,8 @@ module.exports = function( app, passport ) {
 
             // create token to send to user
             // TODO decide what the package is
-            var token = jwt.sign( { username: user }, app.get( 'secret' ), {
+            var package = { user: user };
+            var token = jwt.sign( package, app.get( 'secret' ), {
               expiresInMinutes: 1440 * 30 // 1 month
             });
 
@@ -55,7 +56,8 @@ module.exports = function( app, passport ) {
 
             // create token to send to user 
             // TODO decide what the package is
-            var token = jwt.sign( { username: user }, "my-secret", {
+            var package = { user: user };
+            var token = jwt.sign( package, "my-secret", {
               expiresInMinutes: 1440 * 30 // 1 month
             });
 
