@@ -12,7 +12,6 @@ module.exports = function( app, passport ) {
 
     // if token is available
     if( token ) {
-      console.log( "TOKEN AVAILABLE" );
       // verifies secret and checks exp
       jwt.verify( token, app.get( 'secret' ), function( err, decoded ) {      
         if( err ) {
@@ -31,7 +30,6 @@ module.exports = function( app, passport ) {
 
     // if token not found
     else {
-      console.log( "TOKEN NOT AVAILABLE" );
       return res.status( 403 ).send({ 
           success: false, 
           message: 'No token provided.' 
@@ -58,11 +56,16 @@ module.exports = function( app, passport ) {
             if( err ) { return next( err ); }
 
             // create token to send to user
+            // TODO decide what the package is
             var token = jwt.sign( { username: user }, app.get( 'secret' ), {
               expiresInMinutes: 1440 * 30 // 1 month
             });
 
-            return res.json( { token: token } );
+            return res.json({ 
+              success: true,
+              message: "",
+              token: token 
+            });
           });
         }
 
@@ -86,12 +89,17 @@ module.exports = function( app, passport ) {
           req.logIn( user, function( err ) {
             if( err ) { return next( err ); }
 
-            // create token to send to user
+            // create token to send to user 
+            // TODO decide what the package is
             var token = jwt.sign( { username: user }, "my-secret", {
               expiresInMinutes: 1440 * 30 // 1 month
             });
 
-            return res.json( { token: token } );
+            return res.json({ 
+              success: true,
+              message: "",
+              token: token 
+            });
           });
         }
 
