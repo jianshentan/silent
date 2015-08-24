@@ -6,7 +6,7 @@
 2. run npm install
 3. create a config.js with the contents:
     module.exports = {
-      'secret': 'hellovelocity'
+     'secret': 'your-password'
     };
 
 ####to run:
