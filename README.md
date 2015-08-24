@@ -6,9 +6,11 @@
 2. run npm install
 3. create a config.js with the contents:
     
-    module.exports = {
-     'secret': 'your-password'
-    };
+```
+module.exports = {
+    'secret': 'your-password'
+};
+```
 
 ####to run:
 1. run "nodemon app.js"
