@@ -2,7 +2,7 @@ var rc = require( './db/redis' );
 var async = require( 'async' );
 var crypto = require( 'crypto' );
 
-var generateHash = function( password, salt, cb ) {
+function generateHash( password, salt, cb ) {
   // Use the provided salt to regenerate the hash with the user provided password
   crypto.pbkdf2( password, salt, 1000, 512, 'sha512', function( err, derivedKey ) {
     cb( null, derivedKey );
@@ -21,7 +21,7 @@ exports.login = function ( username, password, done ) {
       if( exists ) {
         var userId = rc.getOrCreateInternalUser( username, null, null, cb );
       } else {
-        cb( true );
+        cb( 'user does not exist' );
       }
     },
 
@@ -33,16 +33,15 @@ exports.login = function ( username, password, done ) {
           if( passwordData.passwordHash == derivedKey ) {
             cb( null, userId );
           } else {
-            cb( true );
+            cb( 'password is invalid' );
           }
         });
       });
     }
 
   )( 'silent', username, function( err, userId ) {
-    console.log( 'ERR: ' + err );
     if( err ) {
-      done( null, false );
+      done( null, false, { message: err } );
     } else {
       done( null, userId );
     }
@@ -62,7 +61,6 @@ exports.signup = function( username, password, done ) {
 
       // if it does then we callback with an error, else generate passwordHash
       function( exists, cb ) {
-        console.log(' does it exist? ');
         if( exists ) {
           cb( 'username_taken', false );
         } else {
@@ -78,7 +76,14 @@ exports.signup = function( username, password, done ) {
         rc.getOrCreateInternalUser( username, passwordHash, salt, cb );
       }
 
-  )( 'silent', username, done );
+  )( 'silent', username, function( err, userId ) {
+    if( err ) {
+      done( null, false, { message: err } );
+    } else {
+      done( null, userId );
+    }
+  });
+
 };
 
 

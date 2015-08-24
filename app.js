@@ -1,4 +1,6 @@
-/* Require Packages ================================ */
+/* ================================================= 
+   Require packages --------------------------------
+   ================================================= */
 
 var express = require('express');
 var path = require('path');
@@ -7,15 +9,21 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
+var user = require('./routes/user');
 var passport = require('passport');
+var config = require('./config'); // get our config file
 var app = express();
 
-/* View engine setup =============================== */
+/* ================================================= 
+   View engine setup -------------------------------
+   ================================================= */
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-/* Configure App =================================== */
+/* ================================================= 
+   Configure App -----------------------------------
+   ================================================= */
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -40,15 +48,23 @@ passport.deserializeUser(function(userId, done) {
 // configure Passport
 require('./passport')(passport);
 
-/* Routes ========================================== */
+// set application secret
+app.set('secret', config.secret); 
 
-// load authentication endpoints and 
+/* ================================================= 
+   Routes ------------------------------------------
+   ================================================= */
+
+// load authentication routes
 // pass in our app and fully configured passport
 require( './routes/auth' )( app, passport );
 
-app.use('/', routes);
+app.use('/', routes); // does not require token auth
+app.use('/user', user); // requires token auth
 
-/* Error Management ================================ */
+/* ================================================= 
+   Error Management --------------------------------
+   ================================================= */
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

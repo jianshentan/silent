@@ -23,7 +23,7 @@
  *
  * // footprint of user in a room
  * room-user-footprint:[room_id]:[user_id] -> footprint HASH<
- *   'accTime' : INTEGER
+ *   'accTime' : INTEGER // accumulated time
  *   'msg' : STRING
  * >
  *
