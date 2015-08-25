@@ -9,7 +9,15 @@
   <body class="bg-darken-1" ng-controller="RoomController">
 
     <sil-modal show="showShareModal">
-      <sil-share-modal info="room"></sil-share-modal>
+      <sil-share-modal></sil-share-modal>
+    </sil-modal>
+
+    <sil-modal show="showLoginModal">
+      <sil-login-modal></sil-login-modal>
+    </sil-modal>
+
+    <sil-modal show="showSignupModal">
+      <sil-signup-modal></sil-signup-modal>
     </sil-modal>
 
     <nav class="bg-white sil-green flex flex-baseline px3 py2" ng-controller="NavigationController">
@@ -17,7 +25,7 @@
       <div class="flex-auto bold h3 center">{{ room }}</div>
       <div class="sil-nav-options right-align">
         <div class="sil-nav-option sil-pointer circle center sil-border-green2 inline-block p1" ng-click="openShareModal()"><i class="fa fa-share-alt sil-fa"></i></div>
-        <div class="sil-nav-option circle center sil-border-green2 inline-block p1">!</div>
+        <div class="sil-nav-option sil-pointer circle center sil-border-green2 inline-block p1" ng-click="openCredentialsModal()"><i class="fa fa-share-alt sil-fa"></i></div>
       </div>
     </nav>
 

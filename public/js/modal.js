@@ -23,7 +23,23 @@
       restrict: 'E',
       scope: {},
       templateUrl: 'templates/sil-share-modal.html'
-    }
+    };
+  });
+
+  app.directive( 'silSignupModal', function() {
+    return {
+      restrict: 'E',
+      scope: {},
+      templateUrl: 'templates/sil-signup-modal.html'
+    };
+  });
+
+  app.directive( 'silLoginModal', function() {
+    return {
+      restrict: 'E',
+      scope: {},
+      templateUrl: 'templates/sil-login-modal.html'
+    };
   });
 
 })();

@@ -7,8 +7,9 @@
     'angularMoment'
   ]);
 
-  app.controller( 'RoomController', [ '$scope', function( $scope ) {
+  app.controller( 'RoomController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
     $scope.showShareModal = false;
+    $scope.showLoginModal = false;
     $scope.room = roomId;
 
     // open share modal
@@ -16,13 +17,49 @@
       $scope.showShareModal = true;
     };
 
+    // open login/logout/signup
+    $scope.openCredentialsModal = function() {
+      if( auth.isAuthenticated() ) {
+        // TODO Handle logout - show logout modal
+        console.log( "LOGOUT" );
+      } else {
+        // show signup modal
+        $scope.showSignupModal = true;
+      }
+    };
+
+    // modal event management --> 
+    // TODO should be made modular and extracted into a factory/service?
+    $rootScope.$on( 'switchModal', function( event, args ) {
+      var modal = args.modal;
+
+      // first, hide all modals
+      $scope.showLoginModal = false;
+      $scope.showShareModal = false;
+      $scope.showSignupModal = false;
+
+      switch( modal ) {
+        case 'login':
+          $scope.showLoginModal = true;
+          break;
+        case 'signup':
+          $scope.showSignupModal = true;
+          break;
+        default:
+          break;
+      }
+    });  
+
   }]);
 
-  app.controller( 'SignupController', [ '$scope', 'auth', function( $scope, auth ) {
+  app.controller( 'SignupController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
 
     var MIN_PASSWORD_LENGTH = 3;
     var MIN_USERNAME_LENGTH = 3;
+
     $scope.isValid = false;
+    // TODO consider using $location for more robust functionality
+    $scope.isSignupPage = window.location.pathname == '/signup';
 
     // form fields
     $scope.username = "";
@@ -42,13 +79,21 @@
 
     // called on submit
     $scope.submitSignupForm = function() {
-      auth.login( $scope.username, $scope.password );
+      auth.signup( $scope.username, $scope.password );
+    };
+
+    // called when toggling between login & signup
+    $scope.toggleAuthentication = function() {
+      $rootScope.$emit( 'switchModal', { modal: 'login' } );
     };
 
   }]);
 
-  app.controller( 'LoginController', [ '$scope', 'auth', function( $scope, auth ) {
+  app.controller( 'LoginController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
+
     $scope.isValid = false;
+    // TODO consider using $location for more robust functionality
+    $scope.isLoginPage = window.location.pathname == '/login';
 
     // form fields
     $scope.username = "";
@@ -67,6 +112,11 @@
     // called on submit
     $scope.submitLoginForm = function() {
       auth.login( $scope.username, $scope.password );
+    };
+
+    // called when toggling between login & signup
+    $scope.toggleAuthentication = function() {
+      $rootScope.$emit( 'switchModal', { modal: 'signup' } );
     };
 
   }]);

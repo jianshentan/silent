@@ -3,7 +3,7 @@
   var app = angular.module( 'Services', [] );
 
   /* Token Manager */
-  app.factory( 'tokenManager', [ '$window', function( $window ) {
+  app.factory( 'tokenManager', [ '$window', '$http', function( $window, $http ) {
 
     var LOCAL_TOKEN_KEY = "user_token";
     var isAuthenticated = false;
@@ -43,7 +43,8 @@
       loadUserCredentials: loadUserCredentials,
       storeUserCredentials: storeUserCredentials,
       useUserCredentials: useUserCredentials,
-      destroyUserCredentials: destroyUserCredentials
+      destroyUserCredentials: destroyUserCredentials,
+      isAuthenticated: function() { return isAuthenticated; }
     }
 
   }]);
@@ -105,10 +106,16 @@
       }
     };
 
+    // param:cb is optional
+    function isAuthenticated( cb ) {
+      return tokenManager.isAuthenticated();
+    };
+
     return {
       login: login,
       signup: signup,
-      logout: logout
+      logout: logout,
+      isAuthenticated: isAuthenticated
     }    
   }]);
 
@@ -155,6 +162,7 @@
         if( rejection.status === 401 || rejection.status === 403 ) {
           // TODO handle the case where the user is not authenticated
           // due to invalid token or missing token
+          console.log( "Token may be invalid" );
         }
         return $q.reject( rejection ) || rejection;
       }
@@ -162,8 +170,14 @@
   }]);
 
   /* Config */
-  app.config( [ '$httpProvider', function( $httpProvider ) {
+  app.config( [ '$httpProvider', '$locationProvider', function( $httpProvider, $locationProvider ) {
     $httpProvider.interceptors.push( 'authInterceptor' );
+    /*
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false
+    });
+    */
   }]);
 
 })();
