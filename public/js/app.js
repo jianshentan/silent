@@ -7,7 +7,8 @@
     'angularMoment'
   ]);
 
-  app.controller( 'RoomController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
+  app.controller( 'RoomController', 
+      [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
 
     // set modal show/hide state
     $scope.showShareModal = false;
@@ -30,12 +31,7 @@
 
     // logs user out
     $scope.logout = function() {
-      // TODO perhaps a modal should appear to confirm logout
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
-
-      auth.logout( function() {
-        $scope.authenticated = auth.isAuthenticated();
-      });
     };
   
     // authentication event manager
@@ -74,87 +70,12 @@
 
   }]);
 
-  app.controller( 'SignupController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
-
-    var MIN_PASSWORD_LENGTH = 3;
-    var MIN_USERNAME_LENGTH = 3;
-
-    $scope.isValid = false;
-    // TODO consider using $location for more robust functionality
-    $scope.isSignupPage = window.location.pathname == '/signup';
-
-    // form fields
-    $scope.username = "";
-    $scope.password = "";
-    $scope.confirmation = "";
-
-    // called when form fields are updated
-    $scope.updateForm = function() {
-      if( $scope.password.length >= MIN_PASSWORD_LENGTH &&
-          $scope.username.length >= MIN_USERNAME_LENGTH &&
-          $scope.password == $scope.confirmation ) {
-        $scope.isValid = true; 
-      } else {
-        $scope.isValid = false; 
-      }
-    };
-
-    // called on submit
-    $scope.submitSignupForm = function() {
-      auth.signup( $scope.username, $scope.password, function() {
-        $rootScope.$emit( 'modalSwitch', { modal: '' } );
-        $rootScope.$emit( 'checkUserCredentials' );
-      });
-    };
-
-    // called when toggling between login & signup
-    $scope.toggleAuthentication = function() {
-      $rootScope.$emit( 'modalSwitch', { modal: 'login' } );
-    };
-
-  }]);
-
-  app.controller( 'LoginController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
-
-    $scope.isValid = false;
-    // TODO consider using $location for more robust functionality
-    $scope.isLoginPage = window.location.pathname == '/login';
-
-    // form fields
-    $scope.username = "";
-    $scope.password = "";
-
-    // called when form fields are updated
-    $scope.updateForm = function() {
-      if( $scope.username.length > 0 &&
-          $scope.password.length > 0 ) {
-        $scope.isValid = true; 
-      } else {
-        $scope.isValid = false; 
-      }
-    };
-
-    // called on submit
-    $scope.submitLoginForm = function() {
-      auth.login( $scope.username, $scope.password, function() {
-        $rootScope.$emit( 'modalSwitch', { modal: '' } );
-        $rootScope.$emit( 'checkUserCredentials' );
-      });
-    };
-
-    // called when toggling between login & signup
-    $scope.toggleAuthentication = function() {
-      $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
-    };
-
-  }]);
-
   app.controller( 'NavigationController', [ '$scope', function( $scope ) {
   }]);
 
   app.controller( 'UserListController', 
-    [ '$scope', 'socket', 'user',  
-    function( $scope, socket, user ) {
+      [ '$scope', 'socket', 'user',  
+      function( $scope, socket, user ) {
 
     /* reference to self */
     var self = this;
