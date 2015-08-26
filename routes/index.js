@@ -5,6 +5,10 @@ router.get( '/', function( req, res, next ) {
   res.render( 'index' );
 });
 
+router.get( '/home', function( req, res, next ) {
+  res.render( 'home' );
+});
+
 router.get( '/@:room', function( req, res, next ) {
   var roomId = req.params.room;
   res.render( 'room', { room: roomId } );

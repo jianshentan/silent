@@ -27,10 +27,10 @@
       this.time = new Date( Date.now() - this.getActiveDuration() );
     }
 
-    /* private function */
+    /* private functions */
     function somePrivateFunction() {};
 
-    /* public function */
+    /* public functions */
     User.prototype.getActiveDuration = function() {
       if( Math.abs(enterTimes.length - exitTimes.length) < 2 ) {
         var accumulator = 0;

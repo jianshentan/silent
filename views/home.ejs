@@ -4,7 +4,22 @@
     <% include partials/head %>
     <script src="/js/lib/angular.min.js"></script>
   </head>
-  <body class="bg-darken-1">
+  <body class="sil-bg-green" ng-controller="HomeController">
+
+    <nav class="bg-white sil-green flex flex-baseline px3 py2" >
+      <div class="sil-nav-options">Silent</div>
+      <div class="flex-auto bold h3 center">{{ room }}</div>
+      <div class="sil-nav-options right-align">
+        <div class="inline-block ml1" ng-show="authenticated">
+          <div class="sil-nav-option sil-pointer center p1">
+            <span ng-click="logout()">Logout</span>
+          </div>
+        </div>
+        <div class="inline-block ml1" ng-hide="authenticated">
+          <div class="sil-nav-option sil-pointer center p1" ng-click="openCredentialsModal()">Login / Signup</div>
+        </div>
+      </div>
+    </nav>
 
     <!-- libraries -->
     <script src="/js/lib/jquery-2.1.4.min.js"></script>
@@ -22,9 +37,6 @@
     <script src="/js/modal.js"></script>
     <script src="/js/user.js"></script>
     <script src="/js/app.js"></script>
-
-
-
 
   </body>
 </html>

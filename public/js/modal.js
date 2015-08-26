@@ -130,6 +130,7 @@
 
   }]);
 
+  /* DEPRECATED 
   app.directive( 'silLogoutModal', 
       [ '$rootScope', 'auth', function( $rootScope, auth ) {
 
@@ -157,6 +158,7 @@
     };
 
   }]);
+  */
 
 })();
 

@@ -7,6 +7,47 @@
     'angularMoment'
   ]);
 
+  /* Config */
+  app.config( [ '$httpProvider', function( $httpProvider ) {
+    $httpProvider.interceptors.push( 'authInterceptor' );
+  }]);
+
+  /* Run */
+  app.run( [ '$window', 'auth', function( $window, auth ) {
+
+    // if '/' but user is authenticated, then go to '/home'
+    if( $window.location.pathname == '/' ) {
+      if( auth.isAuthenticated() ) {
+        $window.location.href = '/home';
+      } 
+    } 
+
+    // if '/home' but user is not authenticated, then go to '/'
+    if( $window.location.pathname == '/home' ) {
+      if( !auth.isAuthenticated() ) {
+        $window.location.href = '/';
+      }
+    };
+
+  }]);
+
+  /* Main Controller for Home View */
+  app.controller( 'HomeController',
+      [ '$scope', '$rootScope', '$window', 'auth', 
+      function( $scope, $rootScope, $window, auth ) {
+
+    $scope.authenticated = auth.isAuthenticated();
+    
+    $scope.logout = function() {
+      auth.logout( function() {
+        $rootScope.$emit( 'checkUserCredentials' );
+        $window.location.href = '/';
+      })
+    };
+
+  }]);
+
+  /* Main Controller for Room View */
   app.controller( 'RoomController', 
       [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
 
@@ -17,7 +58,12 @@
     $scope.showSignupModal = false;
 
     $scope.room = roomId;
+    $scope.user;
     $scope.authenticated = auth.isAuthenticated();
+
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = auth.getUser();
+    });
 
     // open share modal
     $scope.openShareModal = function() {
@@ -70,12 +116,9 @@
 
   }]);
 
-  app.controller( 'NavigationController', [ '$scope', function( $scope ) {
-  }]);
-
   app.controller( 'UserListController', 
-      [ '$scope', 'socket', 'user',  
-      function( $scope, socket, user ) {
+      [ '$scope', '$rootScope', 'socket', 'user', 'auth',
+      function( $scope, $rootScope, socket, user, auth ) {
 
     /* reference to self */
     var self = this;
@@ -87,6 +130,11 @@
 
     /* private variables */
     this.users = [];
+
+    /* listen for user update */
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = auth.getUser();
+    });
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
@@ -123,8 +171,11 @@
 
     socket.on( 'entered', function( data ) {
 
-      $scope.user = new user( data.user );
+      // receive this user object from socket-connection
+      auth.setUser( data.user );
+      //$scope.user = new user( data.user );
 
+      // receive list of users from socket-connection
       for( var i in data.users ) {
         if( data.users[i].userId != $scope.user.userId ) {
           self.users.push( new user( data.users[i] ) );

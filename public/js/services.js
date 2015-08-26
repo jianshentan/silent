@@ -1,6 +1,6 @@
 (function() {
 
-  var app = angular.module( 'Services', [] );
+  var app = angular.module( 'Services', [ 'User' ] );
 
   /* Token Manager */
   app.factory( 'tokenManager', [ '$window', '$http', function( $window, $http ) {
@@ -50,7 +50,12 @@
   }]);
 
   /* Authentication */
-  app.factory( 'auth', [ '$http', 'tokenManager', function( $http, tokenManager ) {
+  app.factory( 'auth', 
+      [ '$http', '$rootScope', 'tokenManager', 'user', 
+      function( $http, $rootScope, tokenManager, user ) {
+
+    var currentUser; // type: User object
+    /* currently, currentUser is updated via Sockets - onenter event */
 
     // param:cb is optional
     function login( username, password, cb ) {
@@ -59,6 +64,9 @@
           // if login is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
+          
+          // TODO get user info and put into User module
+
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
@@ -82,6 +90,9 @@
           // if signup is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
+
+          // TODO get user info and put into User module
+
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
@@ -106,16 +117,35 @@
       }
     };
 
-    // param:cb is optional
-    function isAuthenticated( cb ) {
+    function isAuthenticated() {
       return tokenManager.isAuthenticated();
+    };
+
+    // param:cb is optional
+    function getUser( cb ) {
+      if( cb ) {
+        cb( currentUser );
+      } else {
+        return currentUser;
+      }
+    };
+
+    // param:cb is optional
+    function setUser( data, cb ) {
+      currentUser = new user( data );
+      $rootScope.$emit( 'userUpdate', {} );
+      if( cb ) {
+        cb();
+      }
     };
 
     return {
       login: login,
       signup: signup,
       logout: logout,
-      isAuthenticated: isAuthenticated
+      isAuthenticated: isAuthenticated,
+      getUser: getUser,
+      setUser: setUser
     }    
   }]);
 
@@ -167,11 +197,6 @@
         return $q.reject( rejection ) || rejection;
       }
     };
-  }]);
-
-  /* Config */
-  app.config( [ '$httpProvider', function( $httpProvider ) {
-    $httpProvider.interceptors.push( 'authInterceptor' );
   }]);
 
 })();
