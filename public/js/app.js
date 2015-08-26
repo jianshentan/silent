@@ -8,42 +8,64 @@
   ]);
 
   app.controller( 'RoomController', [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
+
+    // set modal show/hide state
     $scope.showShareModal = false;
     $scope.showLoginModal = false;
+    $scope.showLogoutModal = false;
+    $scope.showSignupModal = false;
+
     $scope.room = roomId;
+    $scope.authenticated = auth.isAuthenticated();
 
     // open share modal
     $scope.openShareModal = function() {
-      $scope.showShareModal = true;
+      $rootScope.$emit( 'modalSwitch', { modal: 'share' } );
     };
 
-    // open login/logout/signup
+    // open login/signup
     $scope.openCredentialsModal = function() {
-      if( auth.isAuthenticated() ) {
-        // TODO Handle logout - show logout modal
-        console.log( "LOGOUT" );
-      } else {
-        // show signup modal
-        $scope.showSignupModal = true;
-      }
+      $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
     };
 
-    // modal event management --> 
-    // TODO should be made modular and extracted into a factory/service?
-    $rootScope.$on( 'switchModal', function( event, args ) {
+    // logs user out
+    $scope.logout = function() {
+      // TODO perhaps a modal should appear to confirm logout
+      $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
+
+      auth.logout( function() {
+        $scope.authenticated = auth.isAuthenticated();
+      });
+    };
+  
+    // authentication event manager
+    $rootScope.$on( 'checkUserCredentials', function( event, args ) {
+      $scope.authenticated = auth.isAuthenticated();
+    });
+
+    // modal event manager
+    $rootScope.$on( 'modalSwitch', function( event, args ) {
       var modal = args.modal;
 
       // first, hide all modals
       $scope.showLoginModal = false;
+      $scope.showLogoutModal = false;
       $scope.showShareModal = false;
       $scope.showSignupModal = false;
 
+      // if 'modal' is empty, close all modals
       switch( modal ) {
         case 'login':
           $scope.showLoginModal = true;
           break;
         case 'signup':
           $scope.showSignupModal = true;
+          break;
+        case 'logout':
+          $scope.showLogoutModal = true;
+          break;
+        case 'share':
+          $scope.showShareModal = true;
           break;
         default:
           break;
@@ -79,12 +101,15 @@
 
     // called on submit
     $scope.submitSignupForm = function() {
-      auth.signup( $scope.username, $scope.password );
+      auth.signup( $scope.username, $scope.password, function() {
+        $rootScope.$emit( 'modalSwitch', { modal: '' } );
+        $rootScope.$emit( 'checkUserCredentials' );
+      });
     };
 
     // called when toggling between login & signup
     $scope.toggleAuthentication = function() {
-      $rootScope.$emit( 'switchModal', { modal: 'login' } );
+      $rootScope.$emit( 'modalSwitch', { modal: 'login' } );
     };
 
   }]);
@@ -111,12 +136,15 @@
 
     // called on submit
     $scope.submitLoginForm = function() {
-      auth.login( $scope.username, $scope.password );
+      auth.login( $scope.username, $scope.password, function() {
+        $rootScope.$emit( 'modalSwitch', { modal: '' } );
+        $rootScope.$emit( 'checkUserCredentials' );
+      });
     };
 
     // called when toggling between login & signup
     $scope.toggleAuthentication = function() {
-      $rootScope.$emit( 'switchModal', { modal: 'signup' } );
+      $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
     };
 
   }]);

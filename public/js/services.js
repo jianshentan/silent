@@ -62,7 +62,7 @@
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
-          tokenManager.destroyCredentials();
+          tokenManager.destroyUserCredentials();
 
           // Handle error
           var message = data.message;
@@ -85,7 +85,7 @@
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
-          tokenManager.destroyCredentials();
+          tokenManager.destroyUserCredentials();
 
           // Handle error
           var message = data.message;
@@ -100,7 +100,7 @@
 
     // param:cb is optional
     function logout( cb ) {
-      tokenManager.destoryCredentials();
+      tokenManager.destroyUserCredentials();
       if( cb ) {
         cb();
       }
@@ -170,14 +170,8 @@
   }]);
 
   /* Config */
-  app.config( [ '$httpProvider', '$locationProvider', function( $httpProvider, $locationProvider ) {
+  app.config( [ '$httpProvider', function( $httpProvider ) {
     $httpProvider.interceptors.push( 'authInterceptor' );
-    /*
-    $locationProvider.html5Mode({
-      enabled: true,
-      requireBase: false
-    });
-    */
   }]);
 
 })();

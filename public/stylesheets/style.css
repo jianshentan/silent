@@ -32,12 +32,14 @@ body {
   right: 4px; 
 }
 .sil-nav-options {
-  width: 8em;
+  width: 16em;
 }
 .sil-nav-option {
-  width: 10px;
   height: 10px;
   line-height: 10px;
+}
+.sil-nav-option.circle {
+  width: 10px;
 }
 .sil-h7 {
   font-size: .675rem;

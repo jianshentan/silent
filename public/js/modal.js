@@ -42,5 +42,13 @@
     };
   });
 
+  app.directive( 'silLogoutModal', function() {
+    return {
+      restrict: 'E',
+      scope: {},
+      templateUrl: 'templates/sil-logout-modal.html'
+    };
+  });
+
 })();
 
