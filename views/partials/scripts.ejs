@@ -1,0 +1,21 @@
+<!-- libraries -->
+<script src="/js/lib/jquery-2.1.4.min.js"></script>
+<script src="/js/lib/moment.min.js"></script>
+<script src="/js/lib/angular-moment.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- global roomId variable -->
+<% if( typeof room != 'undefined') { %>
+  <script>roomId = '<%= room %>';</script>
+<% } %>
+
+<!-- scripts -->
+<script src="/js/services/util.js"></script>
+<script src="/js/services/user.js"></script>
+<script src="/js/directives/modal.js"></script>
+<script src="/js/directives/tabs.js"></script>
+<script src="/js/controllers/room.js"></script>
+<script src="/js/controllers/home.js"></script>
+<script src="/js/app.js"></script>
+
+
