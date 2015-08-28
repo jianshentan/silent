@@ -17,12 +17,12 @@
       if( token ) {
         useUserCredentials( token );
       }
-    };
+    }
 
     function storeUserCredentials( token ) {
       $window.localStorage.setItem( LOCAL_TOKEN_KEY, token );
       useUserCredentials( token );
-    };
+    }
 
     function useUserCredentials( token ) {
       isAuthenticated = true;
@@ -30,14 +30,14 @@
 
       // Set the token as header for your requests
       $http.defaults.headers.common['X-Auth-Token'] = token; 
-    };
+    }
 
     function destroyUserCredentials() {
       authToken = undefined;
       isAuthenticated = false;
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
       window.localStorage.removeItem(LOCAL_TOKEN_KEY);
-    };
+    }
 
     return {
       loadUserCredentials: loadUserCredentials,
@@ -45,7 +45,7 @@
       useUserCredentials: useUserCredentials,
       destroyUserCredentials: destroyUserCredentials,
       isAuthenticated: function() { return isAuthenticated; }
-    }
+    };
 
   }]);
 
@@ -81,7 +81,7 @@
             cb();
           }
         });
-    };
+    }
 
     // param:cb is optional
     function signup( username, password, cb ) {
@@ -107,7 +107,7 @@
             cb();
           }
         });
-    };
+    }
 
     // param:cb is optional
     function logout( cb ) {
@@ -115,11 +115,11 @@
       if( cb ) {
         cb();
       }
-    };
+    }
 
     function isAuthenticated() {
       return tokenManager.isAuthenticated();
-    };
+    }
 
     // param:cb is optional
     function getUser( cb ) {
@@ -128,7 +128,7 @@
       } else {
         return currentUser;
       }
-    };
+    }
 
     // param:cb is optional
     function setUser( data, cb ) {
@@ -137,7 +137,7 @@
       if( cb ) {
         cb();
       }
-    };
+    }
 
     return {
       login: login,
@@ -146,7 +146,7 @@
       isAuthenticated: isAuthenticated,
       getUser: getUser,
       setUser: setUser
-    }    
+    };    
   }]);
 
   /* Sockets */

@@ -11,7 +11,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var passport = require('passport');
-var config = require('./config'); // get our config file
+
+var config = require('./config/config'); // get our config file
+
 var app = express();
 
 /* ================================================= 
@@ -46,7 +48,7 @@ passport.deserializeUser(function(userId, done) {
 });
 
 // configure Passport
-require( './passport' )( passport) ;
+require( './src/passport' )( passport ) ;
 
 // set application secret
 app.set( 'secret', config.secret ); 

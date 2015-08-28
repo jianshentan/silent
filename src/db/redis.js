@@ -35,6 +35,8 @@ var redis = require('redis');
 var rc = redis.createClient();
 var async = require('async');
 
+var SILENT = 'silent';
+
 /*
  * logs and propagates error
  */
@@ -42,7 +44,7 @@ var cbThrow = function( cb ) {
   return function( err ) {
     if( err ) {
       console.error( err );
-      cb( err );
+      cb( err ); // TODO: pass arguments here too
     } else {
       cb.apply(this, arguments);
     }
@@ -90,32 +92,44 @@ exports.internalUserPasswordData = function( userId, cb ) {
   rc.hgetall( 'user-password:' + userId, cbThrow( cb ) );
 };
 
-/* 
- * username::string
- * passwordHash::string
- * salt::string
+/*
+ * provider::string,
+ * extId::string
  * cb::function( string, int )
- *
  */
-exports.getOrCreateInternalUser = function( username, passwordHash, salt, cb ) {
-  var rkey = 'user-id:ext-id:silent:' + username;
-  rc.get( rkey, cbThrow( function( err, userId ) {
-    if( userId ) {
-      cb( null, userId );
-    } else {
-      rc.incr( 'user-id-seq', cbThrow( function( err, userId ) {
-        var multi = rc.multi();
-        multi.set( rkey, userId );
-        multi.hmset( 'user-password:' + userId, {
+var createUser = function( provider, extId, done ) {
+  var rkey = 'user-id:ext-id:' + provider + ':' + extId;
+  async.seq(
+      rc.get,
+      function( userId, cb ) {
+        if( userId ) {
+          cb( 'user exists', userId );
+        } else {
+          rc.incr( 'user-id-seq', cb );
+        }
+      },
+      function( userId, cb ) {
+        rc.set( rkey, userId, cb );
+      }
+  )( rkey, cbThrow( done ) );
+};
+
+/*
+ * username::string,
+ * passwordHash::string,
+ * salt::string,
+ * done::function( string, int )
+ */
+exports.createInternalUser = function( username, passwordHash, salt, done ) {
+  async.seq(
+      createUser,
+      function( userId, cb ) {
+        rc.hmset( 'user-password:' + userId, {
           'passwordHash': passwordHash,
           'salt': salt,
-        });
-        multi.exec( cbThrow( function ( err, _ ) {
-          cb( null, userId );
-        } ) );
-      } ) );
-    }
-  } ) );
+        }, cb);
+      }
+  )( SILENT, username, cbThrow( done ) );
 };
 
 /*
@@ -123,22 +137,38 @@ exports.getOrCreateInternalUser = function( username, passwordHash, salt, cb ) {
  * extId::string
  * cb::function( string, int )
  */
-exports.getOrCreateExternalUser = function( provider, extId, cb ) {
-  if ( provider == 'silent' ) {
-    cb( 'Provider may not be silent' );
+exports.createExternalUser = function( provider, extId, done ) {
+  if ( provider == SILENT ) {
+    cb( 'Provider may not be ' + SILENT );
   } else {
-    var rkey = 'user-id:ext-id:' + provider + ':' + extId;
-    rc.get( rkey, cbThrow( function( err, userId ) {
-      if ( userId ) {
-        cb( null, userId );
-      } else {
-        rc.incr( 'user-id-seq', cbThrow( function( err, userId ) {
-          rc.set( rkey, userId, cbThrow( function( err, _ ) {
-            cb( null, userId );
-          } ) );
-        } ) );
-      }
-    } ) );
+    createUser( provider, extId, done );
+  }
+};
+
+var getUserId = function( provider, extId, done ) {
+  var rkey = 'user-id:ext-id:' + provider + ':' + extId;
+  rc.get( rkey, done );
+};
+
+/*
+ * provider::string
+ * extId::string
+ * done::function( string, int )
+ */
+exports.getInternalUserId = function( username, done ) {
+  getUserId( SILENT, done );
+};
+
+/*
+ * provider::string
+ * extId::string
+ * done::function( string, int )
+ */
+exports.getExternalUserId = function( provider, extId, done ) {
+  if ( provider == SILENT ) {
+    cb( 'Provider may not be ' + SILENT );
+  } else {
+    getUserId( provider, extId, done );
   }
 };
 

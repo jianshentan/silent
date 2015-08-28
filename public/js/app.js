@@ -27,7 +27,7 @@
       if( !auth.isAuthenticated() ) {
         $window.location.href = '/';
       }
-    };
+    }
 
   }]);
 
@@ -42,7 +42,7 @@
       auth.logout( function() {
         $rootScope.$emit( 'checkUserCredentials' );
         $window.location.href = '/';
-      })
+      });
     };
 
   }]);
@@ -58,7 +58,7 @@
     $scope.showSignupModal = false;
 
     $scope.room = roomId;
-    $scope.user;
+    $scope.user = {};
     $scope.authenticated = auth.isAuthenticated();
 
     $rootScope.$on( 'userUpdate', function( event, args ) {

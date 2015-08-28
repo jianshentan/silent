@@ -7,7 +7,7 @@ function generateHash( password, salt, cb ) {
   crypto.pbkdf2( password, salt, 1000, 512, 'sha512', function( err, derivedKey ) {
     cb( null, derivedKey );
   });
-};
+}
 
 exports.login = function ( username, password, done ) {
   console.log( 'Authenticating with { username: ' + username + ', password: ' + password + ' }');
@@ -19,7 +19,7 @@ exports.login = function ( username, password, done ) {
     // if exists, get user id, else done
     function( exists, cb ) {
       if( exists ) {
-        var userId = rc.getOrCreateInternalUser( username, null, null, cb );
+        var userId = rc.getInternalUserId( username, cb );
       } else {
         cb( 'user does not exist' );
       }
@@ -73,7 +73,7 @@ exports.signup = function( username, password, done ) {
 
       // and use it to create a user
       function( passwordHash, salt, cb ) {
-        rc.getOrCreateInternalUser( username, passwordHash, salt, cb );
+        rc.createInternalUser( username, passwordHash, salt, cb );
       }
 
   )( 'silent', username, function( err, userId ) {
@@ -83,7 +83,6 @@ exports.signup = function( username, password, done ) {
       done( null, userId );
     }
   });
-
 };
 
 
