@@ -26,6 +26,10 @@
     $scope.user;
     $scope.authenticated = auth.isAuthenticated();
 
+    if( $scope.authenticated ) {
+      $scope.user = myUser.serialize();
+    }
+
     // open share modal
     $scope.openShareModal = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'share' } );

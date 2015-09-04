@@ -46,7 +46,12 @@
           tokenManager.storeUserCredentials( token );
 
           // TODO get user info and put into User module
+          data.user = {
+            userId: "1234",
+            username: "js"
+          }
 
+          myMuser.initializeUser( data.user );
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
@@ -79,13 +84,14 @@
       [ 'tokenManager', '$rootScope', 
       function( tokenManager, $rootScope ) {
 
-    var userId;
     var MyUser = {};
+
+    var userId;
+    var username;
     
     MyUser.initializeUser = function( data ) {
-      //this.userId = data.userId;
-      //this.username = data.username;
-      this.user = data;
+      userId = data.userId;
+      username = data.username;
     }
 
     // param:cb is optional
