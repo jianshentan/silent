@@ -8,11 +8,8 @@
 
   /* Authentication */
   app.factory( 'auth', 
-      [ '$http', '$rootScope', 'tokenManager', 'user', 
-      function( $http, $rootScope, tokenManager, user ) {
-
-    var currentUser; // type: User object
-    /* currently, currentUser is updated via Sockets - onenter event */
+      [ '$http', '$rootScope', 'tokenManager', 'myUser', 
+      function( $http, $rootScope, tokenManager, myUser ) {
 
     // param:cb is optional
     function login( username, password, cb ) {
@@ -23,7 +20,7 @@
           tokenManager.storeUserCredentials( token );
           
           // TODO get user info and put into User module
-
+          myUser.initializeUser( data );
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
@@ -38,7 +35,7 @@
             cb();
           }
         });
-    };
+    }
 
     // param:cb is optional
     function signup( username, password, cb ) {
@@ -64,47 +61,58 @@
             cb();
           }
         });
-    };
-
-    // param:cb is optional
-    function logout( cb ) {
-      tokenManager.destroyUserCredentials();
-      if( cb ) {
-        cb();
-      }
-    };
+    }
 
     function isAuthenticated() {
       return tokenManager.isAuthenticated();
-    };
-
-    // param:cb is optional
-    function getUser( cb ) {
-      if( cb ) {
-        cb( currentUser );
-      } else {
-        return currentUser;
-      }
-    };
-
-    // param:cb is optional
-    function setUser( data, cb ) {
-      currentUser = new user( data );
-      $rootScope.$emit( 'userUpdate', {} );
-      if( cb ) {
-        cb();
-      }
-    };
+    }
 
     return {
       login: login,
       signup: signup,
-      logout: logout,
-      isAuthenticated: isAuthenticated,
-      getUser: getUser,
-      setUser: setUser
+      isAuthenticated: isAuthenticated
     }    
   }]);
+
+  /* My User Instance */
+  app.factory( 'myUser', 
+      [ 'tokenManager', '$rootScope', 
+      function( tokenManager, $rootScope ) {
+
+    var userId;
+    var MyUser = {};
+    
+    MyUser.initializeUser = function( data ) {
+      //this.userId = data.userId;
+      //this.username = data.username;
+      this.user = data;
+    }
+
+    // param:cb is optional
+    MyUser.logout = function( cb ) {
+      tokenManager.destroyUserCredentials();
+      userId = null;
+      if( cb ) {
+        cb();
+      }
+    }
+
+    MyUser.joinRoom = function( data, cb ) {
+      this.user = data;
+      if( cb ) {
+        cb();
+      }
+    }
+
+    // serialize for controller
+    MyUser.serialize = function( cb ) {
+      return this.user;
+    }
+
+    return MyUser
+
+  }]);
+
 
   /* User Class */
   app.factory( 'user', [ function() {

@@ -13,7 +13,8 @@
 
   /* Main Controller for Room View */
   app.controller( 'RoomController', 
-      [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
+      [ '$scope', '$rootScope', 'auth', 'myUser',
+      function( $scope, $rootScope, auth, myUser ) {
 
     // set modal show/hide state
     $scope.showShareModal = false;
@@ -24,10 +25,6 @@
     $scope.room = roomId;
     $scope.user;
     $scope.authenticated = auth.isAuthenticated();
-
-    $rootScope.$on( 'userUpdate', function( event, args ) {
-      $scope.user = auth.getUser();
-    });
 
     // open share modal
     $scope.openShareModal = function() {
@@ -43,7 +40,12 @@
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
-  
+ 
+    // user-update event manager
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = myUser.serialize();
+    });
+ 
     // authentication event manager
     $rootScope.$on( 'checkUserCredentials', function( event, args ) {
       $scope.authenticated = auth.isAuthenticated();
@@ -81,8 +83,8 @@
   }]);
 
   app.controller( 'UserListController', 
-      [ '$scope', '$rootScope', 'socket', 'user', 'auth',
-      function( $scope, $rootScope, socket, user, auth ) {
+      [ '$scope', '$rootScope', 'socket', 'user', 'auth', 'myUser',
+      function( $scope, $rootScope, socket, user, auth, myUser ) {
 
     /* reference to self */
     var self = this;
@@ -94,11 +96,6 @@
 
     /* private variables */
     this.users = [];
-
-    /* listen for user update */
-    $rootScope.$on( 'userUpdate', function( event, args ) {
-      $scope.user = auth.getUser();
-    });
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
@@ -114,6 +111,7 @@
       return selectedUsers;
     };
 
+    /* set a specified userId in the userlist to inactive */
     this.setInactive = function( userId ) {
       var users = self.users;
       for( var i in users ) {
@@ -130,14 +128,26 @@
       $scope.inactiveUsers = self.getUsers( false );
     };
 
+    /* listen for user update */
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = myUser.serialize();
+    });
+
+    /* SOCKET Handling */ 
+
     // emit 'enter' - TODO decide if this is the right place for this
     socket.emit( 'enter', { room_id: roomId } );
 
     socket.on( 'entered', function( data ) {
 
       // receive this user object from socket-connection
-      auth.setUser( data.user );
-      //$scope.user = new user( data.user );
+      if( auth.isAuthenticated() ) {
+        myUser.joinRoom( data.user, function() {
+          $rootScope.$emit( 'userUpdate' );
+        });
+      } else {
+        $scope.user = new user( data.user );
+      }
 
       // receive list of users from socket-connection
       for( var i in data.users ) {
