@@ -42,10 +42,16 @@
       $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
     };
 
+    // open user-page modal
+    $scope.openUserPageModal = function() {
+      $rootScope.$emit( 'modalSwitch', { modal: 'user-page' } );
+    };
+
     // logs user out
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
+
  
     /* EVENT MANAGERS =====================================*/
 
@@ -53,7 +59,6 @@
     $rootScope.$on( 'userUpdate', function( event, args ) {
       $scope.user = myUser.serialize();
       $scope.username = myUser.getUsername();
-      console.log( $scope.username );
     });
  
     // authentication event manager
@@ -67,9 +72,9 @@
 
       // first, hide all modals
       $scope.showLoginModal = false;
-      $scope.showLogoutModal = false;
       $scope.showShareModal = false;
       $scope.showSignupModal = false;
+      $scope.showUserPageModal = false;
 
       // if 'modal' is empty, close all modals
       switch( modal ) {
@@ -79,8 +84,8 @@
         case 'signup':
           $scope.showSignupModal = true;
           break;
-        case 'logout':
-          $scope.showLogoutModal = true;
+        case 'user-page':
+          $scope.showUserPageModal = true;
           break;
         case 'share':
           $scope.showShareModal = true;

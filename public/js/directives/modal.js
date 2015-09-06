@@ -137,14 +137,13 @@
 
   }]);
 
-  /* DEPRECATED 
-  app.directive( 'silLogoutModal', 
-      [ '$rootScope', 'auth', function( $rootScope, auth ) {
+  app.directive( 'silUserPageModal', 
+      [ '$rootScope', '$window', function( $rootScope, $window ) {
 
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-logout-modal.html',
+      templateUrl: 'templates/sil-user-page-modal.html',
       link: function( scope, el, attr ) {
 
         // 'cancel' is pressed
@@ -152,20 +151,15 @@
           $rootScope.$emit( 'modalSwitch', { modal: '' } );  
         };
 
-        // 'log me out' is pressed
+        // 'OK' is pressed
         scope.accept = function() {
-          $rootScope.$emit( 'modalSwitch', { modal: '' } );
-
-          auth.logout( function() {
-            $rootScope.$emit( 'checkUserCredentials' );
-          });
+          $window.location.href = '/home';  
         };
 
       }
     };
 
   }]);
-  */
 
 })();
 

@@ -12,7 +12,6 @@
       function( $http, $rootScope, tokenManager, myUser ) {
 
     if( isAuthenticated() ) {
-      console.log( "AUTHENTICATED - first" );
       getUser();
     }
 
