@@ -13,7 +13,8 @@
 
   /* Main Controller for Room View */
   app.controller( 'RoomController', 
-      [ '$scope', '$rootScope', 'auth', function( $scope, $rootScope, auth ) {
+      [ '$scope', '$rootScope', 'auth', 'myUser',
+      function( $scope, $rootScope, auth, myUser ) {
 
     // set modal show/hide state
     $scope.showShareModal = false;
@@ -25,9 +26,11 @@
     $scope.user;
     $scope.authenticated = auth.isAuthenticated();
 
-    $rootScope.$on( 'userUpdate', function( event, args ) {
-      $scope.user = auth.getUser();
-    });
+    if( $scope.authenticated ) {
+      $scope.username = auth.username;
+    }
+
+    /* MODAL BUTTONS =====================================*/
 
     // open share modal
     $scope.openShareModal = function() {
@@ -43,7 +46,16 @@
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
-  
+ 
+    /* EVENT MANAGERS =====================================*/
+
+    // user-update event manager
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = myUser.serialize();
+      $scope.username = myUser.getUsername();
+      console.log( $scope.username );
+    });
+ 
     // authentication event manager
     $rootScope.$on( 'checkUserCredentials', function( event, args ) {
       $scope.authenticated = auth.isAuthenticated();
@@ -81,8 +93,8 @@
   }]);
 
   app.controller( 'UserListController', 
-      [ '$scope', '$rootScope', 'socket', 'user', 'auth',
-      function( $scope, $rootScope, socket, user, auth ) {
+      [ '$scope', '$rootScope', 'socket', 'user', 'auth', 'myUser',
+      function( $scope, $rootScope, socket, user, auth, myUser ) {
 
     /* reference to self */
     var self = this;
@@ -95,17 +107,16 @@
     /* private variables */
     this.users = [];
 
-    /* listen for user update */
-    $rootScope.$on( 'userUpdate', function( event, args ) {
-      $scope.user = auth.getUser();
-    });
+    /* handle if user is logged in */
+    var loggedIn = auth.isAuthenticated();
+    var userId = myUser.userId;
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
       var users = self.users;
       var selectedUsers = [];
       for( var i in users ) {
-        if( users[i].userId !== $scope.user.userId ) {
+        if( users[i].userId !== userId ) {
           if( active ? users[i].active : !users[i].active ) {
             selectedUsers.push( users[i] );
           }
@@ -114,10 +125,11 @@
       return selectedUsers;
     };
 
-    this.setInactive = function( userId ) {
+    /* set a specified userId in the userlist to inactive */
+    this.setInactive = function( id ) {
       var users = self.users;
       for( var i in users ) {
-        if( users[i].userId == userId ) {
+        if( users[i].userId == id ) {
           users[i].active = false;
         }
       }
@@ -130,18 +142,31 @@
       $scope.inactiveUsers = self.getUsers( false );
     };
 
+    /* listen for user update */
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = myUser.serialize();
+    });
+
+    /* SOCKET Handling */ 
+
     // emit 'enter' - TODO decide if this is the right place for this
-    socket.emit( 'enter', { room_id: roomId } );
+    socket.emit( 'enter', { room_id: roomId, userId: userId } );
 
     socket.on( 'entered', function( data ) {
 
-      // receive this user object from socket-connection
-      auth.setUser( data.user );
-      //$scope.user = new user( data.user );
+      // receive this user object from socket-connection & set userId (if guest)
+      if( userId ) {
+        myUser.joinRoom( data.user, function() {
+          $rootScope.$emit( 'userUpdate' );
+        });
+      } else {
+        $scope.user = new user( data.user );
+        userId = $scope.user.userId;
+      }
 
       // receive list of users from socket-connection
       for( var i in data.users ) {
-        if( data.users[i].userId != $scope.user.userId ) {
+        if( data.users[i].userId != userId ) {
           self.users.push( new user( data.users[i] ) );
         }
       }

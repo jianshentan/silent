@@ -8,11 +8,13 @@
 
   /* Authentication */
   app.factory( 'auth', 
-      [ '$http', '$rootScope', 'tokenManager', 'user', 
-      function( $http, $rootScope, tokenManager, user ) {
+      [ '$http', '$rootScope', 'tokenManager', 'myUser', 
+      function( $http, $rootScope, tokenManager, myUser ) {
 
-    var currentUser; // type: User object
-    /* currently, currentUser is updated via Sockets - onenter event */
+    if( isAuthenticated() ) {
+      console.log( "AUTHENTICATED - first" );
+      getUser();
+    }
 
     // param:cb is optional
     function login( username, password, cb ) {
@@ -23,7 +25,12 @@
           tokenManager.storeUserCredentials( token );
           
           // TODO get user info and put into User module
+          data.user = {
+            userId: "1234",
+            username: "js"
+          }
 
+          myUser.initializeUser( data.user );
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
@@ -38,7 +45,7 @@
             cb();
           }
         });
-    };
+    }
 
     // param:cb is optional
     function signup( username, password, cb ) {
@@ -49,7 +56,12 @@
           tokenManager.storeUserCredentials( token );
 
           // TODO get user info and put into User module
+          data.user = {
+            userId: "1234",
+            username: "js"
+          }
 
+          myUser.initializeUser( data.user );
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
@@ -64,47 +76,87 @@
             cb();
           }
         });
-    };
-
-    // param:cb is optional
-    function logout( cb ) {
-      tokenManager.destroyUserCredentials();
-      if( cb ) {
-        cb();
-      }
-    };
+    }
 
     function isAuthenticated() {
       return tokenManager.isAuthenticated();
-    };
+    }
 
-    // param:cb is optional
     function getUser( cb ) {
-      if( cb ) {
-        cb( currentUser );
-      } else {
-        return currentUser;
-      }
-    };
+      return $http.post( '/authenticate', {} )
+        .success( function( data ) {
+        })
+        .error( function( data, status ) {
+        })
+        .finally( function() {
+          // should be in success
+          myUser.initializeUser( { userId: '1234', username: 'js' } );
 
-    // param:cb is optional
-    function setUser( data, cb ) {
-      currentUser = new user( data );
-      $rootScope.$emit( 'userUpdate', {} );
-      if( cb ) {
-        cb();
-      }
-    };
+          if( cb ) {
+            cb();
+          }
+        });
+    }
 
     return {
       login: login,
       signup: signup,
-      logout: logout,
       isAuthenticated: isAuthenticated,
-      getUser: getUser,
-      setUser: setUser
+      getUser: getUser
     }    
   }]);
+
+  /* My User Instance */
+  app.factory( 'myUser', 
+      [ 'tokenManager', '$rootScope',
+      function( tokenManager, $rootScope ) {
+
+    var MyUser = {};
+    var roomInfo;
+    var userId;
+    var username;
+
+    // getters
+    MyUser.getUsername = function() { return username; }
+    MyUser.getUserId = function() { return userId; }
+
+    MyUser.initializeUser = function( data ) {
+      userId = data.userId;
+      username = data.username;
+      $rootScope.$emit( 'userUpdate' );
+    }
+
+    // param:cb is optional
+    MyUser.logout = function( cb ) {
+      tokenManager.destroyUserCredentials();
+      userId = null;
+      username = null;
+      if( cb ) {
+        cb();
+      }
+    }
+
+    MyUser.joinRoom = function( data, cb ) {
+      roomInfo = data;
+      if( cb ) {
+        cb();
+      }
+    }
+
+    // serialize for controller
+    MyUser.serialize = function( cb ) {
+      return roomInfo;
+      /*
+      return {
+        username: username
+      }
+      */
+    }
+
+    return MyUser
+
+  }]);
+
 
   /* User Class */
   app.factory( 'user', [ function() {
