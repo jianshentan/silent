@@ -1,6 +1,22 @@
 (function() {
 
-  var app = angular.module( 'Services', [ 'User' ] );
+  var app = angular.module( 'UtilServices', [] );
+
+  /* Authentication Inceptor - 
+     the interceptor will notice response errors on $http requests 
+     and will catch invalid tokens */
+  app.factory( 'authInterceptor', [ '$q', function( $q ) {
+    return {
+      responseError: function( rejection ) {
+        if( rejection.status === 401 || rejection.status === 403 ) {
+          // TODO handle the case where the user is not authenticated
+          // due to invalid token or missing token
+          console.log( "Token may be invalid" );
+        }
+        return $q.reject( rejection ) || rejection;
+      }
+    };
+  }]);
 
   /* Token Manager */
   app.factory( 'tokenManager', [ '$window', '$http', function( $window, $http ) {
@@ -152,7 +168,6 @@
   /* Sockets */
   app.factory( 'socket', [ '$rootScope', function( $rootScope ) {
     var socket = io.connect();
-    console.log( "socket connected" );
  
     return {
       on: function( eventName, callback ) {
@@ -181,22 +196,6 @@
       }
     };
 
-  }]);
-
-  /* Authentication Inceptor - 
-     the interceptor will notice response errors on $http requests 
-     and will catch invalid tokens */
-  app.factory( 'authInterceptor', [ '$q', function( $q ) {
-    return {
-      responseError: function( rejection ) {
-        if( rejection.status === 401 || rejection.status === 403 ) {
-          // TODO handle the case where the user is not authenticated
-          // due to invalid token or missing token
-          console.log( "Token may be invalid" );
-        }
-        return $q.reject( rejection ) || rejection;
-      }
-    };
   }]);
 
 })();

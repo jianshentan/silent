@@ -1,5 +1,12 @@
 (function() {
-  var app = angular.module( 'Modal', [ 'Services' ] );
+
+  /* ModalDirectives include:
+     'silModal' --> generic modal wrapper
+     'silShareModal' --> share modal
+     'silLoginModal' --> login modal
+     'silSignupModal' --> signup modal
+  */
+  var app = angular.module( 'ModalDirectives', [ 'UserServices' ] );
 
   app.directive( 'silModal', function() {
     return {

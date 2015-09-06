@@ -21,22 +21,7 @@
       </div>
     </nav>
 
-    <!-- libraries -->
-    <script src="/js/lib/jquery-2.1.4.min.js"></script>
-    <script src="/js/lib/moment.min.js"></script>
-    <script src="/js/lib/angular-moment.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-
-    <!-- global roomId variable -->
-    <% if( typeof room != 'undefined') { %>
-      <script>roomId = '<%= room %>';</script>
-    <% } %>
-    
-    <!-- scripts -->
-    <script src="/js/services.js"></script>
-    <script src="/js/modal.js"></script>
-    <script src="/js/user.js"></script>
-    <script src="/js/app.js"></script>
+    <% include partials/scripts %>
 
   </body>
 </html>
