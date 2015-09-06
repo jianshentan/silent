@@ -52,6 +52,23 @@ var cbThrow = function( cb ) {
 };
 
 /*
+ * This function needs to be called on redis methods before they can be used in async
+ */
+var wrapRedisCommand = function( functionName ) {
+  return function() {
+    var lastIdx = arguments.length - 1;
+    var nonCbArgs = [];
+    for( var k in arguments ) {
+      if (k != lastIdx) {
+        nonCbArgs[k] = arguments[k];
+      }
+    }
+
+    rc.send_command(functionName, nonCbArgs, arguments[lastIdx]);
+  };
+};
+
+/*
  * provider::string
  * extId::string
  * cb::function( string, int )
@@ -100,7 +117,7 @@ exports.internalUserPasswordData = function( userId, cb ) {
 var createUser = function( provider, extId, done ) {
   var rkey = 'user-id:ext-id:' + provider + ':' + extId;
   async.seq(
-      rc.get,
+      wrapRedisCommand( 'get' ),
       function( userId, cb ) {
         if( userId ) {
           cb( 'user exists', userId );
@@ -109,7 +126,9 @@ var createUser = function( provider, extId, done ) {
         }
       },
       function( userId, cb ) {
-        rc.set( rkey, userId, cb );
+        rc.set( rkey, userId, function() {
+          cb(null, userId);
+        });
       }
   )( rkey, cbThrow( done ) );
 };
@@ -156,7 +175,7 @@ var getUserId = function( provider, extId, done ) {
  * done::function( string, int )
  */
 exports.getInternalUserId = function( username, done ) {
-  getUserId( SILENT, done );
+  getUserId( SILENT, username, done );
 };
 
 /*

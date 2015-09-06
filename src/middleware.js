@@ -4,8 +4,7 @@ var express = require( 'express' );
 var router = express.Router();
 var jwt = require( 'jsonwebtoken' );
 
-// jwt token validation middleware
-router.use( function( req, res, next ) {
+exports.jwtValidation = function( req, res, next ) {
 
   // check header or url parameters or post parameters for token
   var token = req.body.token || 
@@ -38,10 +37,4 @@ router.use( function( req, res, next ) {
     });
   }
 
-});
-
-router.post( '/test', function( req, res ) {
-  res.render( 'index' );
-});
-
-module.exports = router;
+};

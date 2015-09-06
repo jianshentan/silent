@@ -8,9 +8,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var routes = require('./routes/index');
-var user = require('./routes/user');
 var passport = require('passport');
+var routes = require('./routes');
 
 var config = require('./config/config'); // get our config file
 
@@ -48,29 +47,35 @@ passport.deserializeUser(function(userId, done) {
 });
 
 // configure Passport
-require( './src/passport' )( passport ) ;
+
+var LocalStrategy = require( 'passport-local' ).Strategy;
+var authentication = require( './src/authentication' );
+
+passport.use( 'local-login', new LocalStrategy( {
+
+  usernameField: "username", //specify where to get username
+  passwordField: "password", //specify where to get u
+  passReqToCallback: false // pass req object to callback
+
+}, authentication.login ) );
 
 // set application secret
 app.set( 'secret', config.secret ); 
 
+
 /* ================================================= 
-   Routes ------------------------------------------
+   Routers -----------------------------------------
    ================================================= */
 
-// load authentication routes
-// pass in our app and fully configured passport
-require( './routes/auth' )( app, passport );
-
-app.use( '/', routes ); // does not require token auth
-app.use( '/user', user ); // requires token auth
+app.use( '/', routes( passport ) );
 
 /* ================================================= 
    Error Management --------------------------------
    ================================================= */
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+app.use( function( req, res, next ) {
+  var err = new Error( 'Not Found' );
   err.status = 404;
   next(err);
 });

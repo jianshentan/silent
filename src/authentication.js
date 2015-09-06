@@ -19,7 +19,7 @@ exports.login = function ( username, password, done ) {
     // if exists, get user id, else done
     function( exists, cb ) {
       if( exists ) {
-        var userId = rc.getInternalUserId( username, cb );
+        rc.getInternalUserId( username, cb );
       } else {
         cb( 'user does not exist' );
       }
