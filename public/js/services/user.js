@@ -11,6 +11,11 @@
       [ '$http', '$rootScope', 'tokenManager', 'myUser', 
       function( $http, $rootScope, tokenManager, myUser ) {
 
+    if( isAuthenticated() ) {
+      console.log( "AUTHENTICATED - first" );
+      getUser();
+    }
+
     // param:cb is optional
     function login( username, password, cb ) {
       return $http.post( '/login', { username: username, password: password } )
@@ -20,7 +25,12 @@
           tokenManager.storeUserCredentials( token );
           
           // TODO get user info and put into User module
-          myUser.initializeUser( data );
+          data.user = {
+            userId: "1234",
+            username: "js"
+          }
+
+          myUser.initializeUser( data.user );
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
@@ -51,7 +61,7 @@
             username: "js"
           }
 
-          myMuser.initializeUser( data.user );
+          myUser.initializeUser( data.user );
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
@@ -72,39 +82,62 @@
       return tokenManager.isAuthenticated();
     }
 
+    function getUser( cb ) {
+      return $http.post( '/authenticate', {} )
+        .success( function( data ) {
+        })
+        .error( function( data, status ) {
+        })
+        .finally( function() {
+          // should be in success
+          myUser.initializeUser( { userId: '1234', username: 'js' } );
+
+          if( cb ) {
+            cb();
+          }
+        });
+    }
+
     return {
       login: login,
       signup: signup,
-      isAuthenticated: isAuthenticated
+      isAuthenticated: isAuthenticated,
+      getUser: getUser
     }    
   }]);
 
   /* My User Instance */
   app.factory( 'myUser', 
-      [ 'tokenManager', '$rootScope', 
+      [ 'tokenManager', '$rootScope',
       function( tokenManager, $rootScope ) {
 
     var MyUser = {};
-
+    var roomInfo;
     var userId;
     var username;
-    
+
+    // getters
+    MyUser.getUsername = function() { return username; }
+    MyUser.getUserId = function() { return userId; }
+
     MyUser.initializeUser = function( data ) {
       userId = data.userId;
       username = data.username;
+      $rootScope.$emit( 'userUpdate' );
     }
 
     // param:cb is optional
     MyUser.logout = function( cb ) {
       tokenManager.destroyUserCredentials();
       userId = null;
+      username = null;
       if( cb ) {
         cb();
       }
     }
 
     MyUser.joinRoom = function( data, cb ) {
-      this.user = data;
+      roomInfo = data;
       if( cb ) {
         cb();
       }
@@ -112,7 +145,12 @@
 
     // serialize for controller
     MyUser.serialize = function( cb ) {
-      return this.user;
+      return roomInfo;
+      /*
+      return {
+        username: username
+      }
+      */
     }
 
     return MyUser

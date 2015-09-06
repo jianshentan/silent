@@ -27,8 +27,10 @@
     $scope.authenticated = auth.isAuthenticated();
 
     if( $scope.authenticated ) {
-      $scope.user = myUser.serialize();
+      $scope.username = auth.username;
     }
+
+    /* MODAL BUTTONS =====================================*/
 
     // open share modal
     $scope.openShareModal = function() {
@@ -45,9 +47,13 @@
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
  
+    /* EVENT MANAGERS =====================================*/
+
     // user-update event manager
     $rootScope.$on( 'userUpdate', function( event, args ) {
       $scope.user = myUser.serialize();
+      $scope.username = myUser.getUsername();
+      console.log( $scope.username );
     });
  
     // authentication event manager
@@ -101,12 +107,16 @@
     /* private variables */
     this.users = [];
 
+    /* handle if user is logged in */
+    var loggedIn = auth.isAuthenticated();
+    var userId = myUser.userId;
+
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
       var users = self.users;
       var selectedUsers = [];
       for( var i in users ) {
-        if( users[i].userId !== $scope.user.userId ) {
+        if( users[i].userId !== userId ) {
           if( active ? users[i].active : !users[i].active ) {
             selectedUsers.push( users[i] );
           }
@@ -116,10 +126,10 @@
     };
 
     /* set a specified userId in the userlist to inactive */
-    this.setInactive = function( userId ) {
+    this.setInactive = function( id ) {
       var users = self.users;
       for( var i in users ) {
-        if( users[i].userId == userId ) {
+        if( users[i].userId == id ) {
           users[i].active = false;
         }
       }
@@ -140,22 +150,23 @@
     /* SOCKET Handling */ 
 
     // emit 'enter' - TODO decide if this is the right place for this
-    socket.emit( 'enter', { room_id: roomId } );
+    socket.emit( 'enter', { room_id: roomId, userId: userId } );
 
     socket.on( 'entered', function( data ) {
 
-      // receive this user object from socket-connection
-      if( auth.isAuthenticated() ) {
+      // receive this user object from socket-connection & set userId (if guest)
+      if( userId ) {
         myUser.joinRoom( data.user, function() {
           $rootScope.$emit( 'userUpdate' );
         });
       } else {
         $scope.user = new user( data.user );
+        userId = $scope.user.userId;
       }
 
       // receive list of users from socket-connection
       for( var i in data.users ) {
-        if( data.users[i].userId != $scope.user.userId ) {
+        if( data.users[i].userId != userId ) {
           self.users.push( new user( data.users[i] ) );
         }
       }
