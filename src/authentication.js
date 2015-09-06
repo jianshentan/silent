@@ -1,15 +1,33 @@
 var rc = require( './db/redis' );
 var async = require( 'async' );
 var crypto = require( 'crypto' );
+var jwt = require( 'jsonwebtoken' );
 
-function generateHash( password, salt, cb ) {
+var generateHash = function( password, salt, cb ) {
   // Use the provided salt to regenerate the hash with the user provided password
   crypto.pbkdf2( password, salt, 1000, 512, 'sha512', function( err, derivedKey ) {
     cb( null, derivedKey );
   });
-}
+};
 
-exports.login = function ( username, password, done ) {
+exports.jwtTokenizer = function( jwtSecret ) {
+  var TOKEN_LIFE = 60 * 24 * 10; // 10 days
+  var tokenizer = {};
+
+  tokenizer.sign = function( user ) {
+    return jwt.sign( user, jwtSecret, {
+      expiresInMinutes: TOKEN_LIFE
+    });
+  };
+
+  tokenizer.verify = function( token, cb ) {
+    jwt.verify( token, jwtSecret, cb );
+  };
+
+  return tokenizer;
+}; 
+
+exports.login = function( username, password, done ) {
   console.log( 'Authenticating with { username: ' + username + ', password: ' + password + ' }');
   async.seq(
 
@@ -38,12 +56,11 @@ exports.login = function ( username, password, done ) {
         });
       });
     }
-
   )( 'silent', username, function( err, userId ) {
     if( err ) {
       done( null, false, { message: err } );
     } else {
-      done( null, userId );
+      done( null, { userId: userId } );
     }
   });
 };
@@ -80,7 +97,7 @@ exports.signup = function( username, password, done ) {
     if( err ) {
       done( null, false, { message: err } );
     } else {
-      done( null, userId );
+      done( null, { userId: userId } );
     }
   });
 };
