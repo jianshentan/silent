@@ -25,6 +25,7 @@
     $scope.room = roomId;
     $scope.user;
     $scope.authenticated = auth.isAuthenticated();
+    $scope.joinedRoom = myUser.isJoined(); 
 
     if( $scope.authenticated ) {
       $scope.username = auth.username;
@@ -47,6 +48,11 @@
       $rootScope.$emit( 'modalSwitch', { modal: 'user-page' } );
     };
 
+    // open join-room modal
+    $scope.openJoinRoomModal = function() {
+      $rootScope.$emit( 'modalSwitch', { modal: 'join-room' } );
+    };
+
     // logs user out
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
@@ -59,6 +65,7 @@
     $rootScope.$on( 'userUpdate', function( event, args ) {
       $scope.user = myUser.serialize();
       $scope.username = myUser.getUsername();
+      $scope.joinedRoom = myUser.isJoined();
     });
  
     // authentication event manager
@@ -75,6 +82,7 @@
       $scope.showShareModal = false;
       $scope.showSignupModal = false;
       $scope.showUserPageModal = false;
+      $scope.showJoinRoomModal = false;
 
       // if 'modal' is empty, close all modals
       switch( modal ) {
@@ -86,6 +94,9 @@
           break;
         case 'user-page':
           $scope.showUserPageModal = true;
+          break;
+        case 'join-room':
+          $scope.showJoinRoomModal = true;
           break;
         case 'share':
           $scope.showShareModal = true;
@@ -161,7 +172,7 @@
 
       // receive this user object from socket-connection & set userId (if guest)
       if( userId ) {
-        myUser.joinRoom( data.user, function() {
+        myUser.enterRoom( data.user, function() {
           $rootScope.$emit( 'userUpdate' );
         });
       } else {

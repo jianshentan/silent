@@ -4,19 +4,28 @@
   <div class="h5 gray">Let your presence speak loudly</div>
 
   <form class="mt2 mb2" ng-submit="submitSignupForm()">
+
+    <!-- USERNAME -->
     <div class="mt2 mb2">
       <input class="field col-12" type="text" name="username" placeholder="username" ng-model="username" ng-change="updateForm()"/>
     </div>
+
+    <!-- PASSWORD -->
     <div class="mt2 mb2">
       <!-- TODO pattern=".{3,}" is not an elegant solution -->
       <input class="field col-12" type="password" pattern=".{3,}" name="password" placeholder="password" ng-model="password" ng-change="updateForm()"/>
     </div>
+
+    <!-- PASSWORD CONFIRMATION -->
     <div class="mt2 mb2">
       <input class="field col-12" type="password" name="confirm" placeholder="confirm password" ng-model="confirmation" ng-change="updateForm()"/>
     </div>
+
+    <!-- SUBMIT -->
     <div class="mt2 mb2">
       <input class="btn sil-bg-green btn-primary col-12 p1" type="submit" value="Sign Up" ng-disabled="!isValid"/>
     </div>
+
   </form>
 
   <hr class="mt2 mb2">

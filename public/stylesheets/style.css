@@ -79,10 +79,13 @@ body {
 }
 .sil-modal-dialog {
   z-index: 10000;
-  width: 480px;
 }
 .sil-auth-modal {
   min-width: 300px;
+}
+.sil-horizontal-center {
+  margin-left: auto;
+  margin-right: auto;
 }
 .sil-absolute-center {
   top: 50%;
@@ -98,6 +101,9 @@ body {
 .sil-underline {
   text-decoration: underline;
 }
+.sil-fill-width {
+  width: 100%;
+}
 
 /* override basscss defaults */
 a {
@@ -106,3 +112,10 @@ a {
 ::-webkit-scrollbar { 
   display: none; 
 }
+input:focus{
+  outline: 0;
+}
+input:focus.ng-invalid {
+  border: 1px solid red;
+}
+

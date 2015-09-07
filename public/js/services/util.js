@@ -52,7 +52,7 @@
       authToken = undefined;
       isAuthenticated = false;
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
-      window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+      window.localStorage.removeItem( LOCAL_TOKEN_KEY );
     }
 
     return {

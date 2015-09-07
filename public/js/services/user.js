@@ -114,10 +114,14 @@
     var roomInfo;
     var userId;
     var username;
+    var hasJoined = false;
+    var message;
 
     // getters
     MyUser.getUsername = function() { return username; }
     MyUser.getUserId = function() { return userId; }
+    MyUser.isJoined = function() { return hasJoined; }
+    MyUser.getMessage= function() { return message; }
 
     MyUser.initializeUser = function( data ) {
       userId = data.userId;
@@ -135,14 +139,25 @@
       }
     }
 
-    MyUser.joinRoom = function( data, cb ) {
+    // when user enters the room (hits the URL) 
+    MyUser.enterRoom = function( data, cb ) {
       roomInfo = data;
       if( cb ) {
         cb();
       }
     }
 
-    // serialize for controller
+    // when user actively joins the room
+    MyUser.joinRoom = function( data, cb ) {
+      hasJoined = true;
+      message = data.message;
+      console.log( message );
+      if( cb ) {
+        cb();
+      }
+    }
+
+    // serialize for room controller
     MyUser.serialize = function( cb ) {
       return roomInfo;
       /*

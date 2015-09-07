@@ -5,7 +5,10 @@
      'silShareModal' --> share modal
      'silLoginModal' --> login modal
      'silSignupModal' --> signup modal
+     'silUserPageModal' --> confirmation to redirect to /home
+     'silJoinRoomModal' --> join-room modal
   */
+
   var app = angular.module( 'ModalDirectives', [ 'UserServices' ] );
 
   app.directive( 'silModal', function() {
@@ -159,6 +162,51 @@
       }
     };
 
+  }]);
+
+  app.directive( 'silJoinRoomModal',
+      [ '$rootScope', 'myUser', function( $rootScope, myUser ) {
+    
+    return {
+      restrict: 'E',
+      scope: {},
+      templateUrl: 'templates/sil-join-room-modal.html',
+      controller: function( $scope, $element ) {
+        $scope.username = myUser.getUsername();
+        $scope.hasMessage = false;
+        $scope.placeholder = "is present";
+        $scope.message = "";
+      },
+      link: function( scope, el, attr ) {
+
+        scope.messageChange = function() {
+          if( scope.message.length > 0 ) {
+            scope.hasMessage = true;
+          } else {
+            scope.hasMessage = false;
+          }
+        }
+
+        // 'cancel' is pressed
+        scope.cancel = function() {
+          $rootScope.$emit( 'modalSwitch', { modal: '' } );
+        };
+
+        // 'Submit' is pressed 
+        scope.joinRoom = function() {
+
+          // TODO should happen inside socket code
+          // callback:
+          myUser.joinRoom( { message: scope.message }, function() {
+            $rootScope.$emit( 'modalSwitch', { modal: '' } );
+            $rootScope.$emit( 'userUpdate' ); // maybe this should go elsewhere..
+          });
+
+        };
+
+      }
+    };
+        
   }]);
 
 })();
