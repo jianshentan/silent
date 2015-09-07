@@ -2,7 +2,7 @@ var express = require( 'express' );
 var router = express.Router();
 var authentication = require( './src/authentication' );
 
-module.exports = function( passport ) {
+module.exports = function( passport, jwtTokenizer ) {
 
   router.get( '/', function( req, res ) {
     res.render( 'index' );
@@ -17,47 +17,29 @@ module.exports = function( passport ) {
     res.render( 'room', { room: roomId } );
   });
 
-  var jwt = require( 'jsonwebtoken' );
-  router.post( '/login', function( req, res, next ) {
-    /* param:user - user from 'local-login' strategy
-       param:info - msg from 'local-login' strategy */
-    passport.authenticate( 'local-login', function( err, user, info ) {
-      if( err ) { return next(err); }
-
-      // login failed
-      if( !user ) { 
-        return res.send( info );
-      } 
-      // login success
-      else {
-        req.logIn( user, function( err ) {
-          if( err ) { return next( err ); }
-
-          // create token to send to user
-          // TODO decide what the package is
-          var package = { user: user };
-          var token = jwt.sign( package, req.app.get( 'secret' ), {
-            expiresInMinutes: 1440 * 30 // 1 month
-          });
-
-          return res.json({ 
-            success: true,
-            message: "",
-            token: token 
-          });
-        });
-      }
-
-    })( req, res, next );
-  }
-  );
-
-  router.post('/signup', function( req, res ) {
-    authentication.signup( req.body.username, req.body.password, function( err, userId ) {
-      res.json({
-        'userId': userId
-      });
+  /*
+   * If login fails the callback doesn't happen and the response is a 401
+   */
+  router.post( '/login', passport.authenticate( 'local-login' ), function( req, res ) {
+    res.json({ 
+      token: jwtTokenizer.sign( req.user )
     });
+  });
+
+  router.post( '/signup', function( req, res ) {
+    authentication.signup( req.body.username, req.body.password, function( err, user ) {
+      if( user ) {
+        res.json({ 
+          token: jwtTokenizer.sign( user )
+        });
+      } else {
+        res.status(422).send();
+      }
+    });
+  });
+
+  router.post( '/auth', passport.authenticate( 'bearer', { session: false }), function( req, res ) {
+    res.json( req.user );
   });
 
   router.get( '/login', function( req, res ) {

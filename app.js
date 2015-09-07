@@ -49,7 +49,9 @@ passport.deserializeUser(function(userId, done) {
 // configure Passport
 
 var LocalStrategy = require( 'passport-local' ).Strategy;
+var BearerStrategy = require('passport-http-bearer').Strategy;
 var authentication = require( './src/authentication' );
+var jwtTokenizer = authentication.jwtTokenizer( config.secret );
 
 passport.use( 'local-login', new LocalStrategy( {
 
@@ -59,15 +61,13 @@ passport.use( 'local-login', new LocalStrategy( {
 
 }, authentication.login ) );
 
-// set application secret
-app.set( 'secret', config.secret ); 
-
+passport.use( 'bearer', new BearerStrategy( jwtTokenizer.verify ));
 
 /* ================================================= 
    Routers -----------------------------------------
    ================================================= */
 
-app.use( '/', routes( passport ) );
+app.use( '/', routes( passport, jwtTokenizer ) );
 
 /* ================================================= 
    Error Management --------------------------------

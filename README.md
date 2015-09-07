@@ -39,7 +39,7 @@ TBD
         return:
             tbd            
 
-    '/<room_id>': 
+    '/@<room_id>': 
         GET request
         description:
           renders room view 
