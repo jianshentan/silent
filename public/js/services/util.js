@@ -45,13 +45,13 @@
       authToken = token;
 
       // Set the token as header for your requests
-      $http.defaults.headers.common['X-Auth-Token'] = token; 
+      $http.defaults.headers.common['Authorization'] = "Bearer " + token; 
     }
 
     function destroyUserCredentials() {
       authToken = undefined;
       isAuthenticated = false;
-      $http.defaults.headers.common['X-Auth-Token'] = undefined;
+      $http.defaults.headers.common['Authorization'] = undefined;
       window.localStorage.removeItem( LOCAL_TOKEN_KEY );
     }
 

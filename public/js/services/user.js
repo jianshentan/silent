@@ -82,15 +82,13 @@
     }
 
     function getUser( cb ) {
-      return $http.post( '/authenticate', {} )
+      return $http.post( '/auth', {} )
         .success( function( data ) {
+          myUser.initializeUser( { userId: '1234', username: 'js' } );
         })
         .error( function( data, status ) {
         })
         .finally( function() {
-          // should be in success
-          myUser.initializeUser( { userId: '1234', username: 'js' } );
-
           if( cb ) {
             cb();
           }
@@ -151,7 +149,6 @@
     MyUser.joinRoom = function( data, cb ) {
       hasJoined = true;
       message = data.message;
-      console.log( message );
       if( cb ) {
         cb();
       }
