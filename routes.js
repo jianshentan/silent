@@ -38,7 +38,7 @@ module.exports = function( passport, jwtTokenizer ) {
     });
   });
 
-  router.post( '/auth', passport.authenticate( 'bearer', { session: false }), function( req, res ) {
+  router.post( '/auth', passport.authenticate( 'bearer', { session: false } ), function( req, res ) {
     res.json( req.user );
   });
 

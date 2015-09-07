@@ -3,7 +3,8 @@
  * 
  * // data associated with user
  * user:[user_id] -> user HASH<
- *   'displayName' : STRING
+ *   'displayName' : STRING,
+ *   'message': STRING
  * >
  *
  * // for users signing on without external provider

@@ -165,7 +165,7 @@
   }]);
 
   app.directive( 'silJoinRoomModal',
-      [ '$rootScope', 'myUser', function( $rootScope, myUser ) {
+      [ '$rootScope', 'myUser', 'auth', function( $rootScope, myUser, auth ) {
     
     return {
       restrict: 'E',
@@ -195,7 +195,7 @@
         // 'Submit' is pressed 
         scope.joinRoom = function() {
 
-          if( myUser.isAuthorized() ) {
+          if( auth.isAuthenticated() ) {
 
             /* if user is logged in */
             // callback:
