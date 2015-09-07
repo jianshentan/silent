@@ -9,7 +9,7 @@ body {
   box-shadow: 1px 1px 8px #eee;
 }
 .sil-tab {
-  width: 295px;
+  width: 294px;
   height: 80px;
 }
 .sil-empty-tab {
@@ -45,16 +45,20 @@ body {
   font-size: .675rem;
 }
 .sil-green {
-  color: #39B54A
+  /*color: #39B54A;*/
+  color: #3333ff;
 }
 .sil-bg-green {
-  background-color: #39B54A
+  /*background-color: #39B54A;*/
+  background-color: #3333ff;
 }
 .sil-border-green {
-  border: 1px solid #39B54A;
+  /*border: 1px solid #39B54A;*/
+  border: 1px solid #3333ff;
 }
 .sil-border-green2 {
-  border: 2px solid #39B54A;
+  /*border: 2px solid #39B54A;*/
+  border: 2px solid #3333ff;
 }
 .sil-pointer {
   cursor: pointer;
@@ -103,6 +107,13 @@ body {
 }
 .sil-fill-width {
   width: 100%;
+}
+.sil-logo {
+  width: 60px;
+  height: auto;
+  bottom: -4px;
+  position: absolute;
+  left: 0px;
 }
 
 /* override basscss defaults */
