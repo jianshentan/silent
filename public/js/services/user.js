@@ -15,9 +15,14 @@
       getUser();
     }
 
-    // param:cb is optional
-    function login( username, password, cb ) {
-      return $http.post( '/login', { username: username, password: password } )
+    /* param:cb is optional
+     * info = {
+     *   username: <string>,
+     *   password: <string>
+     * }
+     */
+    function login( info, success, fail, finish ) {
+      return $http.post( '/login', { username: info.username, password: info.password } )
         .success( function( data ) {
           // if login is successful, store token
           var token = data.token;
@@ -30,25 +35,34 @@
           }
 
           myUser.initializeUser( data.user );
+
+          if( success ) {
+            success();
+          }
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
           tokenManager.destroyUserCredentials();
 
-          // Handle error
-          var message = data.message;
-          console.log( "ERR: " + message );
+          if( fail ) {
+            fail();
+          }
         })
         .finally( function() {
-          if( cb ) {
-            cb();
+          if( finish ) {
+            finish();
           }
         });
     }
 
-    // param:cb is optional
-    function signup( username, password, cb ) {
-      return $http.post( '/signup', { username: username, password: password } )
+    /* param:cb is optional
+     * info = {
+     *   username: <string>,
+     *   password: <string>
+     * }
+     */
+    function signup( info, success, fail, finish ) {
+      return $http.post( '/signup', { username: info.username, password: info.password } )
         .success( function( data ) {
           // if signup is successful, store token
           var token = data.token;
@@ -61,14 +75,18 @@
           }
 
           myUser.initializeUser( data.user );
+
+          if( success ) {
+            success();
+          }
         })
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
           tokenManager.destroyUserCredentials();
 
-          // Handle error
-          var message = data.message;
-          console.log( "ERR: " + message );
+          if( fail ) {
+            fail();
+          }
         })
         .finally( function() {
           if( cb ) {

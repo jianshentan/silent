@@ -75,10 +75,23 @@
         
         // called on submit
         scope.submitSignupForm = function() {
-          auth.signup( scope.username, scope.password, function() {
-            $rootScope.$emit( 'modalSwitch', { modal: '' } );
-            $rootScope.$emit( 'checkUserCredentials' );
-          });
+          var info = {
+            username: scope.username,
+            password: scope.password
+          }
+          auth.signup( info, 
+            // success
+            function() {
+              $rootScope.$emit( 'modalSwitch', { modal: '' } );
+              $rootScope.$emit( 'checkUserCredentials' );
+            },
+            // fail
+            function() {
+              scope.error = true;
+              scope.errorMessage = "The username already exist."; 
+              scope.password = "";
+              scope.confirmation = "";
+            });
         };
 
         // called when toggling between login & signup
@@ -124,10 +137,22 @@
 
         // called on submit
         scope.submitLoginForm = function() {
-          auth.login( scope.username, scope.password, function() {
-            $rootScope.$emit( 'modalSwitch', { modal: '' } );
-            $rootScope.$emit( 'checkUserCredentials' );
-          });
+          var info = {
+            username: scope.username,
+            password: scope.password
+          }
+          auth.login( info, 
+            //success
+            function() {
+              $rootScope.$emit( 'modalSwitch', { modal: '' } );
+              $rootScope.$emit( 'checkUserCredentials' );
+            }, 
+            //fail
+            function() {
+              scope.error = true;
+              scope.errorMessage = "Your username or password is incorrect.";
+              scope.password = "";
+            });
         };
 
         // called when toggling between login & signup
