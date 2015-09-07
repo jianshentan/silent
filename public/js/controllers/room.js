@@ -50,7 +50,11 @@
 
     // open join-room modal
     $scope.openJoinRoomModal = function() {
-      $rootScope.$emit( 'modalSwitch', { modal: 'join-room' } );
+      if( auth.isAuthenticated() ) {
+        $rootScope.$emit( 'modalSwitch', { modal: 'join-room' } );
+      } else {
+        $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
+      }
     };
 
     // logs user out

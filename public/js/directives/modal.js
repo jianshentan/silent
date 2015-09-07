@@ -195,12 +195,19 @@
         // 'Submit' is pressed 
         scope.joinRoom = function() {
 
-          // TODO should happen inside socket code
-          // callback:
-          myUser.joinRoom( { message: scope.message }, function() {
-            $rootScope.$emit( 'modalSwitch', { modal: '' } );
-            $rootScope.$emit( 'userUpdate' ); // maybe this should go elsewhere..
-          });
+          if( myUser.isAuthorized() ) {
+
+            /* if user is logged in */
+            // callback:
+            myUser.joinRoom( { message: scope.message }, function() {
+              $rootScope.$emit( 'modalSwitch', { modal: '' } );
+              $rootScope.$emit( 'userUpdate' ); // maybe this should go elsewhere..
+            });
+
+          } else {
+            // TODO handle if user is logged out
+
+          }
 
         };
 
