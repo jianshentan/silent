@@ -28,11 +28,7 @@
           var token = data.token;
           tokenManager.storeUserCredentials( token );
           
-          // TODO get user info and put into User module
-          data.user = {
-            userId: "1234",
-            username: "js"
-          }
+          data.user = {};
 
           myUser.initializeUser( data.user );
 
@@ -72,7 +68,7 @@
           data.user = {
             userId: "1234",
             username: "js"
-          }
+          };
 
           myUser.initializeUser( data.user );
 
@@ -118,7 +114,7 @@
       signup: signup,
       isAuthenticated: isAuthenticated,
       getUser: getUser
-    }    
+    };
   }]);
 
   /* My User Instance */
@@ -134,16 +130,16 @@
     var message;
 
     // getters
-    MyUser.getUsername = function() { return username; }
-    MyUser.getUserId = function() { return userId; }
-    MyUser.isJoined = function() { return hasJoined; }
-    MyUser.getMessage= function() { return message; }
+    MyUser.getUsername = function() { return username; };
+    MyUser.getUserId = function() { return userId; };
+    MyUser.isJoined = function() { return hasJoined; };
+    MyUser.getMessage= function() { return message; };
 
     MyUser.initializeUser = function( data ) {
       userId = data.userId;
       username = data.username;
       $rootScope.$emit( 'userUpdate' );
-    }
+    };
 
     // param:cb is optional
     MyUser.logout = function( cb ) {
@@ -153,7 +149,7 @@
       if( cb ) {
         cb();
       }
-    }
+    };
 
     // when user enters the room (hits the URL) 
     MyUser.enterRoom = function( data, cb ) {
@@ -161,7 +157,7 @@
       if( cb ) {
         cb();
       }
-    }
+    };
 
     // when user actively joins the room
     MyUser.joinRoom = function( data, cb ) {
@@ -170,7 +166,7 @@
       if( cb ) {
         cb();
       }
-    }
+    };
 
     // serialize for room controller
     MyUser.serialize = function( cb ) {
@@ -180,9 +176,9 @@
         username: username
       }
       */
-    }
+    };
 
-    return MyUser
+    return MyUser;
 
   }]);
 
@@ -215,7 +211,7 @@
     }
 
     /* private functions */
-    function somePrivateFunction() {};
+    function somePrivateFunction() {}
 
     /* public functions */
     User.prototype.getActiveDuration = function() {

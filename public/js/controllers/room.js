@@ -23,7 +23,7 @@
     $scope.showSignupModal = false;
 
     $scope.room = roomId;
-    $scope.user;
+    $scope.user = {};
     $scope.authenticated = auth.isAuthenticated();
     $scope.joinedRoom = myUser.isJoined(); 
 

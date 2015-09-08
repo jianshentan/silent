@@ -57,6 +57,7 @@ exports.start = function( io ) {
 
   // client is connected - 'socket' refers to the client
   io.on( 'connection', function( socket ) { 
+
     var roomId, userId, guest;
 
     var socketId = socket.id; // unique socket id for every time a socket is opened
