@@ -197,7 +197,7 @@
       scope: {},
       templateUrl: 'templates/sil-join-room-modal.html',
       controller: function( $scope, $element ) {
-        $scope.username = myUser.getUsername();
+        $scope.displayName = myUser.getDisplayName();
         $scope.hasMessage = false;
         $scope.placeholder = "is present";
         $scope.message = "";

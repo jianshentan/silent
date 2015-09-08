@@ -28,7 +28,7 @@
     $scope.joinedRoom = myUser.isJoined(); 
 
     if( $scope.authenticated ) {
-      $scope.username = auth.username;
+      $scope.displayName= myUser.getDisplayName();
     }
 
     /* MODAL BUTTONS =====================================*/
@@ -67,7 +67,7 @@
     // user-update event manager
     $rootScope.$on( 'userUpdate', function( event, args ) {
       $scope.user = myUser.serialize();
-      $scope.username = myUser.getUsername();
+      $scope.displayName = myUser.getDisplayName();
       $scope.joinedRoom = myUser.isJoined();
     });
  

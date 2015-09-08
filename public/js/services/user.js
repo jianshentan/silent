@@ -27,7 +27,6 @@
           // if login is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
-          data.user.username = "fake_username";
           myUser.initializeUser( data.user );
 
           if( success ) {
@@ -61,7 +60,6 @@
           // if signup is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
-          data.user.username = "fake_username";
           myUser.initializeUser( data.user );
 
           if( success ) {
@@ -119,19 +117,19 @@
 
     var roomInfo;
     var userId;
-    var username;
+    var displayName;
     var hasJoined = false;
     var message;
 
     // getters
-    MyUser.getUsername = function() { return username; }
+    MyUser.getDisplayName = function() { return displayName; }
     MyUser.getUserId = function() { return userId; }
     MyUser.isJoined = function() { return hasJoined; }
     MyUser.getMessage = function() { return message; }
 
     MyUser.initializeUser = function( data ) {
       userId = data.userId;
-      username = data.username;
+      displayName = data.displayName;
       $rootScope.$emit( 'userUpdate' );
     }
 
@@ -139,7 +137,7 @@
     MyUser.logout = function( cb ) {
       tokenManager.destroyUserCredentials();
       userId = null;
-      username = null;
+      displayName = null;
       if( cb ) {
         cb();
       }
@@ -165,11 +163,6 @@
     // serialize for room controller
     MyUser.serialize = function( cb ) {
       return roomInfo;
-      /*
-      return {
-        username: username
-      }
-      */
     }
 
     return MyUser
@@ -192,11 +185,13 @@
 
       /* public properties */
       this.userId = user.userId;
-      this.username = user.username;
       this.visitorCount = user.visitorCount;
       this.guest = user.guest;
       this.active = user.active;
 
+      //TODO 
+      var displayName = user.username;
+      this.displayName = displayName;
       this.message = " is present";
 
       /* this.time is used for 'am-time-ago' which updates active 
@@ -226,6 +221,4 @@
     return User;
   }]);
 
-
-  
 })();
