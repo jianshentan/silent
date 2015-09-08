@@ -15,13 +15,13 @@ exports.jwtTokenizer = function( jwtSecret ) {
   var tokenizer = {};
 
   tokenizer.sign = function( user ) {
-    return jwt.sign( user, jwtSecret, {
+    return jwt.sign( user.objectify(), jwtSecret, {
       expiresInMinutes: TOKEN_LIFE
     });
   };
 
   tokenizer.verify = function( token, cb ) {
-    jwt.verify( token, jwtSecret, cb );
+    jwt.verify( token, jwtSecret, cb ); 
   };
 
   return tokenizer;
@@ -56,12 +56,18 @@ exports.login = function( username, password, done ) {
           }
         });
       });
+    },
+
+    // and get the user
+    function( userId, cb ) {
+      User.getUserFromUserId( userId, cb );
     }
-  )( 'silent', username, function( err, userId ) {
+  
+  )( 'silent', username, function( err, user ) {
     if( err ) {
       done( null, false, { message: err } );
     } else {
-      done( null, new User( userId ) );
+      done( null, user );
     }
   });
 };
@@ -69,7 +75,7 @@ exports.login = function( username, password, done ) {
 /*
  * username::string
  * password::string
- * done::function( string, int ) // err, userId
+ * done::function( string, User ) // err, user
  */
 exports.signup = function( username, password, done ) {
   async.seq(
@@ -91,14 +97,14 @@ exports.signup = function( username, password, done ) {
 
       // and use it to create a user
       function( passwordHash, salt, cb ) {
-        User.createUser( username, passwordHash, salt, cb );
+        User.createInternalUser( username, passwordHash, salt, cb );
       }
 
-  )( 'silent', username, function( err, userId ) {
+  )( 'silent', username, function( err, user ) { 
     if( err ) {
-      done( null, false, { message: err } );
+      done( err, false, { message: err } );
     } else {
-      done( null, new User( userId ) );
+      done( null, user );
     }
   });
 };

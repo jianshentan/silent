@@ -61,7 +61,6 @@
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
-
  
     /* EVENT MANAGERS =====================================*/
 

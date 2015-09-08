@@ -1,20 +1,18 @@
 var rc = require( './db/redis' );
+var async = require( 'async' );
 
-module.exports = function( id ) {
+module.exports = User = function( id, userData ) {
 
   var userId = id;
-  var username = null;
+  var displayName = userData.displayName;
 
   this.getId = function() { return userId; }; 
-  this.setId = function( id ) { userId = id; }; 
 
-  this.getUsername = function() { return username; }; 
-  this.setUsername = function( name ) { username = name; }; 
-
-  this.client = function() {
+  this.objectify = function() {
     return {
-      username: username
-    }
+      userId: userId,
+      displayName: displayName
+    };
   };
 
 };
@@ -31,6 +29,45 @@ module.exports.getPasswordData = function( userId, cb ) {
   rc.internalUserPasswordData( userId, cb );
 };
 
-module.exports.createUser = function( username, passwordHash, salt, cb ) {
-  rc.createInternalUser( username, passwordHash, salt, cb );
+module.exports.createInternalUser = function( username, passwordHash, salt, next ) {
+
+  async.seq( 
+
+    // create the user
+    rc.createInternalUser,
+
+    // set username
+    function( userId, cb ) {
+      console.log( userId );
+      rc.alterUser( userId, { displayName: username }, function( err ) {
+        cb( err, userId );
+      } )
+    },
+
+    // get user from userid
+    this.getUserFromUserId
+
+  )( username, passwordHash, salt, next );
+
 };
+
+module.exports.getUserFromUserId = function( userId, next ) {
+
+  async.seq(
+
+    // get the user data
+    function( userId, cb ) {
+      rc.getUser( userId, function( err, userData ) {
+        cb( err, userId, userData );
+      });
+    },
+
+    // make user
+    function( userId, userData, cb ) {
+      cb( null, new User( userId, userData ) );
+    }
+
+  )( userId, next );
+
+};
+

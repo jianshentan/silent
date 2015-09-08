@@ -27,13 +27,7 @@
           // if login is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
-          
-          // TODO get user info and put into User module
-          data.user = {
-            userId: "1234",
-            username: "js"
-          }
-
+          data.user.username = "fake_username";
           myUser.initializeUser( data.user );
 
           if( success ) {
@@ -67,13 +61,7 @@
           // if signup is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
-
-          // TODO get user info and put into User module
-          data.user = {
-            userId: "1234",
-            username: "js"
-          }
-
+          data.user.username = "fake_username";
           myUser.initializeUser( data.user );
 
           if( success ) {
@@ -99,10 +87,11 @@
       return tokenManager.isAuthenticated();
     }
 
+    /* gets user by sending token */
     function getUser( cb ) {
       return $http.post( '/auth', {} )
-        .success( function( data ) {
-          myUser.initializeUser( { userId: '1234', username: 'js' } );
+        .success( function( user ) {
+          myUser.initializeUser( user );
         })
         .error( function( data, status ) {
         })
@@ -127,6 +116,7 @@
       function( tokenManager, $rootScope ) {
 
     var MyUser = {};
+
     var roomInfo;
     var userId;
     var username;
@@ -137,7 +127,7 @@
     MyUser.getUsername = function() { return username; }
     MyUser.getUserId = function() { return userId; }
     MyUser.isJoined = function() { return hasJoined; }
-    MyUser.getMessage= function() { return message; }
+    MyUser.getMessage = function() { return message; }
 
     MyUser.initializeUser = function( data ) {
       userId = data.userId;
