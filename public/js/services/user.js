@@ -11,9 +11,7 @@
       [ '$http', '$rootScope', 'tokenManager', 'myUser', 
       function( $http, $rootScope, tokenManager, myUser ) {
 
-    if( isAuthenticated() ) {
-      getUser();
-    }
+    getUser();
 
     /* param:cb is optional
      * info = {
@@ -75,8 +73,8 @@
           }
         })
         .finally( function() {
-          if( cb ) {
-            cb();
+          if( finish ) {
+            finish();
           }
         });
     }
@@ -86,18 +84,39 @@
     }
 
     /* gets user by sending token */
-    function getUser( cb ) {
-      return $http.post( '/auth', {} )
-        .success( function( user ) {
-          myUser.initializeUser( user );
-        })
-        .error( function( data, status ) {
-        })
-        .finally( function() {
-          if( cb ) {
-            cb();
-          }
-        });
+    function getUser( success, fail, finish ) {
+
+      // if there is a token (in local storage):
+      if( isAuthenticated() ) {
+        
+        $http.post( '/auth', {} )
+          .success( function( user ) {
+            myUser.initializeUser( user );
+
+            if( success ) {
+              success();
+            }
+          })
+          .error( function( data, status ) {
+            // Erase the token if the user fails to log in
+            tokenManager.destroyUserCredentials();
+
+            if( fail ) {
+              fail();
+            }
+          })
+          .finally( function() {
+            if( finish ) {
+              finish();
+            }
+          });
+
+      // if there is no token (in local storage):
+      } else {
+        if( fail ) {
+          fail();
+        }
+      }
     }
 
     return {
