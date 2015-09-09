@@ -7,13 +7,22 @@
   */
   var app = angular.module( 'TabDirectives', []);
 
-  app.directive( 'silJoinTab', function() {
+  app.directive( 'silJoinTab', 
+      [ '$rootScope', 'myUser', function( $rootScope, myUser ) {
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-join-tab.html'
+      templateUrl: 'templates/sil-join-tab.html',
+      controller: function( $scope, $element ) {
+        $scope.displayName = 'a guest';
+      },
+      link: function( scope, el, attr ) {
+        $rootScope.$on( 'userUpdate', function( event, args ) {
+          scope.displayName = myUser.getDisplayName();
+        });
+      }
     };
-  });
+  }]);
 
   app.directive( 'silUserTab', function() {
     return {
@@ -33,11 +42,12 @@
       scope: {},
       templateUrl: 'templates/sil-my-user-tab.html',
       controller: function( $scope, $element ) {
-        $scope.username = myUser.getUsername();
+        $scope.displayName = myUser.getDisplayName();
         $scope.message = myUser.getMessage();
       },
       link: function( scope, el, attr ) {
         $rootScope.$on( 'userUpdate', function( event, args ) {
+          scope.displayName = myUser.getDisplayName();
           scope.message = myUser.getMessage();
         });
       }

@@ -22,7 +22,8 @@ module.exports = function( passport, jwtTokenizer ) {
    */
   router.post( '/login', passport.authenticate( 'local-login' ), function( req, res ) {
     res.json({ 
-      token: jwtTokenizer.sign( req.user )
+      token: jwtTokenizer.sign( req.user ),
+      user: req.user.objectify()
     });
   });
 
@@ -30,7 +31,8 @@ module.exports = function( passport, jwtTokenizer ) {
     authentication.signup( req.body.username, req.body.password, function( err, user ) {
       if( user ) {
         res.json({ 
-          token: jwtTokenizer.sign( user )
+          token: jwtTokenizer.sign( user ),
+          user: user.objectify()
         });
       } else {
         res.status(422).send();

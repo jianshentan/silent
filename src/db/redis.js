@@ -47,7 +47,7 @@ var cbThrow = function( cb ) {
       console.error( err );
       cb( err ); // TODO: pass arguments here too
     } else {
-      cb.apply(this, arguments);
+      cb.apply( this, arguments );
     }
   };
 };
@@ -147,7 +147,9 @@ exports.createInternalUser = function( username, passwordHash, salt, done ) {
         rc.hmset( 'user-password:' + userId, {
           'passwordHash': passwordHash,
           'salt': salt,
-        }, cb);
+        }, function( err ) {
+          cb( err, userId );
+        });
       }
   )( SILENT, username, cbThrow( done ) );
 };
