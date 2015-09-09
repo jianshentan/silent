@@ -16,13 +16,9 @@
     }
 
     /* param:cb is optional
-     * info = {
-     *   username: <string>,
-     *   password: <string>
-     * }
      */
-    function login( info, success, fail, finish ) {
-      return $http.post( '/login', { username: info.username, password: info.password } )
+    function login( username, password, success, fail, finish ) {
+      return $http.post( '/login', { username: username, password: password } )
         .success( function( data ) {
           // if login is successful, store token
           var token = data.token;
@@ -49,13 +45,9 @@
     }
 
     /* param:cb is optional
-     * info = {
-     *   username: <string>,
-     *   password: <string>
-     * }
      */
-    function signup( info, success, fail, finish ) {
-      return $http.post( '/signup', { username: info.username, password: info.password } )
+    function signup( username, password, success, fail, finish ) {
+      return $http.post( '/signup', { username: username, password: password } )
         .success( function( data ) {
           // if signup is successful, store token
           var token = data.token;

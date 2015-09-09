@@ -62,11 +62,6 @@ exports.start = function( io ) {
 
     var socketId = socket.id; // unique socket id for every time a socket is opened
 
-    // TODO verify that this is working
-    var socketIp = socket.request.connection.remoteAddress;
-
-    var url = socket.request.headers.referer; // full url
-
     // client enters (hits the url as a guest)
     socket.on( 'enter', function( data ) {
       guest = true;
@@ -75,7 +70,7 @@ exports.start = function( io ) {
       guestId = 'guest' + visitorCount; // tentative username for guests / guestId 
       userId = roomId+":"+guestId;
 
-      console.log( "userId '" + userId+ "' entered '" + roomId + "'" );
+      console.log( "userId '" + userId + "' entered '" + roomId + "'" );
 
       // join room
       socket.join( roomId );
