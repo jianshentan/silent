@@ -13,6 +13,8 @@
 
     getUser();
 
+    this.isAuthenticated = false;
+
     /* param:cb is optional
      * info = {
      *   username: <string>,
@@ -79,19 +81,15 @@
         });
     }
 
-    function isAuthenticated() {
-      return tokenManager.isAuthenticated();
-    }
-
-    /* gets user by sending token */
+    /* checks authentication starts by getting the user by sending token */
     function getUser( success, fail, finish ) {
-
       // if there is a token (in local storage):
-      if( isAuthenticated() ) {
+      if( tokenManager.hasToken() ) {
         
         $http.post( '/auth', {} )
           .success( function( user ) {
             myUser.initializeUser( user );
+            this.isAuthenticated = true;
 
             if( success ) {
               success();
@@ -100,6 +98,7 @@
           .error( function( data, status ) {
             // Erase the token if the user fails to log in
             tokenManager.destroyUserCredentials();
+            this.isAuthenticated = false;
 
             if( fail ) {
               fail();
@@ -122,8 +121,9 @@
     return {
       login: login,
       signup: signup,
-      isAuthenticated: isAuthenticated,
-      getUser: getUser
+      getUser: getUser,
+      isAuthenticated: function() { return this.isAuthenticated; },
+      hasToken: tokenManager.hasToken
     }    
   }]);
 

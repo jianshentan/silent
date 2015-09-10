@@ -22,7 +22,7 @@
   app.factory( 'tokenManager', [ '$window', '$http', function( $window, $http ) {
 
     var LOCAL_TOKEN_KEY = "user_token";
-    var isAuthenticated = false;
+    var hasToken = false;
     var authToken;
 
     // call in the beginning to check if client has a token
@@ -41,7 +41,7 @@
     }
 
     function useUserCredentials( token ) {
-      isAuthenticated = true;
+      hasToken = true;
       authToken = token;
 
       // Set the token as header for your requests
@@ -50,7 +50,7 @@
 
     function destroyUserCredentials() {
       authToken = undefined;
-      isAuthenticated = false;
+      hasToken = false;
       $http.defaults.headers.common['Authorization'] = undefined;
       window.localStorage.removeItem( LOCAL_TOKEN_KEY );
     }
@@ -60,7 +60,7 @@
       storeUserCredentials: storeUserCredentials,
       useUserCredentials: useUserCredentials,
       destroyUserCredentials: destroyUserCredentials,
-      isAuthenticated: function() { return isAuthenticated; }
+      hasToken: function() { return hasToken; }
     };
 
   }]);

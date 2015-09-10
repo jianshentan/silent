@@ -24,12 +24,8 @@
 
     $scope.room = roomId;
     $scope.user;
-    $scope.authenticated = auth.isAuthenticated();
     $scope.joinedRoom = myUser.isJoined(); 
-
-    if( $scope.authenticated ) {
-      $scope.displayName= myUser.getDisplayName();
-    }
+    $scope.displayName = 'guest';
 
     /* MODAL BUTTONS =====================================*/
 
@@ -50,7 +46,7 @@
 
     // open join-room modal
     $scope.openJoinRoomModal = function() {
-      if( auth.isAuthenticated() ) {
+      if( auth.hasToken() ) {
         $rootScope.$emit( 'modalSwitch', { modal: 'join-room' } );
       } else {
         $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
@@ -69,6 +65,7 @@
       $scope.user = myUser.serialize();
       $scope.displayName = myUser.getDisplayName();
       $scope.joinedRoom = myUser.isJoined();
+      $scope.authenticated = auth.isAuthenticated();
     });
  
     // authentication event manager
@@ -127,7 +124,6 @@
     this.users = [];
 
     /* handle if user is logged in */
-    var loggedIn = auth.isAuthenticated();
     var userId = myUser.userId;
 
     /* private function > gets active/inactive users */
