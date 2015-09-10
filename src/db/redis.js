@@ -28,7 +28,7 @@
  *   'msg' : STRING
  * >
  *
- * acc-room-time:[room_id] -> time INTEGER //TODO
+ * room-acc-time:[room_id] -> time INTEGER //TODO
  *
  */
 
@@ -247,4 +247,19 @@ exports.userRooms = function( userId, cb ) {
  */
 exports.roomUsers = function( roomId, cb ) {
   rc.smembers( 'room-users:' + roomId, cbThrow( cb ) );
+};
+
+/*
+ * roomId::string
+ * cb::function( int, int )
+ */
+exports.accRoomTime = function( roomId, cb ) {
+  rc.smembers( 'room-acc-time:' + roomId, cbThrow( cb ) );
+};
+
+/*
+ * This operation is atomic
+ */
+exports.incrRoomTime = function( roomId, seconds, cb ) {
+  rc.incrby( 'room-acc-time:' + roomId, seconds, cbThrow( cb) );
 };

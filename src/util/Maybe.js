@@ -3,6 +3,8 @@ var Maybe = function( thing ) {
   this.value = this.isPresent ? thing : null;
 };
 
+Maybe.NOTHING = new Maybe(null);
+
 Maybe.prototype.map = function( fn ) {
   return this.isPresent ? new Maybe( fn( this.value) ) : this;
 };

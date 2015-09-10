@@ -1,10 +1,7 @@
 var rc = require( './db/redis' );
 var async = require( 'async' );
 
-module.exports = User = function( id, userData ) {
-
-  var userId = id;
-  var displayName = userData.displayName;
+module.exports = User = function( userId, displayName ) {
 
   this.getId = function() { return userId; }; 
 
@@ -14,7 +11,6 @@ module.exports = User = function( id, userData ) {
       displayName: displayName
     };
   };
-
 };
 
 module.exports.exists = function( provider, extId, cb ) {
@@ -41,7 +37,7 @@ module.exports.createInternalUser = function( username, passwordHash, salt, next
       console.log( userId );
       rc.alterUser( userId, { displayName: username }, function( err ) {
         cb( err, userId );
-      } )
+      });
     },
 
     // get user from userid
@@ -64,7 +60,7 @@ module.exports.getUserFromUserId = function( userId, next ) {
 
     // make user
     function( userId, userData, cb ) {
-      cb( null, new User( userId, userData ) );
+      cb( null, new User( userId, userData.displayName ) );
     }
 
   )( userId, next );
