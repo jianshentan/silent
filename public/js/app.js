@@ -12,11 +12,14 @@
   /* Config */
   app.config( 
       [ '$httpProvider', function( $httpProvider ) {
+        
     $httpProvider.interceptors.push( 'authInterceptor' );
+
   }]);
 
   /* Run */
-  app.run( [ '$window', 'tokenManager', 'auth', function( $window, tokenManager, auth ) {
+  app.run( [ '$window', 'tokenManager', 'auth', 
+      function( $window, tokenManager, auth ) {
 
     // in the beginning, check if client has a token
     tokenManager.loadUserCredentials( function() {
@@ -24,8 +27,10 @@
       auth.getUser();
     });
 
-    // if '/' but user is authenticated, then go to '/home'
-    if( $window.location.pathname == '/' ) {
+    // if '/', '/login' or '/signup' but user is authenticated, then go to '/home'
+    if( $window.location.pathname == '/' ||
+        $window.location.pathname == '/login' ||
+        $window.location.pathname == '/signup' ) {
       if( auth.isAuthenticated() ) {
         $window.location.href = '/home';
       } 
@@ -37,6 +42,7 @@
         $window.location.href = '/';
       }
     }
+
 
   }]);
 })();
