@@ -1,23 +1,27 @@
 var rc = require( './db/redis' );
 var async = require( 'async' );
+var curry = require( 'curry' );
 
-var Room = function( id ) {
-  var roomId = id;
+var Room = function( roomId ) {
+  this.roomId = roomId;
 
   this.objectify = function() {
     return {
       roomId: roomId
     };
   };
+};
 
-  this.occupants = function( cb ) {
-    rc.roomUsers( roomId, cb );
-  };
+Room.prototype.occupants = function() {
+  return curry( rc.roomUsers )( this.roomId );
+};
 
-  this.accumulatedTime = function( cb ) {
-    rc.accRoomTime( roomId, cb );
-  };
+Room.prototype.accTime = function() {
+  return curry( rc.accRoomTime )( this.roomId );
+};
 
+Room.prototype.incrAccTime = function() {
+  return curry( rc.incrRoomTime )( this.roomId );
 };
 
 module.exports = Room;
