@@ -25,13 +25,11 @@
     var hasToken = false;
     var authToken;
 
-    // call in the beginning to check if client has a token
-    loadUserCredentials();
-
-    function loadUserCredentials() {
+    function loadUserCredentials( cb ) {
       var token = $window.localStorage.getItem( LOCAL_TOKEN_KEY );
       if( token ) {
-        useUserCredentials( token );
+        hasToken = true;
+        useUserCredentials( token, cb );
       }
     }
 
@@ -40,12 +38,15 @@
       useUserCredentials( token );
     }
 
-    function useUserCredentials( token ) {
-      hasToken = true;
+    function useUserCredentials( token, cb ) {
       authToken = token;
 
       // Set the token as header for your requests
       $http.defaults.headers.common['Authorization'] = "Bearer " + token; 
+
+      if( cb ) {
+        cb();
+      }
     }
 
     function destroyUserCredentials() {

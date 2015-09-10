@@ -11,8 +11,6 @@
       [ '$http', '$rootScope', 'tokenManager', 'myUser', 
       function( $http, $rootScope, tokenManager, myUser ) {
 
-    getUser();
-
     this.isAuthenticated = false;
 
     /* param:cb is optional

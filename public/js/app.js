@@ -16,7 +16,13 @@
   }]);
 
   /* Run */
-  app.run( [ '$window', 'auth', function( $window, auth ) {
+  app.run( [ '$window', 'tokenManager', 'auth', function( $window, tokenManager, auth ) {
+
+    // in the beginning, check if client has a token
+    tokenManager.loadUserCredentials( function() {
+      // if so, check if the token is valid
+      auth.getUser();
+    });
 
     // if '/' but user is authenticated, then go to '/home'
     if( $window.location.pathname == '/' ) {
