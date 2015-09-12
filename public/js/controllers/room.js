@@ -70,6 +70,50 @@
  
     // authentication event manager
     $rootScope.$on( 'checkUserCredentials', function( event, args ) {
+(function() {
+
+  /* HomeControllers includes: 
+     'HomeController' --> manages home page
+  */
+  var app = angular.module( 'HomeControllers', [ 
+    'UserServices'
+  ]);
+
+  /* Main Controller for Home View */
+  app.controller( 'HomeController',
+      [ '$scope', '$rootScope', '$window', 'auth', 'myUser',
+      function( $scope, $rootScope, $window, auth, myUser ) {
+
+    $scope.authenticated = auth.isAuthenticated();
+    
+    $scope.logout = function() {
+      myUser.logout( function() {
+        $rootScope.$emit( 'checkUserCredentials' );
+        $window.location.href = '/';
+      })
+    };
+
+    $scope.searchQuery = "";
+    $scope.updateSearch = function() {
+      console.log( "hello" );
+    };
+    $scope.searchResults = [ "hello", "hello1", "hello2", "hello3", "hello4", "hello5" ];
+
+
+    /* EVENT MANAGERS =====================================*/
+
+    // user-update event manager
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = myUser.serialize();
+      $scope.displayName = myUser.getDisplayName();
+      $scope.authenticated = auth.isAuthenticated();
+    });
+
+  }]);
+
+})();
+
+
       $scope.authenticated = auth.isAuthenticated();
     });
 

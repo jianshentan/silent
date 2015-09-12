@@ -115,6 +115,73 @@ body {
   position: absolute;
   left: 0px;
 }
+.sil-display-image {
+  width: 28px;
+  height: 28px;
+  left: -28px;
+  top: -2px;
+  color: blue;
+}
+
+/* search */
+.sil-searchbox {
+}
+.sil-search {
+  border: 1px solid #3333ff;
+  max-width: 340px;
+  margin: 0 auto;
+}
+.sil-search-icon {
+  left: 10px;
+  line-height: 32px;
+}
+.sil-search-input {
+  border: 0px solid #fff;
+  background-color: rgba(0,0,0,0);
+  width: 90%;
+  margin-left: 10%;
+}
+.sil-search-results-wrapper {
+  top: 56px;
+  border: 1px solid #3333ff;
+  max-width: 340px;
+  margin: 0 auto;
+}
+.sil-search-results {
+  max-height: 260px;
+  overflow: scroll;
+}
+.sil-search-result {
+  border-bottom: 1px solid #bbb;
+}
+.sil-search-create {
+  word-wrap: break-word;
+}
+
+
+/* Up ARROW */
+.arrow-up:after, .arrow-up:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.arrow-up:after {
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #fff;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.arrow-up:before {
+  border-color: rgba(51, 51, 255, 0);
+  border-bottom-color: #3333ff;
+  border-width: 11px;
+  margin-left: -11px;
+}
 
 /* override basscss defaults */
 a {

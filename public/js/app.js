@@ -6,7 +6,8 @@
     'UtilServices',
     'UserServices',
     'ModalDirectives',
-    'TabDirectives'
+    'TabDirectives',
+    'SearchDirectives'
   ]);
 
   /* Config */

@@ -31,10 +31,17 @@
     </sil-modal>
 
     <nav class="bg-white sil-green flex flex-baseline px3 py3" >
-    <div class="sil-nav-options relative"><img class="sil-logo" src="/media/logo.png"></div>
+      <!-- LHS: logo -->
+      <div class="sil-nav-options relative"><img class="sil-logo" src="/media/logo.png"></div>
+
+      <!-- MIDDLE: room name -->
       <div class="flex-auto bold h2 center">{{ room }}</div>
+
+      <!-- RHS: user + share -->
       <div class="sil-nav-options right-align">
-        <div class="inline-block ml1" ng-show="authenticated">
+        <div class="inline-block ml1 relative" ng-show="authenticated">
+          
+          <div class="sil-display-image absolute inline-block border circle blue"></div>
           <div class="sil-nav-option sil-pointer center p1" ng-click="openUserPageModal()">
             {{ displayName }}
           </div>

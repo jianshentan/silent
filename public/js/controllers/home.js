@@ -9,8 +9,8 @@
 
   /* Main Controller for Home View */
   app.controller( 'HomeController',
-      [ '$scope', '$rootScope', '$window', 'auth', 'myUser',
-      function( $scope, $rootScope, $window, auth, myUser ) {
+      [ '$scope', '$rootScope', '$window', 'auth', 'myUser','$timeout',
+      function( $scope, $rootScope, $window, auth, myUser, $timeout ) {
 
     $scope.authenticated = auth.isAuthenticated();
     
@@ -20,6 +20,43 @@
         $window.location.href = '/';
       })
     };
+
+    $scope.searchQuery = "";
+    $scope.showSearchResults = false;
+
+    /* Update Search
+     * called on type inside the search input box
+     */
+    $scope.updateSearch = function() {
+      if( $scope.searchQuery.length < 1 ) {
+        $scope.showSearchResults = false;
+      } else {
+        $scope.showSearchResults = true;
+      }
+    };
+    $scope.searchResults = [ "hello", "hello1", "hello2", "hello3", "hello4", "hello5" ];
+
+    $scope.blur = function() {
+      $timeout( function() {
+        $scope.showSearchResults = false;
+      }, 1000 );
+    };
+
+    /* Enter Room 
+     * called when user clicks on the join/create button in the search result
+     */
+    $scope.enterRoom = function() {
+      $window.location.href = '/@'+$scope.searchQuery;
+    };
+
+    /* EVENT MANAGERS =====================================*/
+
+    // user-update event manager
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.user = myUser.serialize();
+      $scope.displayName = myUser.getDisplayName();
+      $scope.authenticated = auth.isAuthenticated();
+    });
 
   }]);
 
