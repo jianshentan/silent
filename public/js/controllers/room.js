@@ -23,7 +23,7 @@
     $scope.showSignupModal = false;
 
     $scope.room = roomId;
-    $scope.user;
+    $scope.user = {};
     $scope.joinedRoom = myUser.isJoined(); 
     $scope.displayName = 'guest';
 

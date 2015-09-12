@@ -14,13 +14,9 @@
     this.isAuthenticated = false;
 
     /* param:cb is optional
-     * info = {
-     *   username: <string>,
-     *   password: <string>
-     * }
      */
-    function login( info, success, fail, finish ) {
-      return $http.post( '/login', { username: info.username, password: info.password } )
+    function login( username, password, success, fail, finish ) {
+      return $http.post( '/login', { username: username, password: password } )
         .success( function( data ) {
           // if login is successful, store token
           var token = data.token;
@@ -47,13 +43,9 @@
     }
 
     /* param:cb is optional
-     * info = {
-     *   username: <string>,
-     *   password: <string>
-     * }
      */
-    function signup( info, success, fail, finish ) {
-      return $http.post( '/signup', { username: info.username, password: info.password } )
+    function signup( username, password, success, fail, finish ) {
+      return $http.post( '/signup', { username: username, password: password } )
         .success( function( data ) {
           // if signup is successful, store token
           var token = data.token;
@@ -122,7 +114,9 @@
       getUser: getUser,
       isAuthenticated: function() { return this.isAuthenticated; },
       hasToken: tokenManager.hasToken
-    }    
+      isAuthenticated: isAuthenticated,
+      getUser: getUser
+    };
   }]);
 
   /* My User Instance */
@@ -139,16 +133,16 @@
     var message;
 
     // getters
-    MyUser.getDisplayName = function() { return displayName; }
-    MyUser.getUserId = function() { return userId; }
-    MyUser.isJoined = function() { return hasJoined; }
-    MyUser.getMessage = function() { return message; }
+    MyUser.getDisplayName = function() { return displayName; };
+    MyUser.getUserId = function() { return userId; };
+    MyUser.isJoined = function() { return hasJoined; };
+    MyUser.getMessage = function() { return message; };
 
     MyUser.initializeUser = function( data ) {
       userId = data.userId;
       displayName = data.displayName;
       $rootScope.$emit( 'userUpdate' );
-    }
+    };
 
     // param:cb is optional
     MyUser.logout = function( cb ) {
@@ -158,7 +152,7 @@
       if( cb ) {
         cb();
       }
-    }
+    };
 
     // when user enters the room (hits the URL) 
     MyUser.enterRoom = function( data, cb ) {
@@ -166,7 +160,7 @@
       if( cb ) {
         cb();
       }
-    }
+    };
 
     // when user actively joins the room
     MyUser.joinRoom = function( data, cb ) {
@@ -175,14 +169,14 @@
       if( cb ) {
         cb();
       }
-    }
+    };
 
     // serialize for room controller
     MyUser.serialize = function( cb ) {
       return roomInfo;
-    }
+    };
 
-    return MyUser
+    return MyUser;
 
   }]);
 
@@ -217,7 +211,7 @@
     }
 
     /* private functions */
-    function somePrivateFunction() {};
+    function somePrivateFunction() {}
 
     /* public functions */
     User.prototype.getActiveDuration = function() {

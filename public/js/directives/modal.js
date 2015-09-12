@@ -75,11 +75,7 @@
         
         // called on submit
         scope.submitSignupForm = function() {
-          var info = {
-            username: scope.username,
-            password: scope.password
-          }
-          auth.signup( info, 
+          auth.signup( scope.username, scope.password, 
             // success
             function() {
               $rootScope.$emit( 'modalSwitch', { modal: '' } );
@@ -137,11 +133,7 @@
 
         // called on submit
         scope.submitLoginForm = function() {
-          var info = {
-            username: scope.username,
-            password: scope.password
-          }
-          auth.login( info, 
+          auth.login( scope.username, scope.password, 
             //success
             function() {
               $rootScope.$emit( 'modalSwitch', { modal: '' } );
@@ -210,7 +202,7 @@
           } else {
             scope.hasMessage = false;
           }
-        }
+        };
 
         // 'cancel' is pressed
         scope.cancel = function() {

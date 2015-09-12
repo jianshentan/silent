@@ -42,7 +42,7 @@
       authToken = token;
 
       // Set the token as header for your requests
-      $http.defaults.headers.common['Authorization'] = "Bearer " + token; 
+      $http.defaults.headers.common.Authorization = "Bearer " + token; 
 
       if( cb ) {
         cb();
@@ -52,7 +52,7 @@
     function destroyUserCredentials() {
       authToken = undefined;
       hasToken = false;
-      $http.defaults.headers.common['Authorization'] = undefined;
+      $http.defaults.headers.common.Authorization = undefined;
       window.localStorage.removeItem( LOCAL_TOKEN_KEY );
     }
 
@@ -96,7 +96,5 @@
         });
       }
     };
-
   }]);
-
 })();
