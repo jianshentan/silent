@@ -157,6 +157,9 @@ body {
 .sil-search-create {
   word-wrap: break-word;
 }
+.sil-search-result-meta {
+  margin-top: 2px;
+}
 
 
 /* Up ARROW */

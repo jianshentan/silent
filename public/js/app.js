@@ -1,10 +1,11 @@
 (function() {
 
   var app = angular.module( 'Silent', [ 
-    'HomeControllers',
-    'RoomControllers',
+    'HomeServices',
     'UtilServices',
     'UserServices',
+    'HomeControllers',
+    'RoomControllers',
     'ModalDirectives',
     'TabDirectives',
     'SearchDirectives'
@@ -43,7 +44,6 @@
         $window.location.href = '/';
       }
     }
-
 
   }]);
 })();

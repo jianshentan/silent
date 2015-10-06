@@ -14,13 +14,14 @@
       <div class="sil-searchbox flex-auto bold h3 center relative">
         <div class="sil-search rounded bg-darken-1 relative">
           <i class="fa fa-search sil-search-icon absolute"></i>
-          <input class="sil-search-input" placeholder="search/create rooms" type="text" ng-model="searchQuery"  ng-change="updateSearch()" ng-blur="blur()" />
+          <input class="sil-search-input" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-change="updateSearch()" ng-blur="blur()" />
           <div class="sil-search-results-wrapper rounded absolute sil-fill-width sil-shadow" ng-show="showSearchResults">
             <div class="sil-search-results arrow-up">
               <sil-search-result index="{{$index}}" ng-repeat="result in searchResults" info="result"></sil-search-result>
+              <sil-search-empty ng-show="searchResults.length == 0"></sil-search-empty>
             </div>
             <div class="sil-search-create rounded-bottom sil-bg-green py2 white h5 sil-pointer" ng-click="enterRoom()">
-              <div class="p1">be the first inside @{{ searchQuery }}</div>
+              <div class="p1">{{ joinText }} @{{ searchQuery }}</div>
             </div>
           </div>
         </div>

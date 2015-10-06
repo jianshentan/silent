@@ -6,11 +6,22 @@
     return {
       restrict: 'E',
       scope: {
-        index: "@"
+        index: "@",
+        info: "="
       },
       templateUrl: 'templates/sil-search-result.html',
       link: function( scope, element, attrs ) {
-        scope.name = "LOL";
+      }
+    };
+  });
+
+  app.directive( 'silSearchEmpty', function() {
+    return {
+      restrict: 'E',
+      scope: {
+      },
+      templateUrl: 'templates/sil-search-empty.html',
+      link: function( scope, element, attrs ) {
       }
     };
   });

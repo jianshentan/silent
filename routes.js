@@ -68,5 +68,19 @@ module.exports = function( passport, jwtTokenizer ) {
     ]);
   });
 
+  /* Search Bar */
+  router.get( '/search/:query', function( req, res ) {
+    var query = req.query.query;
+    res.json([
+      { name: "roomExample1", active: 123 },
+      { name: "roomExample2", active: 321 },
+      { name: "roomExample3", active: 432 },
+      { name: "roomExample4", active: 543 },
+      { name: "roomExample5", active: 654 },
+      { name: "roomExample6", active: 123 },
+      { name: "roomExample7", active: 123 },
+    ]);
+  });
+
   return router;
 };

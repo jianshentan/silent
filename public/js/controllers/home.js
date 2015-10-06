@@ -4,13 +4,19 @@
      'HomeController' --> manages home page
   */
   var app = angular.module( 'HomeControllers', [ 
-    'UserServices'
+    'UserServices',
+    'HomeServices'
   ]);
+
+  var JOIN_ROOM_TEXT_OPTIONS = {
+    joinAsFirst: "Be the first inside",
+    join: "Join"
+  };
 
   /* Main Controller for Home View */
   app.controller( 'HomeController',
-      [ '$scope', '$rootScope', '$window', 'auth', 'myUser','$timeout',
-      function( $scope, $rootScope, $window, auth, myUser, $timeout ) {
+      [ '$scope', '$rootScope', '$window', 'auth', 'myUser', '$timeout', 'search',
+      function( $scope, $rootScope, $window, auth, myUser, $timeout, search ) {
 
     $scope.authenticated = auth.isAuthenticated();
     
@@ -23,6 +29,16 @@
 
     $scope.searchQuery = "";
     $scope.showSearchResults = false;
+    $scope.joinText = JOIN_ROOM_TEXT_OPTIONS.joinAsFirst;
+
+    /* Keypress listener 
+     * called on keypress
+     */
+    $scope.onKeyPress = function( e ) {
+      if( e.which === 32 ) {
+        e.preventDefault(); 
+      }
+    };
 
     /* Update Search
      * called on type inside the search input box
@@ -31,11 +47,31 @@
       if( $scope.searchQuery.length < 1 ) {
         $scope.showSearchResults = false;
       } else {
-        $scope.showSearchResults = true;
+        search.search( $scope.searchQuery, 
+          // success
+          function( results ) {
+            $scope.searchResults = results;
+          }, 
+          // fail
+          null, 
+          // forever
+          function() {
+            $scope.showSearchResults = true;
+
+            // if query is a subset of searchResults, change Join Text
+            var results = $scope.searchResults;
+            for( var i in results ) {
+              if( results[i].name == $scope.searchQuery ) {
+                $scope.joinText = JOIN_ROOM_TEXT_OPTIONS.join;
+              }
+            }
+          });
       }
     };
-    $scope.searchResults = [ "hello", "hello1", "hello2", "hello3", "hello4", "hello5" ];
 
+    /* Blur
+     * called when user clicks out of the search bar
+     */
     $scope.blur = function() {
       $timeout( function() {
         $scope.showSearchResults = false;
