@@ -32,14 +32,15 @@
  *
  */
 
-var redis = require('redis');
+var redis = require( 'redis' );
 var rc = redis.createClient();
-var async = require('async');
+var async = require( 'async' );
+var maybe = require( '../util/maybe' );
 
 var SILENT = 'silent';
 
 /*
- * logs and propagates error
+ * logs and propagates error and makes results maybe
  */
 var cbThrow = function( cb ) {
   return function( err ) {
@@ -47,7 +48,10 @@ var cbThrow = function( cb ) {
       console.error( err );
       cb( err ); // TODO: pass arguments here too
     } else {
-      cb.apply( this, arguments );
+      var args = [].slice.call(arguments, 1) // remove the err and convert arguments to array
+                   .map( function( x ) { return maybe.ofNullable( x ); } );
+      args.unshift( null ); // put back the null err
+      cb.apply( this, args );
     }
   };
 };
@@ -243,7 +247,7 @@ exports.userRooms = function( userId, cb ) {
 
 /*
  * roomId::string
- * cb::function( int, [string] )
+ * cb::function( string, [string] )
  */
 exports.roomUsers = function( roomId, cb ) {
   rc.smembers( 'room-users:' + roomId, cbThrow( cb ) );

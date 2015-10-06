@@ -38,7 +38,7 @@ exports.login = function( username, password, done ) {
     // if exists, get user id, else done
     function( exists, cb ) {
       if( exists ) {
-        User.getUserId( username, cb );
+        User.getInternalUserId( username, cb );
       } else {
         cb( 'user does not exist' );
       }
