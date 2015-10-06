@@ -30,6 +30,8 @@
       if( token ) {
         hasToken = true;
         useUserCredentials( token, cb );
+      } else {
+        cb( null );
       }
     }
 

@@ -11,7 +11,7 @@
       [ '$http', '$rootScope', 'tokenManager', 'myUser', 
       function( $http, $rootScope, tokenManager, myUser ) {
 
-    this.isAuthenticated = false;
+    this.authenticated = false;
 
     /* param:cb is optional
      */
@@ -79,7 +79,7 @@
         $http.post( '/auth', {} )
           .success( function( user ) {
             myUser.initializeUser( user );
-            this.isAuthenticated = true;
+            this.authenticated = true;
 
             if( success ) {
               success();
@@ -88,7 +88,7 @@
           .error( function( data, status ) {
             // Erase the token if the user fails to log in
             tokenManager.destroyUserCredentials();
-            this.isAuthenticated = false;
+            this.authenticated = false;
 
             if( fail ) {
               fail();
@@ -102,19 +102,23 @@
 
       // if there is no token (in local storage):
       } else {
+        this.authenticated = false;
         if( fail ) {
           fail();
         }
       }
     }
 
+    function isAuthenticated() {
+      return this.authenticated;
+    }
+
     return {
       login: login,
       signup: signup,
+      isAuthenticated: isAuthenticated,
       getUser: getUser,
-      isAuthenticated: function() { return this.isAuthenticated; },
-      hasToken: tokenManager.hasToken,
-      getUser: getUser
+      hasToken: tokenManager.hasToken
     };
   }]);
 
