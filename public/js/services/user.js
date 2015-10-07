@@ -76,10 +76,12 @@
       // if there is a token (in local storage):
       if( tokenManager.hasToken() ) {
         
+        var auth = this;
+
         $http.post( '/auth', {} )
           .success( function( user ) {
             myUser.initializeUser( user );
-            this.authenticated = true;
+            auth.authenticated = true;
 
             if( success ) {
               success();
@@ -88,13 +90,17 @@
           .error( function( data, status ) {
             // Erase the token if the user fails to log in
             tokenManager.destroyUserCredentials();
-            this.authenticated = false;
+            auth.authenticated = false;
 
             if( fail ) {
               fail();
             }
           })
           .finally( function() {
+
+            // update user state 
+            $rootScope.$emit( 'userUpdate' );
+
             if( finish ) {
               finish();
             }
@@ -103,8 +109,12 @@
       // if there is no token (in local storage):
       } else {
         this.authenticated = false;
-        if( fail ) {
-          fail();
+
+        // update user state 
+        $rootScope.$emit( 'userUpdate' );
+
+        if( finish ) {
+          finish();
         }
       }
     }

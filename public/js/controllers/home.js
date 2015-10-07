@@ -19,6 +19,7 @@
       function( $scope, $rootScope, $window, auth, myUser, $timeout, search ) {
 
     $scope.authenticated = auth.isAuthenticated();
+    console.log( $scope.authenticated );
     
     $scope.logout = function() {
       myUser.logout( function() {
@@ -93,6 +94,7 @@
       $scope.displayName = myUser.getDisplayName();
       $scope.authenticated = auth.isAuthenticated();
     });
+
 
   }]);
 
