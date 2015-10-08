@@ -16,26 +16,6 @@ User.prototype.objectify = function() {
   };
 };
 
-var createInternalUser = function( username, passwordHash, salt, next ) {
-  async.seq( 
-
-    // create the user
-    rc.createInternalUser,
-
-    // set username
-    function( userId, cb ) {
-      rc.alterUser( userId, { displayName: username }, function( err ) {
-        cb( err, userId );
-      });
-    },
-
-    // get user from userid
-    this.getUser
-
-  )( username, passwordHash, salt, next );
-
-};
-
 /*
  * next::function( err, Maybe<User> )
  */
@@ -54,14 +34,40 @@ var getUser = function( userId, next ) {
 
     // make user
     function( userId, userData, cb ) {
-      cb( null, userData.map( function( ud ) { new User( ud.userId, ud.displayName ); } ) );
+      cb( null, userData.map( function( ud ) { return new User( ud.userId, ud.displayName ); } ) );
     }
 
   )( userId, next );
 };
 
+var createInternalUser = function( username, passwordHash, salt, next ) {
+  async.seq( 
+
+    // create the user
+    rc.createInternalUser,
+
+    // set username
+    function( userId, cb ) {
+      rc.alterUser( userId, { displayName: username }, function( err ) {
+        cb( err, userId );
+      });
+    },
+
+    // get user from userid
+    getUser
+
+  )( username, passwordHash, salt, next );
+
+};
+
+var exists = function( provider, extId, cb ) {
+  rc.getUserIdFromExtId( provider, extId, function( err, maybeUserId ) {
+    cb( err, maybeUserId.isPresent() );
+  });
+};
+
 module.exports = {
-  exists: rc.userExists, // fn( provider, extId, cb )
+  exists: exists,
   getInternalUserId: rc.getInternalUserId, // fn( username, cb )
   getInternalUserPasswordData: rc.internalUserPasswordData, // fn( userId, cb )
   createInternalUser: createInternalUser,

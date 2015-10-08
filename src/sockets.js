@@ -54,24 +54,33 @@ exports.start = function( io ) {
 
     // client enters (hits the url as a guest)
     socket.on( 'enter', function( data ) {
-      room = room.getRoom( data.roomId );
-      user = User.getUser( data.userId );
+      maybeRoom = room.getRoom( data.roomId );
+      maybeUser = User.getUser( data.userId );
 
-      console.log( "userId '" + user.id + "' entered '" + room.id + "'" );
+      if( maybeRoom.isPresent() && maybeUser.isPresent() ) {
+        var room = maybeRoom.value;
+        var user = maybeUser.value;
 
-      // join room
-      socket.join( room.id );
+        console.log( "userId '" + user.id + "' entered '" + room.id + "'" );
 
-      addUser( user, room, function() {
+        // join room
+        socket.join( room.id );
 
-        // sending to all clients in <roomId> channel except sender
-        socket.broadcast.to( room.id ).emit( 'visitor entered', { user: user } );
+        addUser( user, room, function() {
 
-        room.occupants( function(err, occupantIds) {
-          // send to current request socket client
-          socket.emit( 'entered', { user: user, users: occupantIds.map( function(x) { return parseInt(x); } } );
+          // sending to all clients in <roomId> channel except sender
+          socket.broadcast.to( room.id ).emit( 'visitor entered', { user: user.objectify() } );
+
+          room.occupants( function(err, occupantIds) {
+            // send to current request socket client
+            socket.emit( 'entered', { user: user,
+                                      users: occupantIds.map( function(x) { return parseInt(x); })
+            });
+          });
         });
-      });
+      } else {
+        console.log( "Invalid roomId (" + data.roomId + ") or userId (" + data.userId + ")" );
+      }
     });
     
     // client joins (as a user) TODO
