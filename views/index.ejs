@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 <html ng-app="Silent">
+  <% include partials/desktop %>
   <head>
     <% include partials/head %>
-    <script src="/js/lib/angular.min.js"></script>
   </head>
   <body class="bg-darken-1">
+    <% include partials/nav %>
+
+    <div class="sil-landing col-12 bg-yellow relative">
+      <div class="sil-landing-image" src="/media/bg.png"></div>
+      <div class="sil-landing-content sil-absolute-center absolute center">
+        <img class="sil-landing-logo center" src="/media/logo.png" />
+        <div class="sil-landing-text white h2 center bold">Let your presence speak for itself</div>
+      </div>
+    </div>
 
     <% include partials/scripts %>
   </body>

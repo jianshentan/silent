@@ -7,6 +7,9 @@ module.exports = function( passport, jwtTokenizer ) {
   router.get( '/', function( req, res ) {
     res.render( 'index' );
   });
+  router.get( '/m.', function( req, res ) {
+    res.render( 'm_index' );
+  });
 
   router.get( '/home', function( req, res ) {
     res.render( 'home' );
@@ -79,6 +82,10 @@ module.exports = function( passport, jwtTokenizer ) {
       { name: "roomExample5", active: 654 },
       { name: "roomExample6", active: 123 },
       { name: "roomExample7", active: 123 },
+      { name: "roomExample8", active: 123 },
+      { name: "roomExample9", active: 123 },
+      { name: "roomExample10", active: 123 },
+      { name: "roomExample11", active: 123 },
     ]);
   });
 

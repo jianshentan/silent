@@ -1,0 +1,44 @@
+
+<nav class="bg-white sil-green flex flex-baseline px3 py3 relative" ng-controller="NavController">
+  <!-- LHS: logo -->
+  <div class="sil-nav-options relative"><img class="sil-logo" src="/media/logo.png"/></div>
+
+  <!-- MIDDLE: search -->
+  <div class="sil-searchbox flex-auto bold h3 center relative">
+    <div class="sil-search rounded bg-darken-1 relative">
+      <i class="fa fa-search sil-search-icon absolute"></i>
+      <input class="sil-search-input" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-change="updateSearch()" ng-blur="blur()" />
+      <div class="sil-search-results-wrapper rounded absolute sil-fill-width sil-shadow" ng-show="showSearchResults">
+        <div class="sil-search-results arrow-up">
+          <sil-search-result index="{{$index}}" ng-repeat="result in searchResults" info="result"></sil-search-result>
+          <sil-search-empty ng-show="searchResults.length == 0"></sil-search-empty>
+        </div>
+        <div class="sil-search-create rounded-bottom sil-bg-green py2 white h5 sil-pointer" ng-click="enterRoom()">
+          <div class="p2">{{ joinText }} @{{ searchQuery }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RHS: user + logout -->
+  <div class="sil-nav-options right-align">
+    <div class="inline-block ml1 relative" ng-show="false">
+      <div class="sil-display-image absolute inline-block border circle blue"></div>
+      <div class="inline-block sil-nav-option center p1">
+        {{ displayName }} 
+      </div>
+    </div>
+    <div class="inline-block ml1" ng-show="authenticated">
+      <div class="sil-nav-option sil-pointer center p1">
+        <span ng-click="logout()">Logout</span>
+      </div>
+    </div>
+    <div class="inline-block ml1" ng-hide="authenticated">
+      <div class="sil-nav-option sil-pointer center p1">
+        <a href="/login">Login</a> / <a href="/signup">Signup</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+

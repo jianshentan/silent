@@ -1,0 +1,22 @@
+<nav class="sil-green flex flex-baseline flex-justify absolute" ng-controller="NavController">
+  <!-- LHS: logo -->
+  <div class="sil-searchbox">
+    <div class="sil-search fixed" ng-class="{ 'bg-white': showSearchResults }">
+      <i class="fa white fa-search sil-search-icon absolute" ng-class="{ 'sil-green': showSearchResults }"></i>
+      <input class="sil-search-input sil-green" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-click="openSearch()" ng-change="updateSearch()" ng-blur="blur()" />
+      <i class="fa fa-times sil-green absolute sil-search-close-icon" ng-show="showSearchResults" ng-click="closeSearch()"></i>
+    </div>
+    <div class="sil-search-results-wrapper absolute sil-fill-width sil-shadow" ng-show="showSearchResults" ng-class="{ 'bg-white': showSearchResults }">
+      <div class="sil-search-create rounded-bottom sil-bg-green py2 white h5 sil-pointer" ng-click="enterRoom()">
+        <div class="p2">{{ joinText }} @{{ searchQuery }}</div>
+      </div>
+      <div class="sil-search-results">
+        <sil-search-result index="{{$index}}" ng-repeat="result in searchResults" info="result"></sil-search-result>
+        <sil-search-empty ng-show="searchResults.length == 0"></sil-search-empty>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
