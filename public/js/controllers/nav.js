@@ -96,7 +96,7 @@
 
     /* HANDLE MOBILE QUIRKS ============================== */
     if( $rootScope.isMobile ) {
-      console.log( "HERE" );
+
       /* Open Search
        * called when user clicks on the search bar
        */

@@ -181,7 +181,7 @@ nav {
   height: 86vh;
   max-height: 800px;
   overflow:hidden;
-  z-index: -1000;
+  /* z-index: -1000;*/
 }
 .sil-landing-content {
   margin-top: -5vh;
