@@ -1,0 +1,36 @@
+<div class="sil-auth-modal bg-white sil-screen-px" >
+
+  <div class="h1 sil-green mb1">Login to Silent</div>
+  <div class="h5 gray">Let your presence speak loudly</div>
+  <div class="red mt1" ng-show="error">{{ errorMessage }}</div>
+
+  <form class="mt2 mb2" ng-submit="submitLoginForm()">
+
+    <!-- USERNAME -->
+    <div class="mt2 mb2">
+      <input class="field col-12" ng-model="username" type="text" name="username" placeholder="username" ng-change="updateForm()"/>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="mt2 mb2">
+      <input class="field col-12" type="password" name="password" placeholder="password" ng-model="password" ng-change="updateForm()"/>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="mt2 mb2">
+      <input class="btn sil-bg-green btn-primary col-12 p1" type="submit" value="Log In" ng-disabled="!isValid"/>
+    </div>
+
+  </form>
+
+  <hr class="mt2 mb2">
+
+  <div class="mt2 mb2">
+    <input class="btn btn-primary col-12 p1" type="submit" value="Log In via Facebook"/>
+  </div>
+
+  <div class="gray">
+    Don't have an account? <span class="sil-underline sil-pointer" ng-click="toggleAuthentication()">Signup</span>
+  </div>
+
+</div>

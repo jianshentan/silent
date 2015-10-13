@@ -1,16 +1,21 @@
 body {
-  width: 100vw;
   height: 100vh;
   min-width: inherit;
   min-height: inherit;
 }
 nav {
-  width: 100vw;
   font-size: 5vw;
 }
-.sil-searchbox {
-  width: 100vw;  
+.sil-screen-width {
+  width: 100vw;
 }
+.sil-screen-px {
+  padding-left: 5vw;
+  padding-right: 5vw;
+  width: 90vw;
+}
+
+/* MOBILE SEARCH BOX */
 .sil-search,
 .sil-search-create,
 .sil-search-result {
@@ -19,7 +24,6 @@ nav {
 }
 .sil-search {
   border: 0px;
-  width: 100vw;
   max-width: inherit;
   border-bottom: 3px solid #3333ff;
   z-index: 1000;
@@ -35,12 +39,13 @@ nav {
 .sil-search-input:-moz-placeholder { color: #fff; } /* Firefox 18- */
 .sil-search-input::-moz-placeholder { color: #fff; }  /* Firefox 19+ */
 .sil-search-input:-ms-input-placeholder { color: #fff;}
+
+/* MOBILE SEARCH BOX RESULTS  */
 .sil-search-results-wrapper {
   max-width: inherit;
   border: 0px;
 }
 .sil-search-results {
-  width: 100vw;
   border-radius: 0px;
   height: 100vh;
   max-height: inherit;
@@ -51,7 +56,6 @@ nav {
 }
 .sil-search-create {
   padding: 0px;
-  width: 100vw;
   border-radius: 0px;
 }
 .sil-search-create > div {
@@ -61,6 +65,8 @@ nav {
 .sil-search-result-meta {
   float: inherit;
 }
+
+/* MOBILE LANDING PAGE*/
 .sil-landing {
   height: 100vh;
 }
@@ -77,3 +83,10 @@ nav {
   font-size: 5vw;
 }
 
+/* MOBILE LOGIN/SIGNUP */
+.sil-auth-modal {
+  min-width: inherit;
+}
+.sil-login-signup-nav {
+  border-bottom: 3px solid #3333ff;
+}

@@ -7,7 +7,7 @@ module.exports = function( passport, jwtTokenizer ) {
   router.get( '/', function( req, res ) {
     res.render( 'index' );
   });
-  router.get( '/m.', function( req, res ) {
+  router.get( '/m_', function( req, res ) {
     res.render( 'm_index' );
   });
 
@@ -50,9 +50,15 @@ module.exports = function( passport, jwtTokenizer ) {
   router.get( '/login', function( req, res ) {
     res.render( 'login' );
   });
+  router.get( '/m_login', function( req, res ) {
+    res.render( 'm_login' );
+  });
 
   router.get( '/signup', function( req, res ) {
     res.render( 'signup' );
+  });
+  router.get( '/m_signup', function( req, res ) {
+    res.render( 'm_signup' );
   });
 
   router.get( '/trending', function( req, res ) {

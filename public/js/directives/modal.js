@@ -42,13 +42,18 @@
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-signup-modal.html',
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ? 
+          'templates/m-sil-signup-modal.html' :
+          'templates/sil-signup-modal.html';
+      },
 
       controller: function( $scope, $element ) {
 
         $scope.isValid = false;
         // TODO consider using $location for more robust functionality
-        $scope.isSignupPage = window.location.pathname == '/signup';
+        $scope.isSignupPage = window.location.pathname == '/signup' ||
+                              window.location.pathname == '/m_signup';
 
         // form fields
         $scope.username = "";
@@ -92,7 +97,11 @@
 
         // called when toggling between login & signup
         scope.toggleAuthentication = function() {
-          $rootScope.$emit( 'modalSwitch', { modal: 'login' } );
+          if( scope.isSignupPage ) {
+            window.location.href = "/login";
+          } else {
+            $rootScope.$emit( 'modalSwitch', { modal: 'login' } );
+          }
         };
       }
 
@@ -105,13 +114,18 @@
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-login-modal.html',
-      
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ? 
+          'templates/m-sil-login-modal.html' :
+          'templates/sil-login-modal.html';
+      },
+
       controller: function( $scope, $element ) {
 
         $scope.isValid = false;
         // TODO consider using $location for more robust functionality
-        $scope.isLoginPage = window.location.pathname == '/login';
+        $scope.isLoginPage = window.location.pathname == '/login' ||
+                             window.location.pathname == '/m_login';
 
         // form fields
         $scope.username = "";
@@ -149,7 +163,11 @@
 
         // called when toggling between login & signup
         scope.toggleAuthentication = function() {
-          $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
+          if( scope.isLoginPage ) {
+            window.location.href = "/signup";
+          } else {
+            $rootScope.$emit( 'modalSwitch', { modal: 'signup' } );
+          }
         };
 
       }
