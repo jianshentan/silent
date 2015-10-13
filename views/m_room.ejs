@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="Silent">
+
+  <head>
+    <% include partials/head %>
+    <% include partials/mobile %>
+  </head>
+  
+  <body class="bg-white" ng-controller="RoomController">
+
+    <!-- get modals ready -->
+
+    <sil-modal show="showShareModal">
+      <sil-share-modal></sil-share-modal>
+    </sil-modal>
+
+    <sil-modal show="showLoginModal">
+      <sil-login-modal></sil-login-modal>
+    </sil-modal>
+
+    <sil-modal show="showSignupModal">
+      <sil-signup-modal></sil-signup-modal>
+    </sil-modal>
+
+    <sil-modal show="showUserPageModal">
+      <sil-user-page-modal></sil-user-page-modal>
+    </sil-modal>
+
+    <sil-modal show="showJoinRoomModal">
+      <sil-join-room-modal></sil-join-room-modal>
+    </sil-modal>
+
+    <nav class="sil-room-nav sil-screen-px bg-white sil-green py2 flex fixed sil-shadow" >
+      <!-- LHS: logo -->
+      <div class="sil-nav-options relative"><img class="sil-logo align-middle" src="/media/logo.png"></div>
+
+      <!-- MIDDLE: room name -->
+      <div class="right bold h3">{{ room }}</div>
+    </nav>
+
+    <div class="sil-room-tabs flex flex-wrap clearfix m2 sil-justify-center" ng-controller="UserListController">
+
+      <!-- user tabs -->
+      <sil-join-tab class="sil-pointer" ng-click="openJoinRoomModal()" ng-hide="joinedRoom"></sil-join-tab>
+      <sil-my-user-tab class="sil-pointer" ng-show="joinedRoom"></sil-my-user-tab>
+      <sil-user-tab ng-repeat="user in activeUsers" info="user" class="sil-pointer"></sil-user-tab>
+      <sil-user-tab class="muted sil-pointer" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
+
+      <!-- empty tabs to left-align last row (TODO: find more elegant solution)-->
+      <div class="sil-tab m1 sil-empty-tab"></div>
+      <div class="sil-tab m1 sil-empty-tab"></div>
+      <div class="sil-tab m1 sil-empty-tab"></div>
+      <div class="sil-tab m1 sil-empty-tab"></div>
+    </div>
+
+    <% include partials/scripts %>
+
+  </body>
+</html>

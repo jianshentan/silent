@@ -1,0 +1,37 @@
+<div class="sil-bg-green rounded-top white py2 center h4">
+  Join <span class="bold"> {{ $parent.room }} </span>
+</div>
+<div class="sil-auth-modal bg-white p3" >
+
+  <div class="">Your presence:</div>
+  <!-- based off: sil-user-tab.html -->
+  <div class="sil-join-tab bg-darken-2 rounded muted border mt2 mb2 table relative sil-horizontal-center">
+    <div class="table-cell h6 align-middle">
+      <div class="px2 table">
+        <div class="table-cell align-middle"><div class="sil-tab-image bg-white circle border mr1"></div></div>
+        <div class="table-cell align-middle">
+          <span class="bold">{{ displayName }}</span> - 
+          <span class="" ng-hide="hasMessage">{{ placeholder}} </span>
+          <span class="" ng-show="hasMessage">{{ message }} </span>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  <form name="joinRoom" ng-submit="joinRoom()">
+
+    <!-- MESSAGE -->
+    <div class="">Your Message:</div>
+    <div class="mb2 mt2">
+      <input type="text" class="border sil-fill-width" placeholder="{{placeholder}}" ng-model="message" ng-maxlength="100" ng-change="messageChange()"></input>
+    </div>
+
+    <!-- CANCEL/SUBMIT -->
+    <div class="center sil-fill-width mt3">
+      <input class="btn col-4 sil-bg-green white rounded mr1 px2 py1 inline-block sil-pointer" type="button" value="Cancel" ng-click="cancel()"></input>
+      <input class="btn col-4 sil-bg-green white rounded ml1 px2 py1 inline-block sil-pointer" type="submit" value="Join"></input>
+    </div>
+
+  </div>
+
+</div>

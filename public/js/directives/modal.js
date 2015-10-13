@@ -205,7 +205,13 @@
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-join-room-modal.html',
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ? 
+          'templates/m-sil-join-room-modal.html' :
+          'templates/sil-join-room-modal.html';
+      },
+
+
       controller: function( $scope, $element ) {
         $scope.displayName = myUser.getDisplayName();
         $scope.hasMessage = false;

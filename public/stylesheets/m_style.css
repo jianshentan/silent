@@ -14,6 +14,11 @@ nav {
   padding-right: 5vw;
   width: 90vw;
 }
+.sil-screen-mx {
+  margin-left: 5vw;
+  margin-right: 5vw;
+  width: 90vw;
+}
 
 /* MOBILE SEARCH BOX */
 .sil-search,
@@ -89,4 +94,23 @@ nav {
 }
 .sil-login-signup-nav {
   border-bottom: 3px solid #3333ff;
+}
+
+/* MOBILE ROOM PAGE */
+.sil-logo {
+  width: 50px;
+  height: auto;
+}
+.sil-tab {
+  width: 88vw;
+}
+.sil-room-nav {
+  top: 0px;
+}
+.sil-room-tabs {
+  margin-top: 64px;
+}
+.sil-join-tab {
+  width: 100%;
+  height: 64px;
 }
