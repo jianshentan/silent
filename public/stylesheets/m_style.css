@@ -19,6 +19,21 @@ nav {
   margin-right: 5vw;
   width: 90vw;
 }
+.sil-screen-mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90vw;
+}
+.sil-screen-mx2 {
+  margin-left: 5vw;
+  margin-right: 5vw;
+  width: 80vw;
+}
+.sil-screen-mx2-auto {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80vw;
+}
 
 /* MOBILE SEARCH BOX */
 .sil-search,
@@ -114,3 +129,7 @@ nav {
   width: 100%;
   height: 64px;
 }
+.sil-modal-dialog {
+  width: 90vw;  
+}
+

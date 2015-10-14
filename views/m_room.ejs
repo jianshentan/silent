@@ -14,6 +14,10 @@
       <sil-share-modal></sil-share-modal>
     </sil-modal>
 
+    <sil-modal show="showUserPageModal">
+      <sil-user-page-modal></sil-user-page-modal>
+    </sil-modal>
+
     <sil-modal show="showLoginModal">
       <sil-login-modal></sil-login-modal>
     </sil-modal>
@@ -22,17 +26,13 @@
       <sil-signup-modal></sil-signup-modal>
     </sil-modal>
 
-    <sil-modal show="showUserPageModal">
-      <sil-user-page-modal></sil-user-page-modal>
-    </sil-modal>
-
     <sil-modal show="showJoinRoomModal">
       <sil-join-room-modal></sil-join-room-modal>
     </sil-modal>
 
     <nav class="sil-room-nav sil-screen-px bg-white sil-green py2 flex fixed sil-shadow" >
       <!-- LHS: logo -->
-      <div class="sil-nav-options relative"><img class="sil-logo align-middle" src="/media/logo.png"></div>
+      <a href="/" class="sil-nav-options"><div class="relative"><img class="sil-logo align-middle" src="/media/logo.png"></div></a>
 
       <!-- MIDDLE: room name -->
       <div class="right bold h3">{{ room }}</div>
