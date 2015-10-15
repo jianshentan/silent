@@ -138,6 +138,7 @@
       signup: signup,
       isAuthenticated: isAuthenticated,
       getUser: getUser,
+      isAuthenticated: function() { return this.isAuthenticated; },
       hasToken: tokenManager.hasToken
     };
   }]);

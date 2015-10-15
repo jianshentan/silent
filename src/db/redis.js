@@ -32,14 +32,15 @@
  *
  */
 
-var redis = require('redis');
+var redis = require( 'redis' );
 var rc = redis.createClient();
-var async = require('async');
+var async = require( 'async' );
+var maybe = require( '../util/maybe' );
 
 var SILENT = 'silent';
 
 /*
- * logs and propagates error
+ * logs and propagates error and makes results maybe
  */
 var cbThrow = function( cb ) {
   return function( err ) {
@@ -49,6 +50,15 @@ var cbThrow = function( cb ) {
     } else {
       cb.apply( this, arguments );
     }
+  };
+};
+
+var convertNullsToMaybes = function( cb ) {
+  return function() {
+    var args = [].slice.call(arguments, 1) // remove the err and convert arguments to array
+                 .map( function( x ) { return maybe.ofNullable( x ); } );
+    args.unshift( null ); // put back the null err
+    cb.apply( this, args );
   };
 };
 
@@ -72,32 +82,23 @@ var wrapRedisCommand = function( functionName ) {
 /*
  * provider::string
  * extId::string
- * cb::function( string, int )
+ * cb::function( string, Maybe<int> )
  */
 exports.getUserIdFromExtId = function( provider, extId, cb ) {
-  rc.get( 'user-id:ext-id:' + provider + ':' + extId, cbThrow( cb ) );
+  rc.get( 'user-id:ext-id:' + provider + ':' + extId, convertNullsToMaybes( cbThrow( cb ) ) );
 };
 
 /*
  * userId::int
- * cb::function( string, user )
+ * cb::function( string, Maybe<user> )
  */
 exports.getUser = function( userId, cb ) {
-  rc.hgetall( 'user:' + userId, cbThrow( cb ) );
-};
-
-/*
- * provider::string
- * extId::string
- * cb::function( string, boolean )
- */
-exports.userExists = function( provider, extId, cb ) {
-  rc.exists( 'user-id:ext-id:' + provider + ':' + extId, cbThrow( cb ) );
+  rc.hgetall( 'user:' + userId, convertNullsToMaybes( cbThrow( cb ) ) );
 };
 
 /*
  * userId::int
- * cb::function( string, passwordData )
+ * cb::function( string, maybe<passwordData> )
  *
  * where
  * passwordData::{
@@ -107,7 +108,7 @@ exports.userExists = function( provider, extId, cb ) {
  *
  */
 exports.internalUserPasswordData = function( userId, cb ) {
-  rc.hgetall( 'user-password:' + userId, cbThrow( cb ) );
+  rc.hgetall( 'user-password:' + userId, convertNullsToMaybes( cbThrow( cb ) ) );
 };
 
 /*
@@ -169,7 +170,7 @@ exports.createExternalUser = function( provider, extId, done ) {
 
 var getUserId = function( provider, extId, done ) {
   var rkey = 'user-id:ext-id:' + provider + ':' + extId;
-  rc.get( rkey, done );
+  rc.get( rkey, convertNullsToMaybes( done ) );
 };
 
 /*
@@ -178,7 +179,7 @@ var getUserId = function( provider, extId, done ) {
  * done::function( string, int )
  */
 exports.getInternalUserId = function( username, done ) {
-  getUserId( SILENT, username, done );
+  getUserId( SILENT, username, cbThrow( done ) );
 };
 
 /*
@@ -190,7 +191,7 @@ exports.getExternalUserId = function( provider, extId, done ) {
   if ( provider == SILENT ) {
     cb( 'Provider may not be ' + SILENT );
   } else {
-    getUserId( provider, extId, done );
+    getUserId( provider, extId, cbThrow( done ) );
   }
 };
 
@@ -243,7 +244,7 @@ exports.userRooms = function( userId, cb ) {
 
 /*
  * roomId::string
- * cb::function( int, [string] )
+ * cb::function( string, [string] )
  */
 exports.roomUsers = function( roomId, cb ) {
   rc.smembers( 'room-users:' + roomId, cbThrow( cb ) );
@@ -261,5 +262,5 @@ exports.accRoomTime = function( roomId, cb ) {
  * This operation is atomic
  */
 exports.incrRoomTime = function( roomId, seconds, cb ) {
-  rc.incrby( 'room-acc-time:' + roomId, seconds, cbThrow( cb) );
+  rc.incrby( 'room-acc-time:' + roomId, seconds, cbThrow( cb ) );
 };
