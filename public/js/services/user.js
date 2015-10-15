@@ -16,12 +16,16 @@
     /* param:cb is optional
      */
     function login( username, password, success, fail, finish ) {
+
+      var auth = this;
+
       return $http.post( '/login', { username: username, password: password } )
         .success( function( data ) {
           // if login is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
           myUser.initializeUser( data.user );
+          auth.authenticated = true;
 
           if( success ) {
             success();
@@ -30,6 +34,7 @@
         .error( function( data, status ) {
           // Erase the token if the user fails to log in
           tokenManager.destroyUserCredentials();
+          auth.authenticated = false;
 
           if( fail ) {
             fail();
@@ -45,12 +50,16 @@
     /* param:cb is optional
      */
     function signup( username, password, success, fail, finish ) {
+
+      var auth = this;
+
       return $http.post( '/signup', { username: username, password: password } )
         .success( function( data ) {
           // if signup is successful, store token
           var token = data.token;
           tokenManager.storeUserCredentials( token );
           myUser.initializeUser( data.user );
+          auth.authenticated = true;
 
           if( success ) {
             success();
@@ -59,6 +68,7 @@
         .error( function( data, status ) {
           // Erase the token if the user fails to sign up 
           tokenManager.destroyUserCredentials();
+          auth.authenticated = false;
 
           if( fail ) {
             fail();

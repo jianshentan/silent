@@ -90,8 +90,13 @@
           auth.signup( scope.username, scope.password, 
             // success
             function() {
+
+              // close modal 
               $rootScope.$emit( 'modalSwitch', { modal: '' } );
-              $rootScope.$emit( 'checkUserCredentials' );
+
+              // update authentication status in the room controller
+              $rootScope.$emit( 'userUpdate' );
+
             },
             // fail
             function() {
@@ -157,8 +162,13 @@
           auth.login( scope.username, scope.password, 
             //success
             function() {
+
+              // close modal 
               $rootScope.$emit( 'modalSwitch', { modal: '' } );
-              $rootScope.$emit( 'checkUserCredentials' );
+
+              // update authentication status in the room controller
+              $rootScope.$emit( 'userUpdate' );
+
             }, 
             //fail
             function() {
@@ -218,13 +228,13 @@
           'templates/sil-join-room-modal.html';
       },
 
-
       controller: function( $scope, $element ) {
         $scope.displayName = myUser.getDisplayName();
         $scope.hasMessage = false;
         $scope.placeholder = "is present";
         $scope.message = "";
       },
+
       link: function( scope, el, attr ) {
 
         scope.messageChange = function() {
@@ -258,6 +268,10 @@
           }
 
         };
+
+        $rootScope.$on( 'userUpdate', function( event, args ) {
+          scope.displayName = myUser.getDisplayName()
+        });
 
       }
     };
