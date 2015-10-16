@@ -16,6 +16,8 @@ var getRoom = function( roomId ) {
   }
 };
 
+Room.prototype.addUser = curry( rc.addUserToRoom )( this.id );
+
 // cb
 Room.prototype.occupants = curry( rc.roomUsers )( this.id );
 

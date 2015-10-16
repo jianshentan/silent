@@ -45,12 +45,12 @@ exports.login = function( username, password, done ) {
     },
 
     // once we have user id, get and compare passwords
-    function( userId, cb ) {
-      user.getPasswordData( userId, function( err, passwordData ) {
-        generateHash( password, passwordData.salt, function( err, derivedKey ) {
+    function( maybeUserId, cb ) {
+      user.getInternalUserPasswordData( maybeUserId.value, function( err, maybePasswordData ) {
+        generateHash( password, maybePasswordData.value.salt, function( err, derivedKey ) {
           // If the hashes match then we're good
-          if( passwordData.passwordHash == derivedKey ) {
-            cb( null, userId );
+          if( maybePasswordData.value.passwordHash == derivedKey ) {
+            cb( null, maybeUserId.value );
           } else {
             cb( 'password is invalid' );
           }
@@ -60,14 +60,14 @@ exports.login = function( username, password, done ) {
 
     // and get the user
     function( userId, cb ) {
-      user.getUserFromUserId( userId, cb );
+      user.getUser( userId, cb );
     }
   
-  )( 'silent', username, function( err, user ) {
+  )( 'silent', username, function( err, maybeUser ) {
     if( err ) {
       done( null, false, { message: err } );
     } else {
-      done( null, user );
+      done( null, maybeUser.value );
     }
   });
 };

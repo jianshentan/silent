@@ -211,13 +211,13 @@ exports.alterUser = function( userId, properties, cb ) {
  * roomId::string
  * cb::function( string )
  */
-exports.addUserToRoom = function( userId, roomId, cb ) {
+exports.addUserToRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.sadd( 'room-users:' + roomId, userId );
   multi.sadd( 'user-rooms:' + userId, roomId);
   multi.exec( cbThrow( function( err ) {
     cb( err );
-  } ) );
+  }));
 };
 
 /*

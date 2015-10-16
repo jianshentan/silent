@@ -90,7 +90,7 @@
       myUser.logout( function() {
         $rootScope.$emit( 'checkUserCredentials' );
         $window.location.href = '/';
-      })
+      });
     };
 
     $scope.searchQuery = "";
