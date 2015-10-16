@@ -1,27 +1,37 @@
 var rc = require( './db/redis' );
 var async = require( 'async' );
 var curry = require( 'curry' );
+var maybe = require( './util/maybe' );
 
+// keep private - instead use createRoom
 var Room = function( roomId ) {
-  this.roomId = roomId;
-
-  this.objectify = function() {
-    return {
-      roomId: roomId
-    };
-  };
+  this.id = roomId;
 };
 
-Room.prototype.occupants = function() {
-  return curry( rc.roomUsers )( this.roomId );
+var getRoom = function( roomId ) {
+  if (typeof roomId === 'string' || roomId instanceof String) {
+    return new maybe.Just( new Room( roomId ) );
+  } else {
+    return maybe.Nothing;
+  }
 };
 
-Room.prototype.accTime = function() {
-  return curry( rc.accRoomTime )( this.roomId );
-};
+Room.prototype.addUser = curry( rc.addUserToRoom )( this.id );
 
-Room.prototype.incrAccTime = function() {
-  return curry( rc.incrRoomTime )( this.roomId );
-};
+// cb
+Room.prototype.occupants = curry( rc.roomUsers )( this.id );
 
-module.exports = Room;
+// cb
+Room.prototype.accTime = curry( rc.accRoomTime )( this.id );
+
+// seconds, cb
+Room.prototype.incrAccTime = curry( rc.incrRoomTime )( this.id );
+
+// seconds, cb
+Room.prototype.incrAccTime = curry( rc.incrRoomTime )( this.id );
+
+Room.prototype.objectify = function() { return { roomId: this.id }; };
+
+module.exports = {
+  getRoom: getRoom
+};

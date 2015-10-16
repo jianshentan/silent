@@ -1,32 +1,46 @@
 var rc = require( './db/redis' );
 var async = require( 'async' );
+var maybe = require( './util/maybe' );
+var curry = require( 'curry' );
 
-module.exports = User = function( userId, displayName ) {
+var User = function( userId, displayName ) {
+  // these behave like a cache - may not have most updated info
+  this.id = userId;
+  this.displayName = displayName;
+};
 
-  this.getId = function() { return userId; }; 
-
-  this.objectify = function() {
-    return {
-      userId: userId,
-      displayName: displayName
-    };
+User.prototype.objectify = function() {
+  return {
+    userId: this.id,
+    displayName: this.displayName
   };
 };
 
-module.exports.exists = function( provider, extId, cb ) {
-  rc.userExists( provider, extId, cb );
+/*
+ * next::function( err, Maybe<User> )
+ */
+var getUser = function( userId, next ) {
+
+  async.seq(
+    // get the user data
+    function( userId, cb ) {
+      rc.getUser( userId, function( err, userData ) {
+        cb( err, userId, userData.map( function( ud ) { 
+          ud.userId = userId;
+          return ud;
+        }));
+      });
+    },
+
+    // make user
+    function( userId, userData, cb ) {
+      cb( null, userData.map( function( ud ) { return new User( ud.userId, ud.displayName ); } ) );
+    }
+
+  )( userId, next );
 };
 
-module.exports.getUserId = function( username, cb ) {
-  rc.getInternalUserId( username, cb );
-};
-
-module.exports.getPasswordData = function( userId, cb ) {
-  rc.internalUserPasswordData( userId, cb );
-};
-
-module.exports.createInternalUser = function( username, passwordHash, salt, next ) {
-
+var createInternalUser = function( username, passwordHash, salt, next ) {
   async.seq( 
 
     // create the user
@@ -34,36 +48,29 @@ module.exports.createInternalUser = function( username, passwordHash, salt, next
 
     // set username
     function( userId, cb ) {
-      console.log( userId );
       rc.alterUser( userId, { displayName: username }, function( err ) {
         cb( err, userId );
       });
     },
 
     // get user from userid
-    this.getUserFromUserId
+    getUser
 
   )( username, passwordHash, salt, next );
 
 };
 
-module.exports.getUserFromUserId = function( userId, next ) {
+var exists = function( provider, extId, cb ) {
+  rc.getUserIdFromExtId( provider, extId, function( err, maybeUserId ) {
+    cb( err, maybeUserId.isPresent() );
+  });
+};
 
-  async.seq(
-
-    // get the user data
-    function( userId, cb ) {
-      rc.getUser( userId, function( err, userData ) {
-        cb( err, userId, userData );
-      });
-    },
-
-    // make user
-    function( userId, userData, cb ) {
-      cb( null, new User( userId, userData.displayName ) );
-    }
-
-  )( userId, next );
-
+module.exports = {
+  exists: exists,
+  getInternalUserId: rc.getInternalUserId, // fn( username, cb )
+  getInternalUserPasswordData: rc.internalUserPasswordData, // fn( userId, cb )
+  createInternalUser: createInternalUser,
+  getUser: getUser
 };
 

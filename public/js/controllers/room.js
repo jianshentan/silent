@@ -165,7 +165,7 @@
     /* SOCKET Handling */ 
 
     // emit 'enter' - TODO decide if this is the right place for this
-    socket.emit( 'enter', { room_id: roomId, userId: userId } );
+    socket.emit( 'enter', { roomId: roomId, userId: userId } );
 
     socket.on( 'entered', function( data ) {
 

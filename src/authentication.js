@@ -1,7 +1,7 @@
 var async = require( 'async' );
 var crypto = require( 'crypto' );
 var jwt = require( 'jsonwebtoken' );
-var User = require( './user' );
+var user = require( './user' );
 
 var generateHash = function( password, salt, cb ) {
   // Use the provided salt to regenerate the hash with the user provided password
@@ -33,24 +33,24 @@ exports.login = function( username, password, done ) {
   async.seq(
 
     // check if user exists
-    User.exists,
+    user.exists,
 
     // if exists, get user id, else done
     function( exists, cb ) {
       if( exists ) {
-        User.getUserId( username, cb );
+        user.getInternalUserId( username, cb );
       } else {
         cb( 'user does not exist' );
       }
     },
 
     // once we have user id, get and compare passwords
-    function( userId, cb ) {
-      User.getPasswordData( userId, function( err, passwordData ) {
-        generateHash( password, passwordData.salt, function( err, derivedKey ) {
+    function( maybeUserId, cb ) {
+      user.getInternalUserPasswordData( maybeUserId.value, function( err, maybePasswordData ) {
+        generateHash( password, maybePasswordData.value.salt, function( err, derivedKey ) {
           // If the hashes match then we're good
-          if( passwordData.passwordHash == derivedKey ) {
-            cb( null, userId );
+          if( maybePasswordData.value.passwordHash == derivedKey ) {
+            cb( null, maybeUserId.value );
           } else {
             cb( 'password is invalid' );
           }
@@ -60,14 +60,14 @@ exports.login = function( username, password, done ) {
 
     // and get the user
     function( userId, cb ) {
-      User.getUserFromUserId( userId, cb );
+      user.getUser( userId, cb );
     }
   
-  )( 'silent', username, function( err, user ) {
+  )( 'silent', username, function( err, maybeUser ) {
     if( err ) {
       done( null, false, { message: err } );
     } else {
-      done( null, user );
+      done( null, maybeUser.value );
     }
   });
 };
@@ -81,7 +81,7 @@ exports.signup = function( username, password, done ) {
   async.seq(
 
       // check if user exists
-      User.exists,
+      user.exists,
 
       // if it does then we callback with an error, else generate passwordHash
       function( exists, cb ) {
@@ -97,14 +97,14 @@ exports.signup = function( username, password, done ) {
 
       // and use it to create a user
       function( passwordHash, salt, cb ) {
-        User.createInternalUser( username, passwordHash, salt, cb );
+        user.createInternalUser( username, passwordHash, salt, cb );
       }
 
-  )( 'silent', username, function( err, user ) { 
-    if( err ) {
+  )( 'silent', username, function( err, maybeUser ) { 
+    if( err || !maybeUser.isPresent() ) {
       done( err, false, { message: err } );
     } else {
-      done( null, user );
+      done( null, maybeUser.value );
     }
   });
 };

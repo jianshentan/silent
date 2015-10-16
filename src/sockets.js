@@ -15,101 +15,63 @@ https://github.com/socketio/socket.io/blob/master/examples/chat/index.js
 
 =========================================================== */
 
-/* tentative user model (TODO should be exported ) */
-function User( userId, username, visitorCount, guest, active ) {
-  this.userId = userId;
-  this.username = username;
-  this.visitorCount = visitorCount;
-  this.guest = guest;
-  this.active = active;
-
-  this.enterTimes = [];
-  this.exitTimes = [];
-  this.enterTimes.push( Date.now() );
-}
-
-/* tentative db methods (TODO should be replaced with redis) */
-var db = {};
-
-function addUser( user, roomId, callback ) {
-  if( !(roomId in db) ) {
-    db[ roomId ] = [];
-  }
-  db[ roomId ].push( user );
-  callback();
-}
-
-function setInactive( userId, roomId, callback ) {
-  for( var i in db[ roomId ] ) {
-    if( db[ roomId ][i].userId == userId ) {
-      db[ roomId ][i].active = false;
-      db[ roomId ][i].exitTimes.push( Date.now() );
-    }
-  }
-  callback();
-}
+var user = require( './user' );
+var room = require( './room' );
+var maybe = require( './util/maybe' );
 
 exports.start = function( io ) {
-
-  // active user count
-  var visitorCount = 0;
-  var userCount = 0;
 
   // client is connected - 'socket' refers to the client
   io.on( 'connection', function( socket ) { 
 
-    var roomId, userId, guest;
+    var maybeConnRoom = maybe.Nothing;
+    var maybeConnUser = maybe.Nothing;
 
-    var socketId = socket.id; // unique socket id for every time a socket is opened
-
-    // client enters (hits the url as a guest)
     socket.on( 'enter', function( data ) {
-      guest = true;
-      visitorCount++;
-      roomId = data.room_id;
-      guestId = 'guest' + visitorCount; // tentative username for guests / guestId 
-      userId = roomId+":"+guestId;
+      maybeConnRoom = room.getRoom( data.roomId );
+      user.getUser( data.userId, function( err, maybeUser ) {
+        maybeConnUser = maybeUser;
 
-      console.log( "userId '" + userId + "' entered '" + roomId + "'" );
+        if( maybeConnRoom.isPresent() && maybeUser.isPresent() ) {
+          var connRoom = maybeConnRoom.value;
+          var connUser = maybeConnUser.value;
 
-      // join room
-      socket.join( roomId );
+          console.log( "userId '" + connUser.id + "' entered '" + connRoom.id + "'" );
 
-      var user = new User( userId, guestId, visitorCount, guest, true );
+          // join room
+          socket.join( connRoom.id );
 
-      addUser( user, roomId, function() {
+          connRoom.addUser( connUser.id, function() {
 
-        // sending to all clients in <roomId> channel except sender
-        socket.broadcast.to( roomId ).emit( 'visitor entered', 
-          { user: user } );
+            // sending to all clients in <roomId> channel except sender
+            socket.broadcast.to( connRoom.id ).emit( 'visitor entered', { user: user.objectify() } );
 
-        // send to current request socket client
-        socket.emit( 'entered',  
-          { user: user, users: db[ roomId ] });
-
+            connRoom.occupants( function(err, occupantIds) {
+              // send to current request socket client
+              socket.emit( 'entered', { user: user,
+                users: occupantIds.map( function(x) { return parseInt(x); })
+              });
+            });
+          });
+        } else {
+          console.log( "Invalid roomId (" + data.roomId + ") or userId (" + data.userId + ")" );
+        }
       });
-      
     });
     
     // client joins (as a user) TODO
     socket.on( 'join', function( data ) {
-      guest = false;
-      userCount++;
     });
 
     // client closes connection
     socket.on( 'disconnect', function() {
-
-      console.log( "userId '" + userId + "' disconnected from '" + roomId + "'" );
-
-      setInactive( userId, roomId, function() {
-        socket.broadcast.to( roomId ).emit( 'visitor left',
-          { userId: userId } ); 
-      });
-
+      if( maybeConnRoom.isPresent() && maybeConnUser.isPresent() ) {
+        var userId = maybeConnUser.value.id;
+        var roomId = maybeConnRoom.value.id;
+        console.log( "userId '" + userId + "' disconnected from '" + roomId + "'" );
+        socket.broadcast.to( roomId ).emit( 'visitor left', { userId: userId } );
+      }
     });
-
   });
-
 };
 
