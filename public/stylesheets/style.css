@@ -185,6 +185,7 @@ nav {
   /* z-index: -1000;*/
 }
 .sil-landing-content {
+  min-width: 380px;
   margin-top: -5vh;
 }
 .sil-landing-image {
@@ -231,6 +232,52 @@ nav {
   border-bottom-color: #3333ff;
   border-width: 11px;
   margin-left: -11px;
+}
+
+/* How It works */
+.sil-how {
+  min-width: 560px;
+  height: 600px;
+}
+.sil-how-instructions{
+  min-width: 560px;
+  margin: 0 auto;
+  line-height: 50px;
+}
+.sil-how-diagram {
+  overflow: hidden;
+  max-width: 800px;
+  min-height: 300px;
+  margin: 0 auto 40px auto;
+  padding-left: 0px;
+  padding-right: 2px;
+  background-color: #eee;
+}
+.sil-how-browser-bar {
+  height: 60px;
+  line-height: 60px;
+}
+.sil-how-browser-button {
+  width: 12px;
+  height: 12px;
+  margin-left: 12px;
+  background-color: #999;
+}
+.sil-how-browser-search {
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  left: 50%;
+  margin-left: -25%;
+  margin-top: 10px;
+}
+.sil-how-browser-body {
+  width: 100%;
+  min-height: 238px;
+}
+.sil-how-browser-item,
+.sil-how-browser-item-ghost {
+  width: 100px;
 }
 
 /* override basscss defaults */

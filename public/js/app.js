@@ -6,6 +6,7 @@
     'UserServices',
     'NavControllers',
     'HomeControllers',
+    'IndexControllers',
     'RoomControllers',
     'ModalDirectives',
     'TabDirectives',
@@ -38,12 +39,20 @@
 
         // if '/', '/login' or '/signup' but user is authenticated, then go to '/home'
         if( $window.location.pathname == '/' ||
-            $window.location.pathname == '/login' ||
-            $window.location.pathname == '/signup' ) {
+            $window.location.pathname == '/m' ) {
           if( auth.isAuthenticated() ) {
             /*  // TODO: eventually, if we create the '/home' page for logged in users
                 // it should redirect to '/home'
                 $window.location.href = '/home';  */
+          }
+        }
+
+        if( $window.location.pathname == '/login' ||
+            $window.location.pathname == '/m/login' ||
+            $window.location.pathname == '/signup' ||
+            $window.location.pathname == '/m/signup' ) {
+          if( auth.isAuthenticated() ) {
+            $window.location.href= '/';
           } 
         } 
 

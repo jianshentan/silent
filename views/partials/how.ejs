@@ -1,0 +1,83 @@
+<div class="sil-how col-12 relative sil-fill-width">
+
+  <div class="sil-how-instructions col-8 py3 sil-green h3">
+    <div class="mt1 mb2 sil-fill-width">
+      <span class="black">1. create a room and generate a unique url:</span> 
+      <span class="nowrap relative center p2"><strong><span class="sil-border-green2 sil-green px2 py1">silent.buzz/@your-room</span></strong></span>
+    </div>
+    <div class="mt1 mb1">
+      <span class="black">2. share that url and watch as people enter your room!</span> <a href="/about">Learn More</a>
+    </div>
+  </div>
+
+  <div class="sil-how-diagram col-10 relative rounded">
+    <div class="sil-how-browser-bar px2 relative">
+      <div class="sil-how-browser-button circle inline-block"></div>
+      <div class="sil-how-browser-button circle inline-block"></div>
+      <div class="sil-how-browser-search inline-block bg-white absolute center rounded">silent.buzz/@your-room</div>
+    </div>
+    <div class="sil-how-browser-body sil-border-green bg-white rounded-bottom flex-wrap">
+      <div class="p1 center">
+
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Koji Y</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Lukas B</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Kevin W</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Annia C</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Rachel O</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Josephine D</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Isabel M</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Danica M</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Alison W</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Jenny S</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Alicia V</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Dora M</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">JS T</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Henry K</div>
+        <div class="sil-how-browser-item sil-green sil-border-green px3 py2 m1 center rounded inline-block hide">Rachel H</div>
+
+        <!-- empty tabs to left-align last row -->
+        <div class="sil-how-browser-item-ghost sil-empty-tab white px3 m1 inline-block"><div class="">1. avalencia </div></div>
+        <div class="sil-how-browser-item-ghost sil-empty-tab white px3 m1 inline-block"><div class="">1. avalencia </div></div>
+        <div class="sil-how-browser-item-ghost sil-empty-tab white px3 m1 inline-block"><div class="">1. avalencia </div></div>
+
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<script>
+  // wait for jquery to load
+  setTimeout( function() {
+    $( window ).ready( function() {
+
+      jQuery.fn.shuffle = function () {
+        var j;
+        for (var i = 0; i < this.length; i++) {
+          j = Math.floor(Math.random() * this.length);
+          $(this[i]).before($(this[j]));
+        }
+        return this;
+      };
+
+      $( ".sil-how-browser-item" ).shuffle();
+
+      // load fake user tabs for "how" example
+      setInterval( function() {
+        var hiddenTab = $( ".sil-how-browser-body" ).find( ".hide:first" );
+        var activeTabCount = $( ".sil-how-browser-item:not(.hide)" ).length;
+
+        if( activeTabCount <= 10 ) {
+          hiddenTab.removeClass( "hide" );
+        } else {
+          $( ".sil-how-browser-item" ).shuffle();
+          $( ".sil-how-browser-item" ).each( function() { $( this ).addClass( "hide" ); } );
+        }
+
+      }, 2000 );
+
+    });
+
+  }, 1000 );
+
+</script>

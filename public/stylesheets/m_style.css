@@ -94,6 +94,7 @@ nav {
   background-position: 100%;
 }
 .sil-landing-content {
+  min-width: inherit;
   width: 80vw;
 }
 .sil-landing-logo {

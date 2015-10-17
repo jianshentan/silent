@@ -91,11 +91,16 @@
             // success
             function() {
 
-              // close modal 
-              $rootScope.$emit( 'modalSwitch', { modal: '' } );
+              if( scope.isSignupPage ) {
+                window.location.href= "/home";
+              } else {
 
-              // update authentication status in the room controller
-              $rootScope.$emit( 'userUpdate' );
+                // close modal 
+                $rootScope.$emit( 'modalSwitch', { modal: '' } );
+
+                // update authentication status in the room controller
+                $rootScope.$emit( 'userUpdate' );
+              }
 
             },
             // fail
@@ -163,11 +168,17 @@
             //success
             function() {
 
-              // close modal 
-              $rootScope.$emit( 'modalSwitch', { modal: '' } );
+              if( scope.isLoginPage ) {
+                window.location.href= "/home";
+              } else {
 
-              // update authentication status in the room controller
-              $rootScope.$emit( 'userUpdate' );
+                // close modal 
+                $rootScope.$emit( 'modalSwitch', { modal: '' } );
+
+                // update authentication status in the room controller
+                $rootScope.$emit( 'userUpdate' );
+
+              }
 
             }, 
             //fail
