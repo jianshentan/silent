@@ -124,7 +124,8 @@
     this.users = [];
 
     /* handle if user is logged in */
-    var userId = myUser.userId;
+    var userId = myUser.getUserId();
+    console.log('USER ID:' + JSON.stringify(myUser));
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
@@ -165,7 +166,7 @@
     /* SOCKET Handling */ 
 
     // emit 'enter' - TODO decide if this is the right place for this
-    socket.emit( 'enter', { roomId: roomId, userId: userId } );
+    socket.emit( 'enter', { roomId: roomId } );
 
     socket.on( 'entered', function( data ) {
 

@@ -270,7 +270,7 @@
         };
 
         $rootScope.$on( 'userUpdate', function( event, args ) {
-          scope.displayName = myUser.getDisplayName()
+          scope.displayName = myUser.getDisplayName();
         });
 
       }

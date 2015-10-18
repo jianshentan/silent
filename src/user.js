@@ -1,7 +1,6 @@
 var rc = require( './db/redis' );
 var async = require( 'async' );
 var maybe = require( './util/maybe' );
-var curry = require( 'curry' );
 
 var User = function( userId, displayName ) {
   // these behave like a cache - may not have most updated info
