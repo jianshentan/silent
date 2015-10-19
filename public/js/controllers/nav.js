@@ -102,13 +102,15 @@
        */
       $scope.openSearch = function() {
         $scope.showSearchResults = true;
+        $scope.$parent.searchIsOpen = true;
       };
 
-      /* Close Search
+      /* close search
        * called when user clicks on close-search
        */
       $scope.closeSearch = function() {
         $scope.showSearchResults = false;
+        $scope.$parent.searchIsOpen = false;
       };
     }
 

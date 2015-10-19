@@ -45,15 +45,15 @@ nav {
 .sil-search {
   border: 0px;
   max-width: inherit;
-  border-bottom: 3px solid #3333ff;
-  z-index: 1000;
+  z-index: 100;
 }
 .sil-search-icon {
   line-height: 56px;
 }
 .sil-search-close-icon {
-  right: 20px;
-  top: 20px;
+  right: 16px;
+  top: 16px;
+  font-size: 24px;
 }
 .sil-search-input::-webkit-input-placeholder { color: #fff; }
 .sil-search-input:-moz-placeholder { color: #fff; } /* Firefox 18- */
@@ -89,6 +89,7 @@ nav {
 /* MOBILE LANDING PAGE*/
 .sil-landing {
   height: 100vh;
+  margin-top: inherit;
 }
 .sil-landing-image {
   background-position: 100%;
@@ -102,6 +103,12 @@ nav {
 }
 .sil-landing-text {
   font-size: 5vw;
+}
+.sil-landing-how {
+  top: 10px;
+  right: 10px; 
+  z-index: 101;
+  font-size: 30px;
 }
 
 /* MOBILE LOGIN/SIGNUP */
@@ -132,5 +139,41 @@ nav {
 }
 .sil-modal-dialog {
   width: 90vw;  
+}
+
+/* how it works  */
+.sil-how {
+  top: 0px;
+  z-index: 1000;
+  height: 100vh;
+  min-width: inherit;
+  width: 100vw;
+}
+.sil-how-instructions {
+  min-width: inherit;
+  line-height: inherit;
+}
+.sil-how-diagram {
+  border-radius: 48px;
+  min-width: inherit;
+  width: 90vw;
+  max-width: 320px;
+}
+.sil-how-browser-body {
+  width: 90%;
+  margin: 76px auto;
+  overflow: hidden;
+  height: 460px;
+}
+.sil-how-url {
+  width: 100%;
+  border-bottom: 1px solid #3333ff;
+  height: 48px;
+  line-height: 48px;
+}
+.sil-how-browser-item ,
+.sil-how-browser-item-you ,
+.silhow-browser-item-ghost {
+  width: 100%;
 }
 

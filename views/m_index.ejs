@@ -7,15 +7,17 @@
   <body class="bg-darken-1" ng-controller="IndexController">
     <% include partials/m_nav %>
 
+    <div ng-click="openHow()" ng-hide="howIsOpen || searchIsOpen" class="sil-landing-how white absolute"><i class="fa fa-question-circle "></i></div>
+
     <div class="sil-landing col-12 bg-yellow relative">
       <div class="sil-landing-image"></div>
       <div class="sil-landing-content sil-absolute-center absolute center">
         <img class="sil-landing-logo center" src="/media/logo.png" />
         <div class="sil-landing-text white center bold">Let your presence speak for itself</div>
         <div class="white mt2 center ">
-          <a href="/about"><div class="sil-pointer inline-block mr1 ml1 px2 py1 mb2 rounded sil-border-white3 center">
+          <!--<a href="/about"><div class="sil-pointer inline-block mr1 ml1 px2 py1 mb2 rounded sil-border-white3 center">
               Learn More
-          </div></a>
+          </div></a>-->
           <a href="/login" ng-hide="authenticated"><div class="sil-pointer inline-block ml1 mr1 px2 py1 rounded center sil-border-white3">
             Login / Signup
           </div></a>
@@ -24,6 +26,9 @@
       
     </div>
 
+    <% include partials/m_how %>
+
     <% include partials/scripts %>
+
   </body>
 </html>

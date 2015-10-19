@@ -134,7 +134,8 @@ body {
 
 /* nav */
 nav {
-  z-index: 1000;
+  top: 0px;
+  z-index: 100;
 }
 
 /* search */
@@ -181,6 +182,7 @@ nav {
   width: 100vw;
   height: 86vh;
   max-height: 800px;
+  margin-top: 102px;
   overflow:hidden;
   /* z-index: -1000;*/
 }
@@ -276,6 +278,7 @@ nav {
   min-height: 238px;
 }
 .sil-how-browser-item,
+.sil-how-browser-item-you,
 .sil-how-browser-item-ghost {
   width: 100px;
 }

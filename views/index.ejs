@@ -3,7 +3,7 @@
   <head>
     <% include partials/head %>
   </head>
-  <body class="bg-white">
+  <body class="bg-white" ng-controller="IndexController">
     <% include partials/nav %>
 
     <div class="sil-landing col-12 bg-yellow relative">
@@ -11,9 +11,9 @@
       <div class="sil-landing-content sil-absolute-center absolute center">
         <img class="sil-landing-logo center" src="/media/logo.png" />
         <div class="sil-landing-text white h2 center bold">Let your presence speak for itself</div>
-        <a href="/about"><div class="white sil-pointer inline-block mt2 mr1 ml1 px2 py1 mb2 rounded sil-border-white3 center">
+        <div ng-click="scrollTo('.sil-how')"class="white sil-pointer inline-block mt2 mr1 ml1 px2 py1 mb2 rounded sil-border-white3 center">
           How do I use Silent? 
-        </div></a>
+        </div>
       </div>
     </div>
 

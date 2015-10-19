@@ -1,0 +1,80 @@
+<!-- MOBILE VERSION OF HOW-TO PAGE -->
+<div class="sil-how fixed bg-white sil-fill-width" ng-show="howIsOpen">
+
+  <i class="fa fa-times sil-green absolute sil-search-close-icon" ng-show="howIsOpen" ng-click="closeHow()"></i>
+
+  <div class="sil-how-instructions col-10 py3 sil-green h4">
+    <div class="mt1 mb2 sil-fill-width">
+      <span class="black">1. create a room and generate a unique url:</span> 
+      <span class="mt1 nowrap relative center p2 block"><strong><span class="sil-border-green2 sil-green px2 py1">silent.buzz/@your-room</span></strong></span>
+    </div>
+    <div class="mt1 mb1">
+      <span class="black">2. share that url and watch as people enter your room!</span>
+    </div>
+  </div>
+
+  <div class="sil-how-diagram col-10 relative rounded">
+    <div class="sil-how-browser-body sil-border-green bg-white rounded-bottom flex-wrap">
+      <div class="sil-how-url h4 sil-green bg-white center ">silent.buzz/@your-room</div>
+      <div class="p2 center">
+
+        <div class="sil-how-browser-item-you white sil-bg-green sil-border-green mb2 py2 center rounded inline-block"><strong>you</strong></div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Koji Y</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Lukas B</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Kevin W</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Annia C</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Rachel O</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Josephine D</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Isabel M</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Danica M</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Alison W</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Jenny S</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Alicia V</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Dora M</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">JS T</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Henry K</div><!--
+        --><div class="sil-how-browser-item sil-green sil-border-green mb2 py2 center rounded inline-block hide">Rachel H</div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<script>
+  /* Script to animate how-to page */
+
+  // wait for jquery to load
+  setTimeout( function() {
+
+    $( window ).ready( function() {
+
+      jQuery.fn.shuffle = function () {
+        var j;
+        for (var i = 0; i < this.length; i++) {
+          j = Math.floor(Math.random() * this.length);
+          $(this[i]).before($(this[j]));
+        }
+        return this;
+      };
+
+      $( ".sil-how-browser-item" ).shuffle();
+
+      // load fake user tabs for "how" example
+      setInterval( function() {
+        var hiddenTab = $( ".sil-how-browser-body" ).find( ".hide:first" );
+        var activeTabCount = $( ".sil-how-browser-item:not(.hide)" ).length;
+
+        if( activeTabCount <= 5 ) {
+          hiddenTab.removeClass( "hide" );
+        } else {
+          $( ".sil-how-browser-item" ).shuffle();
+          $( ".sil-how-browser-item" ).each( function() { $( this ).addClass( "hide" ); } );
+        }
+
+      }, 2000 );
+
+    });
+
+  }, 1000 );
+
+</script>
