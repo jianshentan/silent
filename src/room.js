@@ -20,8 +20,24 @@ Room.prototype.addUser = function( userId, cb ) {
   rc.addUserToRoom( this.id, userId, cb );
 };
 
+Room.prototype.removeUser = function( userId, cb ) {
+  rc.removeUserFromRoom( this.id, userId, cb );
+};
+
 Room.prototype.occupants = function( cb ) {
   rc.roomUsers( this.id, cb );
+};
+
+Room.prototype.addGuest = function( cb ) {
+  rc.incrNumGuests( this.id, cb );
+};
+
+Room.prototype.removeGuest = function( cb ) {
+  rc.decrNumGuests( this.id, cb );
+};
+
+Room.prototype.numGuests = function( cb ) {
+  rc.getNumGuests( this.id, cb );
 };
 
 Room.prototype.accTime = function( cb ) {

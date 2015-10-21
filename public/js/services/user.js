@@ -214,8 +214,8 @@
     /* Constructor */
     function User( user ) {
 
-      enterTimes = user.enterTimes;
-      exitTimes = user.exitTimes;
+      enterTimes = []; //TODO user.enterTimes;
+      exitTimes = []; //TODO user.exitTimes;
 
       /* public properties */
       this.userId = user.userId;

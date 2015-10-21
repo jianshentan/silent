@@ -30,6 +30,8 @@
  *
  * room-acc-time:[room_id] -> time INTEGER //TODO
  *
+ * room-num-guests:[room_id] -> INTEGER
+ *
  */
 
 var redis = require( 'redis' );
@@ -225,7 +227,7 @@ exports.addUserToRoom = function( roomId, userId, cb ) {
  * roomId::string
  * cb::function( string )
  */
-exports.removeUserFromRoom = function( userId, roomId, cb ) {
+exports.removeUserFromRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.srem( 'room-users:' + roomId, userId );
   multi.srem( 'user-rooms:' + userId, roomId );
@@ -263,4 +265,25 @@ exports.accRoomTime = function( roomId, cb ) {
  */
 exports.incrRoomTime = function( roomId, seconds, cb ) {
   rc.incrby( 'room-acc-time:' + roomId, seconds, cbThrow( cb ) );
+};
+
+/*
+ * This operation increments the number of guests in a room
+ */
+exports.incrNumGuests = function( roomId, cb ) {
+  rc.incr( 'room-num-guests:' + roomId, cbThrow( cb ) );
+};
+
+/*
+ * This operation decrements the number of guests in a room
+ */
+exports.decrNumGuests = function( roomId, cb ) {
+  rc.decr( 'room-num-guests:' + roomId, cbThrow( cb ) );
+};
+
+/*
+ * This operation gets the number of guests in a room
+ */
+exports.getNumGuests = function( roomId, cb ) {
+  rc.get( 'room-num-guests:' + roomId, cbThrow( cb ) );
 };

@@ -86,9 +86,13 @@
       console.log( 'Authenticating with: ' + token );
 
       socket.on( 'connect', function() {
-        socket.emit( 'authenticate', {
-          token: token
-        }); //send the jwt
+        if( token ) {
+          socket.emit( 'join', {
+            token: token
+          }); //send the jwt
+        } else {
+          socket.emit( 'guest' );
+        }
       });
     });
                       

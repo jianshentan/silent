@@ -125,7 +125,7 @@
 
     /* handle if user is logged in */
     var userId = myUser.getUserId();
-    console.log('USER ID:' + JSON.stringify(myUser));
+    console.log( 'USER ID:' + JSON.stringify(myUser) );
 
     /* private function > gets active/inactive users */
     this.getUsers = function( active ) {
@@ -169,6 +169,7 @@
     socket.emit( 'enter', { roomId: roomId } );
 
     socket.on( 'entered', function( data ) {
+      console.log( 'ENTERED' );
 
       // receive this user object from socket-connection & set userId (if guest)
       if( userId ) {
@@ -191,12 +192,22 @@
     });
 
     socket.on( 'visitor entered', function( data ) {
+      console.log( 'visitor entered: ' + JSON.stringify( data.user ) );
       self.users.push( new user( data.user ) );
       self.updateUserList();
     });
 
     socket.on( 'visitor left', function( data ) {
+      console.log( 'visitor left:' + data.userId );
       self.setInactive( data.userId );
+    });
+
+    socket.on( 'guest entered', function( data ) {
+      console.log( 'guest entered : ' + data.numGuests );
+    });
+
+    socket.on( 'guest left', function( data ) {
+      console.log( 'guest left : ' + data.numGuests );
     });
 
   }]);
