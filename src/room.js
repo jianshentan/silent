@@ -16,19 +16,37 @@ var getRoom = function( roomId ) {
   }
 };
 
-Room.prototype.addUser = curry( rc.addUserToRoom )( this.id );
+Room.prototype.addUser = function( userId, cb ) {
+  rc.addUserToRoom( this.id, userId, cb );
+};
 
-// cb
-Room.prototype.occupants = curry( rc.roomUsers )( this.id );
+Room.prototype.removeUser = function( userId, cb ) {
+  rc.removeUserFromRoom( this.id, userId, cb );
+};
 
-// cb
-Room.prototype.accTime = curry( rc.accRoomTime )( this.id );
+Room.prototype.occupants = function( cb ) {
+  rc.roomUsers( this.id, cb );
+};
 
-// seconds, cb
-Room.prototype.incrAccTime = curry( rc.incrRoomTime )( this.id );
+Room.prototype.addGuest = function( cb ) {
+  rc.incrNumGuests( this.id, cb );
+};
 
-// seconds, cb
-Room.prototype.incrAccTime = curry( rc.incrRoomTime )( this.id );
+Room.prototype.removeGuest = function( cb ) {
+  rc.decrNumGuests( this.id, cb );
+};
+
+Room.prototype.numGuests = function( cb ) {
+  rc.getNumGuests( this.id, cb );
+};
+
+Room.prototype.accTime = function( cb ) {
+  rc.accRoomTime( this.id, cb );
+};
+
+Room.prototype.incrAccTime = function( seconds, cb ) {
+  rc.incrRoomTime( this.id, seconds, cb );
+};
 
 Room.prototype.objectify = function() { return { roomId: this.id }; };
 

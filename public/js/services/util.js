@@ -25,6 +25,15 @@
     var hasToken = false;
     var authToken;
 
+    function getToken( cb ) {
+      var token = $window.localStorage.getItem( LOCAL_TOKEN_KEY );
+      if( token ) {
+        cb( null, token );
+      } else {
+        cb( 'No Token' );
+      }
+    }
+
     function loadUserCredentials( cb ) {
       var token = $window.localStorage.getItem( LOCAL_TOKEN_KEY );
       if( token ) {
@@ -59,6 +68,7 @@
     }
 
     return {
+      getToken: getToken,
       loadUserCredentials: loadUserCredentials,
       storeUserCredentials: storeUserCredentials,
       useUserCredentials: useUserCredentials,
@@ -69,9 +79,23 @@
   }]);
 
   /* Sockets */
-  app.factory( 'socket', [ '$rootScope', function( $rootScope ) {
+  app.factory( 'socket', [ 'tokenManager', '$rootScope', function( tokenManager, $rootScope ) {
     var socket = io.connect();
- 
+
+    tokenManager.getToken( function( err, token ) {
+      console.log( 'Authenticating with: ' + token );
+
+      socket.on( 'connect', function() {
+        if( token ) {
+          socket.emit( 'join', {
+            token: token
+          }); //send the jwt
+        } else {
+          socket.emit( 'guest' );
+        }
+      });
+    });
+                      
     return {
       on: function( eventName, callback ) {
         function wrapper() {
