@@ -90,18 +90,12 @@
           auth.signup( scope.username, scope.password, 
             // success
             function() {
-
               if( scope.isSignupPage ) {
                 window.location.href= "/home";
               } else {
-
-                // close modal 
-                $rootScope.$emit( 'modalSwitch', { modal: '' } );
-
-                // update authentication status in the room controller
-                $rootScope.$emit( 'userUpdate' );
+                // reload page to reset socket data (hack?)
+                location.reload();
               }
-
             },
             // fail
             function() {
@@ -167,19 +161,12 @@
           auth.login( scope.username, scope.password, 
             //success
             function() {
-
               if( scope.isLoginPage ) {
                 window.location.href= "/home";
               } else {
-
-                // close modal 
-                $rootScope.$emit( 'modalSwitch', { modal: '' } );
-
-                // update authentication status in the room controller
-                $rootScope.$emit( 'userUpdate' );
-
+                // reload page to reset socket data (hack?)
+                location.reload();
               }
-
             }, 
             //fail
             function() {

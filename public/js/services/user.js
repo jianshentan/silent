@@ -162,7 +162,6 @@
     MyUser.getMessage = function() { return message; };
 
     MyUser.initializeUser = function( data ) {
-      console.log( "initialize MyUser" );
       userId = data.userId;
       displayName = data.displayName;
       $rootScope.$emit( 'userUpdate' );
@@ -195,7 +194,7 @@
       }
     };
 
-    // serialize for room controller
+    // serialize for room controller TODO 
     MyUser.serialize = function( cb ) {
       return roomInfo;
     };

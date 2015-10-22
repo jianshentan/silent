@@ -139,10 +139,8 @@
       var users = self.users;
       var selectedUsers = [];
       for( var i in users ) {
-        if( users[i].userId !== userId ) {
-          if( active ? users[i].active : !users[i].active ) {
-            selectedUsers.push( users[i] );
-          }
+        if( active ? users[i].active : !users[i].active ) {
+          selectedUsers.push( users[i] );
         }
       }
       return selectedUsers;
@@ -192,7 +190,7 @@
 
       /* receive list of users from socket-connection */
       for( var i in data.users ) {
-        if( data.users[i].userId != userId ) {
+        if( data.users[i].id != userId ) {
           self.users.push( new user( data.users[i] ) );
         }
       }
@@ -201,21 +199,21 @@
     });
 
     socket.on( 'visitor entered', function( data ) {
-      /*
-       * 1. create a 'user' object, set active state
-       * 2. add user to 'users' list
-       * 3. call updateUserList to update views
-       */
       console.log( 'visitor entered: ' + JSON.stringify( data.user ) );
+
+      // delete user from userlist if same ID (hack?)
+      for( var i in self.users ) {
+        if( self.users[i].userId === data.user.userId ) {
+          self.users.splice( i, 1 );
+        }
+      }
+      console.log( self.users );
+      // create a user object and add it to the user list
       self.users.push( new user( data.user ) );
       self.updateUserList();
     });
 
     socket.on( 'visitor left', function( data ) {
-      /*
-       * 1. set that visitor to be inactive
-       * 2. call updateUserList to update views
-       */
       console.log( 'visitor left:' + data.userId );
       self.setInactive( data.userId );
     });

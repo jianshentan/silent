@@ -34,7 +34,7 @@
       <div class="sil-nav-options relative"><img class="sil-logo" src="/media/logo.png"></div>
 
       <!-- MIDDLE: room name -->
-      <div class="flex-auto bold h2 center">{{ room }} ({{ activeGuests }}/{{ activeUsers }}/{{ totalUsers }}) </div>
+      <div class="flex-auto bold h2 center">{{ room }} ({{ activeGuests || 0 }}/{{ activeUsers || 0 }}/{{ totalUsers || 0 }}) </div>
 
       <!-- RHS: user + share -->
       <div class="sil-nav-options right-align">
