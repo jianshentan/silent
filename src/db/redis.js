@@ -217,8 +217,8 @@ exports.addUserToRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.sadd( 'room-users:' + roomId, userId );
   multi.sadd( 'user-rooms:' + userId, roomId);
-  multi.exec( cbThrow( function( err ) {
-    cb( err );
+  multi.exec( cbThrow( function( err, results ) {
+    cb( err, results );
   }));
 };
 
