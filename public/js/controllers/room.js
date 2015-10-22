@@ -169,16 +169,13 @@
     socket.emit( 'enter', { roomId: roomId } );
 
     socket.on( 'entered', function( data ) {
-      console.log( 'ENTERED' );
+      console.log( 'ENTERED: ' + JSON.stringify( data ) );
 
       // receive this user object from socket-connection & set userId (if guest)
       if( userId ) {
         myUser.enterRoom( data.user, function() {
           $rootScope.$emit( 'userUpdate' );
         });
-      } else {
-        $scope.user = new user( data.user );
-        userId = $scope.user.userId;
       }
 
       // receive list of users from socket-connection

@@ -89,11 +89,13 @@ exports.start = function( io ) {
             }
 
 
-            connRoom.occupants( function(err, occupantIds) {
-              // send to current request socket client
-              socket.emit( 'entered', {
-                user: user,
-                users: occupantIds.map( function(x) { return parseInt(x); })
+            connRoom.occupants( function( err, occupantIds ) {
+              connRoom.numGuests( function( err, numGuests ) {
+                socket.emit( 'entered', {
+                  user: connUser,
+                  numGuests: numGuests,
+                  users: occupantIds.map( function(x) { return parseInt(x); })
+                });
               });
             });
 
@@ -108,7 +110,13 @@ exports.start = function( io ) {
             if( err ) {
               console.error( err );
             } else {
-              socket.emit( 'guest entered', { numGuests: numGuests } );
+              connRoom.occupants( function( err, occupantIds ) {
+                socket.emit( 'entered', {
+                  numGuests: numGuests,
+                  users: occupantIds.map( function( x ) { return parseInt( x ); })
+                });
+              });
+
               socket.to( connRoom.id ).emit( 'guest entered', { numGuests: numGuests } );
             }
           });
