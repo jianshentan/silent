@@ -82,27 +82,32 @@ exports.start = function( io ) {
           var connUser = maybeConnUser.value;
           console.log( "userId '" + connUser.id + "' entered '" + connRoom.id + "'" );
 
-          connRoom.addUser( connUser.id, function( err ) {
+          connRoom.addUser( connUser.id, function( err, added /* new user or not (bool) */ ) {
 
             if( err ) {
               console.error( err );
             }
 
-
-            connRoom.occupants( function( err, occupantIds ) {
+            connRoom.occupants( function( err, occupants ) {
               connRoom.numGuests( function( err, numGuests ) {
+                var otherUsers = occupants.filter( function( occupant ) {
+                  return occupant.id != connUser.id;
+                });
+
                 socket.emit( 'entered', {
                   user: connUser,
                   numGuests: numGuests,
-                  users: occupantIds.map( function(x) { return parseInt(x); })
+                  users: otherUsers
                 });
               });
             });
 
-            // sending to all clients in <roomId> channel except sender
-            socket.to( connRoom.id ).emit( 'visitor entered', {
-              user: connUser.objectify()
-            });
+            if( added ) {
+              // sending to all clients in <roomId> channel except sender
+              socket.to( connRoom.id ).emit( 'visitor entered', {
+                user: connUser.objectify()
+              });
+            }
 
           });
         } else {
@@ -110,10 +115,10 @@ exports.start = function( io ) {
             if( err ) {
               console.error( err );
             } else {
-              connRoom.occupants( function( err, occupantIds ) {
+              connRoom.occupants( function( err, occupants ) {
                 socket.emit( 'entered', {
                   numGuests: numGuests,
-                  users: occupantIds.map( function( x ) { return parseInt( x ); })
+                  users: occupants
                 });
               });
 

@@ -2,6 +2,7 @@ var rc = require( './db/redis' );
 var async = require( 'async' );
 var curry = require( 'curry' );
 var maybe = require( './util/maybe' );
+var user = require( './user' );
 
 // keep private - instead use createRoom
 var Room = function( roomId ) {
@@ -17,15 +18,32 @@ var getRoom = function( roomId ) {
 };
 
 Room.prototype.addUser = function( userId, cb ) {
-  rc.addUserToRoom( this.id, userId, cb );
+  rc.addUserToRoom( this.id, userId, function( err, results ) {
+    cb( err, results.every( function( r ) { return r == 1; } ) );
+  });
 };
 
 Room.prototype.removeUser = function( userId, cb ) {
   rc.removeUserFromRoom( this.id, userId, cb );
 };
 
-Room.prototype.occupants = function( cb ) {
-  rc.roomUsers( this.id, cb );
+Room.prototype.occupants = function( next ) {
+  async.seq(
+    rc.roomUsers,
+    function( userIds, cb ) {
+      async.map( userIds, function( userId, cb2 ) {
+        user.getUser( userId, function( err, maybeUser ) {
+          if( maybeUser.isPresent() ) {
+            cb2( null, maybeUser.value );
+          } else {
+            cb2( 'User with id ' + userId + ' does not exist' );
+          }
+        });
+      }, function( err, users ) {
+        cb( null, users );
+      });
+    }
+  )( this.id, next );
 };
 
 Room.prototype.addGuest = function( cb ) {
