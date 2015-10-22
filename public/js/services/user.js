@@ -162,6 +162,7 @@
     MyUser.getMessage = function() { return message; };
 
     MyUser.initializeUser = function( data ) {
+      console.log( "initialize MyUser" );
       userId = data.userId;
       displayName = data.displayName;
       $rootScope.$emit( 'userUpdate' );
@@ -220,12 +221,10 @@
       /* public properties */
       this.userId = user.userId;
       this.visitorCount = user.visitorCount;
-      this.guest = user.guest;
-      this.active = user.active;
+      this.active = true;
 
       //TODO 
-      var displayName = user.username;
-      this.displayName = displayName;
+      this.displayName = user.displayName;
       this.message = " is present";
 
       /* this.time is used for 'am-time-ago' which updates active 

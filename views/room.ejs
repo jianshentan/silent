@@ -34,7 +34,7 @@
       <div class="sil-nav-options relative"><img class="sil-logo" src="/media/logo.png"></div>
 
       <!-- MIDDLE: room name -->
-      <div class="flex-auto bold h2 center">{{ room }}</div>
+      <div class="flex-auto bold h2 center">{{ room }} ({{ activeGuests }}/{{ activeUsers }}/{{ totalUsers }}) </div>
 
       <!-- RHS: user + share -->
       <div class="sil-nav-options right-align">
@@ -57,8 +57,8 @@
     <div class="flex flex-wrap clearfix m2 sil-justify-center" ng-controller="UserListController">
 
       <!-- user tabs -->
-      <sil-join-tab class="sil-pointer" ng-click="openJoinRoomModal()" ng-hide="joinedRoom"></sil-join-tab>
-      <sil-my-user-tab class="sil-pointer" ng-show="joinedRoom"></sil-my-user-tab>
+      <sil-join-tab class="sil-pointer" ng-click="openJoinRoomModal()" ng-hide="authenticated"></sil-join-tab>
+      <sil-my-user-tab class="sil-pointer" ng-show="authenticated"></sil-my-user-tab>
       <sil-user-tab ng-repeat="user in activeUsers" info="user" class="sil-pointer"></sil-user-tab>
       <sil-user-tab class="muted sil-pointer" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
 

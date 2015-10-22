@@ -25,7 +25,10 @@
     $scope.room = roomId;
     $scope.user = {};
     $scope.joinedRoom = myUser.isJoined(); 
-    $scope.displayName = 'guest';
+    $scope.displayName;
+    $scope.authenticated = auth.isAuthenticated();
+
+    $scope.activeGuests = 0;
 
     /* MODAL BUTTONS =====================================*/
 
@@ -60,11 +63,16 @@
  
     /* EVENT MANAGERS =====================================*/
 
+    // update active guest count
+    $rootScope.$on( 'guestUpdate', function( event, args ) {
+      var guests = args.guestCount;
+      $scope.activeGuests = guests;
+    });
+
     // user-update event manager
     $rootScope.$on( 'userUpdate', function( event, args ) {
-      $scope.user = myUser.serialize();
+      // $scope.user = myUser.serialize();
       $scope.displayName = myUser.getDisplayName();
-      $scope.joinedRoom = myUser.isJoined();
       $scope.authenticated = auth.isAuthenticated();
     });
  
@@ -124,10 +132,9 @@
     this.users = [];
 
     /* handle if user is logged in */
-    var userId = myUser.getUserId();
-    console.log( 'USER ID:' + JSON.stringify(myUser) );
+    var userId;
 
-    /* private function > gets active/inactive users */
+    /* getUsers gets users based on the 'active' parameter */
     this.getUsers = function( active ) {
       var users = self.users;
       var selectedUsers = [];
@@ -160,7 +167,6 @@
 
     /* listen for user update */
     $rootScope.$on( 'userUpdate', function( event, args ) {
-      $scope.user = myUser.serialize();
     });
 
     /* SOCKET Handling */ 
@@ -171,14 +177,20 @@
     socket.on( 'entered', function( data ) {
       console.log( 'ENTERED: ' + JSON.stringify( data ) );
 
-      // receive this user object from socket-connection & set userId (if guest)
-      if( userId ) {
-        myUser.enterRoom( data.user, function() {
+      /* handle user object (or guest) from socket-connection */
+
+      // if is a user
+      if( data.user ) {
+        myUser.enterRoom( null, function() {
           $rootScope.$emit( 'userUpdate' );
         });
+      } 
+      // if is a guest
+      else {
+        $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
       }
 
-      // receive list of users from socket-connection
+      /* receive list of users from socket-connection */
       for( var i in data.users ) {
         if( data.users[i].userId != userId ) {
           self.users.push( new user( data.users[i] ) );
@@ -189,22 +201,33 @@
     });
 
     socket.on( 'visitor entered', function( data ) {
+      /*
+       * 1. create a 'user' object, set active state
+       * 2. add user to 'users' list
+       * 3. call updateUserList to update views
+       */
       console.log( 'visitor entered: ' + JSON.stringify( data.user ) );
       self.users.push( new user( data.user ) );
       self.updateUserList();
     });
 
     socket.on( 'visitor left', function( data ) {
+      /*
+       * 1. set that visitor to be inactive
+       * 2. call updateUserList to update views
+       */
       console.log( 'visitor left:' + data.userId );
       self.setInactive( data.userId );
     });
 
     socket.on( 'guest entered', function( data ) {
       console.log( 'guest entered : ' + data.numGuests );
+      $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
     });
 
     socket.on( 'guest left', function( data ) {
       console.log( 'guest left : ' + data.numGuests );
+      $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
     });
 
   }]);
