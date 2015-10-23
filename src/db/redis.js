@@ -35,7 +35,7 @@
  */
 
 var redis = require( 'redis' );
-var rc = redis.createClient();
+//var rc = redis.createClient();
 var rc = redis.createClient(6379,'silent.redis.cache.windows.net', {auth_pass: 'yi2f1yelyDAKO3Cys6dSDyFRZ6n+W1kG3phGFOLmmGU=' });
 var async = require( 'async' );
 var maybe = require( '../util/maybe' );
