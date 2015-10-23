@@ -2,6 +2,9 @@
   "name": "silent",
   "version": "0.0.0",
   "private": true,
+  "engine" : { 
+    "node" : "0.12.6" 
+  },
   "scripts": {
     "start": "node ./bin/www"
   },
