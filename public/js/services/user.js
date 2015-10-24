@@ -205,6 +205,7 @@
 
 
   /* User Class */
+  // TODO a lot is deprecated - think about what we need to keep and we dont
   app.factory( 'user', [ function() {
 
     /* private properties */
@@ -218,7 +219,7 @@
       exitTimes = []; //TODO user.exitTimes;
 
       /* public properties */
-      this.userId = user.userId;
+      this.userId = user.userId || user.id;
       this.visitorCount = user.visitorCount;
       this.active = true;
 

@@ -136,25 +136,25 @@
 
     /* getUsers gets users based on the 'active' parameter */
     this.getUsers = function( active ) {
-      var users = self.users;
       var selectedUsers = [];
-      for( var i in users ) {
-        if( active ? users[i].active : !users[i].active ) {
-          selectedUsers.push( users[i] );
+      for( var i in self.users ) {
+        if( active ? self.users[i].active : !self.users[i].active ) {
+          selectedUsers.push( self.users[i] );
         }
       }
       return selectedUsers;
     };
 
-    /* set a specified userId in the userlist to inactive */
-    this.setInactive = function( id ) {
-      var users = self.users;
-      for( var i in users ) {
-        if( users[i].userId == id ) {
-          users[i].active = false;
+    /* set a specified userId in the userlist to the specified state */
+    this.setActiveState = function( id, state, cb ) {
+      for( var i in self.users ) {
+        if( self.users[i].userId == id ) {
+          self.users[i].active = state;
         }
       }
-      self.updateUserList();
+      if( cb ) {
+        cb();
+      }
     };
 
     /* private function > updates active/inactive user lists to views */
@@ -167,7 +167,7 @@
     $rootScope.$on( 'userUpdate', function( event, args ) {
     });
 
-    /* SOCKET Handling */ 
+    /* SOCKET Handling ==================================================*/ 
 
     // emit 'enter' - TODO decide if this is the right place for this
     socket.emit( 'enter', { roomId: roomId } );
@@ -191,7 +191,10 @@
       /* receive list of users from socket-connection */
       for( var i in data.users ) {
         if( data.users[i].id != userId ) {
-          self.users.push( new user( data.users[i] ) );
+          self.users.push( new user({
+            userId: data.users[i].id,
+            displayName: data.users[i].displayName 
+          }));
         }
       }
 
@@ -199,23 +202,34 @@
     });
 
     socket.on( 'visitor entered', function( data ) {
-      console.log( 'visitor entered: ' + JSON.stringify( data.user ) );
+      console.log( '(s) visitor entered: ' + JSON.stringify( data.user ) );
 
-      // delete user from userlist if same ID (hack?)
+      // check if user already exists in userlist
+      var isExistingUser = false;
       for( var i in self.users ) {
-        if( self.users[i].userId === data.user.userId ) {
-          self.users.splice( i, 1 );
+        if( self.users[i].userId == data.user.userId ) {
+          isExistingUser = true; 
         }
       }
-      console.log( self.users );
+      
       // create a user object and add it to the user list
-      self.users.push( new user( data.user ) );
-      self.updateUserList();
+      if( !isExistingUser ) {
+        self.users.push( new user( data.user ) );
+        self.updateUserList();
+      } 
+      // set user to active
+      else {
+        self.setActiveState( data.user.userId, true, function() {
+          self.updateUserList();
+        } );
+      }
     });
 
     socket.on( 'visitor left', function( data ) {
-      console.log( 'visitor left:' + data.userId );
-      self.setInactive( data.userId );
+      console.log( '(s) visitor left:' + data.userId );
+      self.setActiveState( data.userId, false, function() {
+        self.updateUserList();
+      });
     });
 
     socket.on( 'guest entered', function( data ) {
