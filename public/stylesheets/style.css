@@ -6,7 +6,7 @@ body {
   font-weight: normal;
 }
 .sil-shadow {
-  box-shadow: 1px 1px 8px #ccc;
+  box-shadow: 1px 1px 8px rgba(0,0,0,0.1);
 }
 .sil-tab {
   width: 294px;
@@ -142,7 +142,6 @@ nav {
 .sil-searchbox {
 }
 .sil-search {
-  border: 1px solid #3333ff;
   max-width: 340px;
   margin: 0 auto;
   width: 300px;
@@ -169,6 +168,9 @@ nav {
 }
 .sil-search-result {
   border-bottom: 1px solid #bbb;
+}
+.sil-search-result:hover {
+  background-color: #eee;
 }
 .sil-search-create {
   word-wrap: break-word;
