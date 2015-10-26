@@ -18,8 +18,6 @@
       [ '$scope', '$rootScope', '$window', 'auth', 'myUser', '$timeout', 'search',
       function( $scope, $rootScope, $window, auth, myUser, $timeout, search ) {
 
-    $scope.authenticated = auth.isAuthenticated();
-    
     $scope.logout = function() {
       myUser.logout( function() {
         $rootScope.$emit( 'checkUserCredentials' );
