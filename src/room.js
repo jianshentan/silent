@@ -27,22 +27,32 @@ Room.prototype.removeUser = function( userId, cb ) {
   rc.removeUserFromRoom( this.id, userId, cb );
 };
 
+var convertUserIdsToUsers = function( userIds, cb ) {
+  async.map( userIds, function( userId, cb2 ) {
+    user.getUser( userId, function( err, maybeUser ) {
+      if( maybeUser.isPresent() ) {
+        cb2( null, maybeUser.value );
+      } else {
+        cb2( 'User with id ' + userId + ' does not exist' );
+      }
+    });
+  }, function( err, users ) {
+    cb( null, users );
+  });
+};
+
 Room.prototype.occupants = function( next ) {
   async.seq(
     rc.roomUsers,
-    function( userIds, cb ) {
-      async.map( userIds, function( userId, cb2 ) {
-        user.getUser( userId, function( err, maybeUser ) {
-          if( maybeUser.isPresent() ) {
-            cb2( null, maybeUser.value );
-          } else {
-            cb2( 'User with id ' + userId + ' does not exist' );
-          }
-        });
-      }, function( err, users ) {
-        cb( null, users );
-      });
-    }
+    convertUserIdsToUsers
+  )( this.id, next );
+};
+
+Room.prototype.ghosts = function( next ) {
+  console.log('Executing ghosts');
+  async.seq(
+    rc.roomGhosts,
+    convertUserIdsToUsers
   )( this.id, next );
 };
 

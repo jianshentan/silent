@@ -19,11 +19,14 @@
  * // users in a room
  * room-users:[room_id] -> user_ids SET<INT>
  *
+ * // users that have been in a room
+ * room-footprints:[room_id] -> user_ids SET<INT>
+ *
  * // room a user is in
  * user-rooms:[user_id] -> room_ids SET<INT>
  *
  * // footprint of user in a room
- * room-user-footprint:[room_id]:[user_id] -> footprint HASH<
+ * room-user-data:[room_id]:[user_id] -> footprint HASH<
  *   'accTime' : INTEGER // accumulated time
  *   'msg' : STRING
  * >
@@ -34,9 +37,8 @@
  *
  */
 
-var redis = require( 'redis' );
-//var rc = redis.createClient();
-var rc = redis.createClient(6379,'silent.redis.cache.windows.net', {auth_pass: 'yi2f1yelyDAKO3Cys6dSDyFRZ6n+W1kG3phGFOLmmGU=' });
+var config = require( '../../config/config' );
+var rc = config.redisClient;
 var async = require( 'async' );
 var maybe = require( '../util/maybe' );
 
@@ -217,6 +219,7 @@ exports.alterUser = function( userId, properties, cb ) {
 exports.addUserToRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.sadd( 'room-users:' + roomId, userId );
+  multi.sadd( 'room-footprints:' + roomId, userId );
   multi.sadd( 'user-rooms:' + userId, roomId);
   multi.exec( cbThrow( function( err, results ) {
     cb( err, results );
@@ -251,6 +254,26 @@ exports.userRooms = function( userId, cb ) {
  */
 exports.roomUsers = function( roomId, cb ) {
   rc.smembers( 'room-users:' + roomId, cbThrow( cb ) );
+};
+
+/*
+ * roomId::string
+ * cb::function( string, [string] )
+ *
+ * Both active and non active users will have a footprint
+ */
+exports.roomFootprints = function( roomId, cb ) {
+  rc.smembers( 'room-footprints:' + roomId, cbThrow( cb ) );
+};
+
+/*
+ * roomId::string
+ * cb::function( string, [string] )
+ *
+ * Ghost is a non active user with a footprint in the room
+ */
+exports.roomGhosts = function( roomId, cb ) {
+  rc.sdiff( 'room-footprints:' + roomId, 'room-users:' + roomId, cbThrow( cb ) );
 };
 
 /*
