@@ -29,6 +29,7 @@ module.exports = function( passport, jwtTokenizer ) {
    * If login fails the callback doesn't happen and the response is a 401
    */
   router.post( '/login', passport.authenticate( 'local-login' ), function( req, res ) {
+    console.log( 'Authentication successful' );
     res.json({ 
       token: jwtTokenizer.sign( req.user ),
       user: req.user.objectify()

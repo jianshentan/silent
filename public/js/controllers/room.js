@@ -36,6 +36,7 @@
     // open room info 
     $scope.roomInfo = function() {
       $scope.showRoomInfo = !$scope.showRoomInfo;
+      $rootScope.$emit( 'getUsers' );
     };
 
     // open share modal
@@ -68,6 +69,13 @@
     };
  
     /* EVENT MANAGERS =====================================*/
+
+    // update users
+    $rootScope.$on( 'updateUsers', function( event, args ) {
+      $scope.activeUsers = args.activeUsers.length + ( auth.isAuthenticated() ? 1 : 0 );
+      $scope.inactiveUsers = args.inactiveUsers.length;
+      $scope.totalUsers = $scope.activeUsers + $scope.inactiveUsers;
+    });
 
     // update active guest count
     $rootScope.$on( 'guestUpdate', function( event, args ) {
@@ -173,6 +181,20 @@
     $rootScope.$on( 'userUpdate', function( event, args ) {
     });
 
+    // update active guest count
+    $rootScope.$on( 'guestUpdate', function( event, args ) {
+      var guests = args.guestCount;
+      $scope.activeGuests = guests;
+    });
+
+    // update user count 
+    $rootScope.$on( 'getUsers', function( event, args ) {
+      $rootScope.$emit( 'updateUsers', { 
+        activeUsers: self.getUsers( true ), 
+        inactiveUsers: self.getUsers( false ) 
+      });
+    });
+
     /* SOCKET Handling ==================================================*/ 
 
     // emit 'enter' - TODO decide if this is the right place for this
@@ -208,7 +230,7 @@
     });
 
     socket.on( 'visitor entered', function( data ) {
-      console.log( '(s) visitor entered: ' + JSON.stringify( data.user ) );
+      console.log( 'visitor entered: ' + JSON.stringify( data.user ) );
 
       // check if user already exists in userlist
       var isExistingUser = false;
@@ -232,7 +254,7 @@
     });
 
     socket.on( 'visitor left', function( data ) {
-      console.log( '(s) visitor left:' + data.userId );
+      console.log( 'visitor left:' + data.userId );
       self.setActiveState( data.userId, false, function() {
         self.updateUserList();
       });

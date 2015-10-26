@@ -15,12 +15,14 @@ https://github.com/socketio/socket.io/blob/master/examples/chat/index.js
 
 =========================================================== */
 
+var async = require( 'async' );
 var user = require( './user' );
 var room = require( './room' );
 var maybe = require( './util/maybe' );
 var socketioJwt = require( 'socketio-jwt' );
 var config = require( '../config/config' );
 var jwt = require( 'jsonwebtoken' );
+var moment = require( 'moment' );
 
 exports.start = function( io ) {
 
@@ -29,6 +31,7 @@ exports.start = function( io ) {
 
     var maybeConnRoom = maybe.Nothing;
     var maybeConnUser = maybe.Nothing;
+    var joinTime = moment();
     
     // client joins (as a user) TODO
     socket.on( 'join', function( data ) {
@@ -78,56 +81,69 @@ exports.start = function( io ) {
         // join room
         socket.join( connRoom.id );
 
-        if( maybeConnUser.isPresent() ) {
-          var connUser = maybeConnUser.value;
-          console.log( "userId '" + connUser.id + "' entered '" + connRoom.id + "'" );
+        async.parallel({
+          // for some reason they have to be wrapped in functions for async to work
+          occupants: function( cb ) { connRoom.occupants( cb ); },
+          numGuests: function( cb ) { connRoom.numGuests( cb ); },
+          ghosts: function( cb ) { connRoom.ghosts( cb ); }
+        }, function( err, results ) {
+          console.log( 'RESULTS: ' + JSON.stringify(results) );
+          var occupants = results.occupants;
+          var numGuests = results.numGuests;
+          var ghosts = results.ghosts;
 
-          connRoom.addUser( connUser.id, function( err, added /* new user or not (bool) */ ) {
+          if( maybeConnUser.isPresent() ) {
+            var connUser = maybeConnUser.value;
+            console.log( "userId '" + connUser.id + "' entered '" + connRoom.id + "'" );
 
-            if( err ) {
-              console.error( err );
-            }
+            connRoom.addUser( connUser.id, function( err, added /* new user or not (bool) */ ) {
 
-            connRoom.occupants( function( err, occupants ) {
-              connRoom.numGuests( function( err, numGuests ) {
+              if( err ) {
+                console.error( err );
+              } else {
                 var otherUsers = occupants.filter( function( occupant ) {
                   return occupant.id != connUser.id;
+                });
+
+                var otherGhosts = ghosts.filter( function( ghost ) {
+                  return ghost.id != connUser.id;
                 });
 
                 socket.emit( 'entered', {
                   user: connUser,
                   numGuests: numGuests,
-                  users: otherUsers
+                  users: otherUsers,
+                  ghosts: otherGhosts
                 });
-              });
+
+                if( added ) {
+                  // only if user isn't already active do we broadcast (multiple tabs)
+                  socket.to( connRoom.id ).emit( 'visitor entered', {
+                    user: connUser.objectify()
+                  });
+                }
+              }
             });
-
-            if( added ) {
-              // sending to all clients in <roomId> channel except sender
-              socket.to( connRoom.id ).emit( 'visitor entered', {
-                user: connUser.objectify()
-              });
-            }
-
-          });
-        } else {
-          connRoom.addGuest( function( err, numGuests ) {
-            if( err ) {
-              console.error( err );
-            } else {
-              connRoom.occupants( function( err, occupants ) {
-                socket.emit( 'entered', {
-                  numGuests: numGuests,
-                  users: occupants
+          } else {
+            connRoom.addGuest( function( err, numGuests ) {
+              if( err ) {
+                console.error( err );
+              } else {
+                connRoom.occupants( function( err, occupants ) {
+                  socket.emit( 'entered', {
+                    numGuests: numGuests,
+                    users: occupants,
+                    ghosts: ghosts
+                  });
                 });
-              });
 
-              socket.to( connRoom.id ).emit( 'guest entered', { numGuests: numGuests } );
-            }
-          });
-        }
+                socket.to( connRoom.id ).emit( 'guest entered', { numGuests: numGuests } );
+              }
+            });
+          }
+        });
       } else {
-        console.log( "Invalid roomId (" + data.roomId + ") or userId (" + data.userId + ")" );
+        console.log( "Invalid roomId (" + data.roomId + ")");
       }
     });
   });
