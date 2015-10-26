@@ -130,9 +130,10 @@ nav {
 }
 .sil-room-nav {
   top: 0px;
+  height: 80px;
 }
 .sil-room-tabs {
-  margin-top: 64px;
+  margin-top: 88px;
 }
 .sil-join-tab {
   width: 100%;
@@ -177,4 +178,21 @@ nav {
 .silhow-browser-item-ghost {
   width: 100%;
 }
+
+/* Room Info */
+.sil-room-info-wrapper {
+  width: 100vw;
+  left: 0px;
+  top: 0px;
+}
+.sil-room-info {
+  border: 0px;
+  width: 100vw;
+  max-width: inherit;
+}
+.sil-room-name,
+.sil-nav-options {
+  line-height: 80px;
+}
+
 

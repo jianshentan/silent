@@ -29,8 +29,14 @@
     $scope.authenticated = auth.isAuthenticated();
 
     $scope.activeGuests = 0;
+    $scope.showRoomInfo = false;
 
     /* MODAL BUTTONS =====================================*/
+
+    // open room info 
+    $scope.roomInfo = function() {
+      $scope.showRoomInfo = !$scope.showRoomInfo;
+    };
 
     // open share modal
     $scope.openShareModal = function() {

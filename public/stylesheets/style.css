@@ -283,6 +283,18 @@ nav {
   width: 100px;
 }
 
+/* Room Infomation */
+.sil-room-info-wrapper {
+  top: 50px;
+  z-index: 100;
+}
+.sil-room-info {
+  border: 1px solid #3333ff;
+  max-width: 210px;
+  margin: 0 auto;
+  margin-top: -1px;
+}
+
 /* override basscss defaults */
 a {
   color: inherit;
