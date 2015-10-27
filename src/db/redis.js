@@ -38,7 +38,7 @@
  */
 
 var config = require( '../../config/config' );
-var rc = config.redisClient;
+var rc = config.redisClient();
 var async = require( 'async' );
 var maybe = require( '../util/maybe' );
 
