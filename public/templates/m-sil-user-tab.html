@@ -1,0 +1,25 @@
+<div class="sil-tab bg-white table black relative border-bottom">
+
+  <!-- top right corner -->
+  <div class="absolute sil-tab-tags h7">
+    <div class="inline-block circle bg-gray sil-tab-tag"></div>
+    <div class="inline-block circle bg-gray sil-tab-tag"></div>
+  </div>
+
+  <!-- bottom right corner -->
+  <div class="absolute sil-tab-data sil-h7 muted">
+    <span class="" am-time-ago="info.time"></span> | 
+    <span>{{ info.visitorCount }}</span>
+  </div>
+
+  <!-- main content-->
+  <div class="table-cell h6 align-middle">
+    <div class="px2 table">
+      <div class="table-cell align-middle"><div class="sil-tab-image circle border mr1"></div></div>
+      <div class="table-cell align-middle">
+        <span class="bold">{{ info.displayName }}</span> - {{ info.message }} 
+      </div>
+    </div>
+  </div>
+
+</div>
