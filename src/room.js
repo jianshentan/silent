@@ -19,7 +19,7 @@ var getRoom = function( roomId ) {
 
 Room.prototype.addUser = function( userId, cb ) {
   rc.addUserToRoom( this.id, userId, function( err, results ) {
-    cb( err, results.every( function( r ) { return r == 1; } ) );
+    cb( err, results[0] == 1 );
   });
 };
 
