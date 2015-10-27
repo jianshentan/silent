@@ -221,9 +221,19 @@
         if( data.users[i].id != userId ) {
           self.users.push( new user({
             userId: data.users[i].id,
-            displayName: data.users[i].displayName 
+            displayName: data.users[i].displayName,
+            active: true
           }));
         }
+      }
+
+      /* receive list of ghosts from socket-connection */
+      for( var i in data.ghosts ) {
+        self.users.push( new user({
+          userId: data.ghosts[i].id,
+          displayName: data.ghosts[i].displayName,
+          active: false
+        }));
       }
 
       self.updateUserList();
@@ -242,7 +252,11 @@
       
       // create a user object and add it to the user list
       if( !isExistingUser ) {
-        self.users.push( new user( data.user ) );
+        self.users.push( new user( { 
+          userId: data.user.userId,
+          displayName: data.user.displayName,
+          active: true
+        } ) );
         self.updateUserList();
       } 
       // set user to active

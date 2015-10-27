@@ -221,7 +221,7 @@
       /* public properties */
       this.userId = user.userId || user.id;
       this.visitorCount = user.visitorCount;
-      this.active = true;
+      this.active = user.active;
 
       //TODO 
       this.displayName = user.displayName;

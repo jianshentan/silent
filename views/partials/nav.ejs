@@ -13,7 +13,7 @@
           <sil-search-result index="{{$index}}" ng-repeat="result in searchResults" info="result"></sil-search-result>
           <sil-search-empty ng-show="searchResults.length == 0"></sil-search-empty>
         </div>
-        <div class="sil-search-create rounded-bottom sil-bg-green py2 white h5 sil-pointer" ng-click="enterRoom()">
+        <div class="sil-search-create rounded-bottom sil-bg-green py1 white h5 sil-pointer" ng-click="enterRoom()">
           <div class="p2">{{ joinText }} @{{ searchQuery }}</div>
         </div>
       </div>

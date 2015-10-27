@@ -9,14 +9,28 @@
 
   /* Main Controller for Index View */
   app.controller( 'IndexController', 
-      [ '$scope', 'auth', '$rootScope', function( $scope, auth, $rootScope ) {
-    $scope.authenticated = auth.isAuthenticated();
+      [ '$scope', 'auth', '$rootScope', 'myUser', '$window',
+      function( $scope, auth, $rootScope, myUser, $window ) {
     
     $scope.scrollTo = function( selector ) {
       $( 'body' ).animate({ 
         scrollTop: $( selector ).offset().top
       }, 1000 );
     };
+    
+    $scope.logout = function() {
+      myUser.logout( function() {
+        $window.location.href = "/";
+      })
+    };
+
+    /* EVENT MANAGERS ===================================== */
+
+    // user-update event manager
+    $rootScope.$on( 'userUpdate', function( event, args ) {
+      $scope.authenticated = auth.isAuthenticated();
+      $scope.displayName = myUser.getDisplayName();
+    });
 
     /* HANDLE MOBILE QUIRKS ============================== */
     if( $rootScope.isMobile ) {
@@ -36,7 +50,6 @@
       $scope.closeHow = function() {
         $scope.howIsOpen = false;
       }
-
 
     }
 
