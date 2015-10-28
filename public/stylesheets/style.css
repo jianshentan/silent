@@ -8,9 +8,17 @@ body {
 .sil-shadow {
   box-shadow: 1px 1px 8px rgba(0,0,0,0.1);
 }
+.sil-space-between {
+  justify-content: space-between;
+}
 .sil-tab {
   width: 294px;
   height: 80px;
+}
+.sil-tab-icon {
+  width: 42px;
+  height: 42px;
+  margin-right: 12px;
 }
 .sil-empty-tab {
   height: 0px;
@@ -35,11 +43,14 @@ body {
   width: 16em;
 }
 .sil-nav-option {
-  height: 10px;
-  line-height: 10px;
+  min-width: 50px;
 }
 .sil-nav-option.circle {
   width: 10px;
+}
+.sil-nav-icon {
+  width: 30px;
+  height: 30px;
 }
 .sil-h7 {
   font-size: .675rem;
@@ -113,6 +124,9 @@ body {
 }
 .sil-underline {
   text-decoration: underline;
+}
+.sil-underline-white {
+  border-bottom: 2px solid white;
 }
 .sil-fill-width {
   width: 100%;

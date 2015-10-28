@@ -51,7 +51,11 @@
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-my-user-tab.html',
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ?
+          'templates/m-sil-my-user-tab.html' :
+          'templates/sil-my-user-tab.html' ;
+      },
       controller: function( $scope, $element ) {
         $scope.displayName = myUser.getDisplayName();
         $scope.message = myUser.getMessage();
