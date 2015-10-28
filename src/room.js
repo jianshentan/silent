@@ -18,7 +18,7 @@ var getRoom = function( roomId ) {
 };
 
 var match = function( prefix, next ) {
-  rc.matchRoom( prefix, next );
+  rc.roomWithActiveUsers( prefix, next );
 };
 
 Room.prototype.addUser = function( userId, cb ) {

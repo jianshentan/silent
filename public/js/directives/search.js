@@ -7,8 +7,7 @@
       restrict: 'E',
       scope: {
         index: "@",
-        room: "=",
-        card: "="
+        info: "="
       },
       templateUrl: 'templates/sil-search-result.html',
       link: function( scope, element, attrs ) {

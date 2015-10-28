@@ -221,6 +221,7 @@ exports.addUserToRoom = function( roomId, userId, cb ) {
   multi.sadd( 'room-users:' + roomId, userId );
   multi.sadd( 'room-footprints:' + roomId, userId );
   multi.sadd( 'user-rooms:' + userId, roomId);
+  multi.zincrby( 'rooms-active-users', -1, roomId);
   multi.exec( cbThrow( function( err, results ) {
     cb( err, results );
   }));
@@ -235,6 +236,7 @@ exports.removeUserFromRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.srem( 'room-users:' + roomId, userId );
   multi.srem( 'user-rooms:' + userId, roomId );
+  multi.zincrby( 'rooms-active-users', -1, roomId );
   multi.exec( cbThrow( function( err ) {
     cb( err );
   } ) );
@@ -314,19 +316,25 @@ exports.getNumGuests = function( roomId, cb ) {
 
 /*
  * Match rooms with given prefix
- * cb( err, [ { room: numActiveUsers } ] )
+ * cb( err, [ { room: STRING,
+ *              activeUsers: INTEGER } ] )
+ *
  */
-exports.matchRoom = function( prefix, next ) {
-  rc.keys('room-users:' + prefix + '*', function( err, rcKeys ) {
-    var roomToCard = {};
-    async.each( rcKeys, function( key, cb ) {
-      rc.scard( key, function( err, card ) {
-        roomToCard[ key.slice( 'room-users:'.length ) ] = card;
-        cb();
+exports.roomWithActiveUsers = function( prefix, next ) {
+  // NOTES: zscan will only return a portion of total matches.
+  //        We assume that the number returned is sufficient for our use case.
+  rc.zscan('rooms-active-users', 0, 'MATCH', prefix + '*', function( err, results ) {
+    var roomsActiveUsers = results[1];
+    var processedRoomsActiveUsers = [];
+
+    for( var i = 0; i < roomsActiveUsers.length; i += 2 ) {
+      processedRoomsActiveUsers.push({
+        room: roomsActiveUsers[ i ],
+        activeUsers: -roomsActiveUsers[ i + 1 ]
       });
-    }, function( err ) {
-      next( err, roomToCard );
-    });
+    }
+
+    next( null, processedRoomsActiveUsers );
   });
 };
 
