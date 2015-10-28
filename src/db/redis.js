@@ -70,7 +70,7 @@ var convertNullsToMaybes = function( cb ) {
 /*
  * This function needs to be called on redis methods before they can be used in async
  */
-var wrapRedisCommand = function( functionName ) {
+exports.wrapRedisCommand = function( functionName ) {
   return function() {
     var lastIdx = arguments.length - 1;
     var nonCbArgs = [];
@@ -311,3 +311,22 @@ exports.decrNumGuests = function( roomId, cb ) {
 exports.getNumGuests = function( roomId, cb ) {
   rc.get( 'room-num-guests:' + roomId, cbThrow( cb ) );
 };
+
+/*
+ * Match rooms with given prefix
+ * cb( err, [ { room: numActiveUsers } ] )
+ */
+exports.matchRoom = function( prefix, next ) {
+  rc.keys('room-users:' + prefix + '*', function( err, rcKeys ) {
+    var roomToCard = {};
+    async.each( rcKeys, function( key, cb ) {
+      rc.scard( key, function( err, card ) {
+        roomToCard[ key.slice( 'room-users:'.length ) ] = card;
+        cb();
+      });
+    }, function( err ) {
+      next( err, roomToCard );
+    });
+  });
+};
+

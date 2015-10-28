@@ -1,6 +1,7 @@
 var express = require( 'express' );
 var router = express.Router();
 var authentication = require( './src/authentication' );
+var room = require( './src/room' );
 
 module.exports = function( passport, jwtTokenizer ) {
 
@@ -87,20 +88,10 @@ module.exports = function( passport, jwtTokenizer ) {
 
   /* Search Bar */
   router.get( '/search/:query', function( req, res ) {
-    var query = req.query.query;
-    res.json([
-      { name: "roomExample1", active: 123 },
-      { name: "roomExample2", active: 321 },
-      { name: "roomExample3", active: 432 },
-      { name: "roomExample4", active: 543 },
-      { name: "roomExample5", active: 654 },
-      { name: "roomExample6", active: 123 },
-      { name: "roomExample7", active: 123 },
-      { name: "roomExample8", active: 123 },
-      { name: "roomExample9", active: 123 },
-      { name: "roomExample10", active: 123 },
-      { name: "roomExample11", active: 123 },
-    ]);
+    var query = req.params.query;
+    room.match( query, function( err, roomToCard ) {
+      res.json( roomToCard );
+    });
   });
 
 

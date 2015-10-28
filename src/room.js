@@ -17,6 +17,10 @@ var getRoom = function( roomId ) {
   }
 };
 
+var match = function( prefix, next ) {
+  rc.matchRoom( prefix, next );
+};
+
 Room.prototype.addUser = function( userId, cb ) {
   rc.addUserToRoom( this.id, userId, function( err, results ) {
     cb( err, results[0] == 1 );
@@ -79,5 +83,6 @@ Room.prototype.incrAccTime = function( seconds, cb ) {
 Room.prototype.objectify = function() { return { roomId: this.id }; };
 
 module.exports = {
-  getRoom: getRoom
+  getRoom: getRoom,
+  match: match
 };
