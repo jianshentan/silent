@@ -189,9 +189,9 @@ nav {
   width: 100vw;
   max-width: inherit;
 }
-.sil-room-name,
 .sil-nav-options {
   line-height: 80px;
+  width: inherit;
 }
 
 

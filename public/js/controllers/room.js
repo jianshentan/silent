@@ -63,7 +63,7 @@
       }
     };
 
-    // logs user out
+    // logs user out TODO: deprecated?
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };

@@ -14,7 +14,7 @@
       <div class="sil-landing-content sil-absolute-center absolute center">
         <img class="sil-landing-logo center" src="/media/logo.png" />
         <div class="sil-landing-text white center bold">Let your presence speak for itself</div>
-        <div class="white mt2 center ">
+        <div class="white mt1 center ">
           <!--<a href="/about"><div class="sil-pointer inline-block mr1 ml1 px2 py1 mb2 rounded sil-border-white3 center">
               Learn More
           </div></a>-->
@@ -22,6 +22,7 @@
             Login / Signup
           </div></a>
           <div class="" ng-show="authenticated">
+            <div class="mb2 inline-block ml1 mr1 px3 py1 center bold sil-landing-text">Hello <span class="sil-underline-white">{{ displayName }}</span></div>
             <div class="inline-block ml1 mr1 px3 py1 sil-border-white3 rounded sil-pointer center" ng-click="logout()">Logout</div>
           </div>
         </div>
