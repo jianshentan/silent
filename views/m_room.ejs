@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="Silent">
+<html ng-app="Silent" ng-cloak>
 
   <head>
     <% include partials/head %>
@@ -33,12 +33,13 @@
     <nav class="sil-room-nav sil-screen-px bg-white sil-green flex sil-space-between fixed" >
       <!-- LHS: ROOM NAME-->
       <div class="">
-        <div class="sil-nav-options bold h3" ng-click="roomInfo()">@{{ room }}</div>
+        <div class="sil-nav-options bold h3" ng-click="roomInfo()">@{{ room }} ({{ totalUsers }})</div>
         <div class="sil-room-info-wrapper sil-fill-width absolute" ng-click="roomInfo()" ng-show="showRoomInfo">
           <div class="sil-room-info bg-white center">
-            <div class="inline-block col-2 px1 py2">{{ activeGuests || 0 }}<div class="">guests</div></div>
-            <div class="inline-block col-2 px2 py2">{{ activeUsers || 0 }}<div class="">active</div></div>
-            <div class="inline-block col-2 px1 py2">{{ totalUsers || 0 }}<div class="">total</div></div>
+            <div class="inline-block col-2 px1 py2">{{ guests || 0 }}<div class="">guests</div></div>
+            <div class="inline-block col-2 px1 py2">{{ activeUsers || 0 }}<div class="">active</div></div>
+            <div class="inline-block col-2 px1 py2">{{ inactiveUsers || 0 }}<div class="">offline</div></div>
+            <div class="inline-block col-2 px1 py2 bold">{{ totalUsers || 0 }}<div class="">total</div></div>
           </div>
         </div>
       </div>

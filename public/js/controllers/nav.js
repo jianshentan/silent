@@ -46,12 +46,15 @@
         $scope.showSearchResults = false;
       } else {
         search.search( $scope.searchQuery, 
+
           // success
           function( results ) {
             $scope.searchResults = results;
           }, 
+
           // fail
-          null, 
+          function() {}, 
+
           // forever
           function() {
             $scope.showSearchResults = true;
@@ -59,11 +62,12 @@
             // if query is a subset of searchResults, change Join Text
             var results = $scope.searchResults;
             for( var i in results ) {
-              if( results[i].name == $scope.searchQuery ) {
+              if( results[i].room == $scope.searchQuery ) {
                 $scope.joinText = JOIN_ROOM_TEXT_OPTIONS.join;
               }
             }
           });
+
       }
     };
 

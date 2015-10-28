@@ -28,7 +28,7 @@
     $scope.displayName;
     $scope.authenticated = auth.isAuthenticated();
 
-    $scope.activeGuests = 0;
+    $scope.guests = 0;
     $scope.showRoomInfo = false;
 
     /* MODAL BUTTONS =====================================*/
@@ -74,13 +74,15 @@
     $rootScope.$on( 'updateUsers', function( event, args ) {
       $scope.activeUsers = args.activeUsers.length + ( auth.isAuthenticated() ? 1 : 0 );
       $scope.inactiveUsers = args.inactiveUsers.length;
-      $scope.totalUsers = $scope.activeUsers + $scope.inactiveUsers;
+      $scope.totalUsers = $scope.activeUsers ? parseInt($scope.activeUsers) : 0 + 
+                          $scope.inactiveUsers ? parseInt($scope.inactiveUsers) : 0 + 
+                          $scope.guests ? parseInt($scope.guests) : 0;
     });
 
     // update active guest count
     $rootScope.$on( 'guestUpdate', function( event, args ) {
       var guests = args.guestCount;
-      $scope.activeGuests = guests;
+      $scope.guests = guests;
     });
 
     // user-update event manager
@@ -181,12 +183,6 @@
     $rootScope.$on( 'userUpdate', function( event, args ) {
     });
 
-    // update active guest count
-    $rootScope.$on( 'guestUpdate', function( event, args ) {
-      var guests = args.guestCount;
-      $scope.activeGuests = guests;
-    });
-
     // update user count 
     $rootScope.$on( 'getUsers', function( event, args ) {
       $rootScope.$emit( 'updateUsers', { 
@@ -211,10 +207,7 @@
           $rootScope.$emit( 'userUpdate' );
         });
       } 
-      // if is a guest
-      else {
-        $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
-      }
+      $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
 
       /* receive list of users from socket-connection */
       for( var i in data.users ) {
@@ -237,6 +230,7 @@
       }
 
       self.updateUserList();
+      $rootScope.$emit( 'getUsers' );
     });
 
     socket.on( 'visitor entered', function( data ) {
