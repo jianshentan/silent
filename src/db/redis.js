@@ -72,7 +72,7 @@ var convertNullsToMaybes = function( cb ) {
 /*
  * This function needs to be called on redis methods before they can be used in async
  */
-exports.wrapRedisCommand = function( functionName ) {
+var wrapRedisCommand = function( functionName ) {
   return function() {
     var lastIdx = arguments.length - 1;
     var nonCbArgs = [];
@@ -240,7 +240,7 @@ exports.removeUserFromRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.srem( 'room-users:' + roomId, userId );
   multi.srem( 'user-rooms:' + userId, roomId );
-  multi.exec( cbThrow( function( err ) {
+  multi.exec( cbThrow( function( err, results ) {
     if( results[0] == 1 ) {
       rc.zincrby( 'rooms-active-users', 1, roomId );
     }
