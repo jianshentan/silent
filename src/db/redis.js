@@ -35,6 +35,8 @@
  *
  * room-num-guests:[room_id] -> INTEGER
  *
+ * rooms-active-users -> SORTED_SET<room:STRING, estimated_active_users:INTEGER>
+ *
  */
 
 var config = require( '../../config/config' );
@@ -222,6 +224,9 @@ exports.addUserToRoom = function( roomId, userId, cb ) {
   multi.sadd( 'room-footprints:' + roomId, userId );
   multi.sadd( 'user-rooms:' + userId, roomId);
   multi.exec( cbThrow( function( err, results ) {
+    if( results[0] == 1 ) {
+      rc.zincrby( 'rooms-active-users', -1, roomId );
+    }
     cb( err, results );
   }));
 };
@@ -235,7 +240,10 @@ exports.removeUserFromRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.srem( 'room-users:' + roomId, userId );
   multi.srem( 'user-rooms:' + userId, roomId );
-  multi.exec( cbThrow( function( err ) {
+  multi.exec( cbThrow( function( err, results ) {
+    if( results[0] == 1 ) {
+      rc.zincrby( 'rooms-active-users', 1, roomId );
+    }
     cb( err );
   } ) );
 };
@@ -311,3 +319,28 @@ exports.decrNumGuests = function( roomId, cb ) {
 exports.getNumGuests = function( roomId, cb ) {
   rc.get( 'room-num-guests:' + roomId, cbThrow( cb ) );
 };
+
+/*
+ * Match rooms with given prefix
+ * cb( err, [ { room: STRING,
+ *              activeUsers: INTEGER } ] )
+ *
+ */
+exports.roomWithActiveUsers = function( prefix, next ) {
+  // NOTES: zscan will only return a portion of total matches.
+  //        We assume that the number returned is sufficient for our use case.
+  rc.zscan('rooms-active-users', 0, 'MATCH', prefix + '*', function( err, results ) {
+    var roomsActiveUsers = results[1];
+    var processedRoomsActiveUsers = [];
+
+    for( var i = 0; i < roomsActiveUsers.length; i += 2 ) {
+      processedRoomsActiveUsers.push({
+        room: roomsActiveUsers[ i ],
+        activeUsers: -roomsActiveUsers[ i + 1 ]
+      });
+    }
+
+    next( null, processedRoomsActiveUsers );
+  });
+};
+

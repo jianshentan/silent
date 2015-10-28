@@ -21,7 +21,7 @@
     $scope.logout = function() {
       myUser.logout( function() {
         $window.location.href = "/";
-      })
+      });
     };
 
     /* EVENT MANAGERS ===================================== */
@@ -42,14 +42,14 @@
        */
       $scope.openHow = function() {
         $scope.howIsOpen = true;      
-      }
+      };
 
       /* Close search
        * called when user clicks on close button
        */
       $scope.closeHow = function() {
         $scope.howIsOpen = false;
-      }
+      };
 
     }
 
