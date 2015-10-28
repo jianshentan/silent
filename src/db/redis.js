@@ -35,6 +35,8 @@
  *
  * room-num-guests:[room_id] -> INTEGER
  *
+ * rooms-active-users -> SORTED_SET<room:STRING, estimated_active_users:INTEGER>
+ *
  */
 
 var config = require( '../../config/config' );
@@ -221,8 +223,10 @@ exports.addUserToRoom = function( roomId, userId, cb ) {
   multi.sadd( 'room-users:' + roomId, userId );
   multi.sadd( 'room-footprints:' + roomId, userId );
   multi.sadd( 'user-rooms:' + userId, roomId);
-  multi.zincrby( 'rooms-active-users', -1, roomId);
   multi.exec( cbThrow( function( err, results ) {
+    if( results[0] == 1 ) {
+      rc.zincrby( 'rooms-active-users', -1, roomId );
+    }
     cb( err, results );
   }));
 };
@@ -236,8 +240,10 @@ exports.removeUserFromRoom = function( roomId, userId, cb ) {
   var multi = rc.multi();
   multi.srem( 'room-users:' + roomId, userId );
   multi.srem( 'user-rooms:' + userId, roomId );
-  multi.zincrby( 'rooms-active-users', -1, roomId );
   multi.exec( cbThrow( function( err ) {
+    if( results[0] == 1 ) {
+      rc.zincrby( 'rooms-active-users', 1, roomId );
+    }
     cb( err );
   } ) );
 };
