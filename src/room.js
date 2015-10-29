@@ -11,14 +11,14 @@ var Room = function( roomId ) {
 
 var getRoom = function( roomId ) {
   if (typeof roomId === 'string' || roomId instanceof String) {
-    return new maybe.Just( new Room( roomId ) );
+    return new maybe.Just( new Room( roomId.toLowerCase() ) );
   } else {
     return maybe.Nothing;
   }
 };
 
 var match = function( prefix, next ) {
-  rc.roomWithActiveUsers( prefix, next );
+  rc.roomWithActiveUsers( prefix.toLowerCase(), next );
 };
 
 Room.prototype.addUser = function( userId, cb ) {
