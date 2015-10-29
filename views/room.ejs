@@ -69,8 +69,9 @@
       <!-- user tabs -->
       <sil-join-tab class="sil-pointer" ng-click="openJoinRoomModal()" ng-hide="authenticated"></sil-join-tab>
       <sil-my-user-tab class="sil-pointer" ng-show="authenticated"></sil-my-user-tab>
-      <sil-user-tab ng-repeat="user in activeUsers" info="user" class="sil-pointer"></sil-user-tab>
-      <sil-user-tab class="muted sil-pointer" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
+      <sil-user-tab ng-repeat="user in activeUsers" info="user"></sil-user-tab>
+      <sil-guest-tab ng-repeat="guest in guestsToDisplay()"></sil-guest-tab>
+      <sil-user-tab ng-repeat="user in inactiveUsers" info="user" class="muted"></sil-user-tab>
 
       <!-- empty tabs to left-align last row (TODO: find more elegant solution)-->
       <div class="sil-tab m1 sil-empty-tab"></div>
