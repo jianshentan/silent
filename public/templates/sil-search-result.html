@@ -1,4 +1,4 @@
-<div class="sil-search-result sil-pointer py2 bg-white h4 left-align sil-fill-width" ng-class="{'rounded-top':index==0}">
+<a href="/@{{ info.room }}"><div class="sil-search-result sil-pointer py2 bg-white h4 left-align sil-fill-width" ng-class="{'rounded-top':index==0}">
   <div class="inline-block px2">{{ info.room | limitTo: 15 }}</div>
   <div class="sil-search-result-meta inline-block gray right h6 px2">{{ info.activeUsers }} active</div>
-</div>
+</div></a>

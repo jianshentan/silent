@@ -12,7 +12,11 @@
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-join-tab.html',
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ?
+          'templates/m-sil-join-tab.html' :
+          'templates/sil-join-tab.html' ;
+      },
       controller: function( $scope, $element ) {
         $scope.displayName = 'a guest';
       },
@@ -24,15 +28,22 @@
     };
   }]);
 
-  app.directive( 'silUserTab', function() {
+  app.directive( 'silUserTab', 
+      [ '$rootScope', function( $rootScope ) {
+
     return {
       restrict: 'E',
       scope: { 
         info: '='
       },
-      templateUrl: 'templates/sil-user-tab.html'
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ?
+          'templates/m-sil-user-tab.html' :
+          'templates/sil-user-tab.html' ;
+      }
     };
-  });
+
+  }]);
 
   app.directive( 'silMyUserTab',
       [ '$rootScope', 'myUser', function( $rootScope, myUser ) {
@@ -40,7 +51,11 @@
     return {
       restrict: 'E',
       scope: {},
-      templateUrl: 'templates/sil-my-user-tab.html',
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ?
+          'templates/m-sil-my-user-tab.html' :
+          'templates/sil-my-user-tab.html' ;
+      },
       controller: function( $scope, $element ) {
         $scope.displayName = myUser.getDisplayName();
         $scope.message = myUser.getMessage();

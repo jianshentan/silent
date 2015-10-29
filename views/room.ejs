@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="Silent">
+<html ng-app="Silent" ng-cloak>
 
   <head>
     <% include partials/head %>
@@ -29,33 +29,32 @@
       <sil-join-room-modal></sil-join-room-modal>
     </sil-modal>
 
-    <nav class="bg-white sil-green flex flex-baseline px3 py3" >
+    <nav class="sil-nav-room bg-white sil-green py3 flex sil-space-between" >
       <!-- LHS: logo -->
-      <a href="/"><div class="sil-nav-options relative"><img class="sil-logo" src="/media/logo.png"></div></a>
+      <a href="/"><div class="sil-nav-option ml2 inline-block relative"><img class="sil-logo" src="/media/logo.png"></div></a>
 
       <!-- MIDDLE: room name -->
-      <div class="flex-auto center relative">
-        <div class="sil-room-name bold h2 sil-pointer" ng-click="roomInfo()">@{{ room }}</div>
+      <div class="sil-nav-options inline-block center relative">
+        <div class="sil-room-name bold h2 sil-pointer" ng-click="roomInfo()">@{{ room }} ({{ totalUsers }})</div>
         <div class="sil-room-info-wrapper sil-fill-width absolute" ng-show="showRoomInfo">
           <div class="sil-room-info bg-white center rounded sil-shadow arrow-up">
-            <div class="inline-block col-2 px1 py2">{{ activeGuests || 0 }}<div class="">guests</div></div>
-            <div class="inline-block col-2 px2 py2">{{ activeUsers || 0 }}<div class="">active</div></div>
-            <div class="inline-block col-2 px1 py2">{{ totalUsers || 0 }}<div class="">total</div></div>
+            <div class="inline-block col-2 px1 py2">{{ guests || 0 }}<div class="">ghosts</div></div>
+            <div class="inline-block col-2 px1 py2">{{ activeUsers || 0 }}<div class="">active</div></div>
+            <div class="inline-block col-2 px1 py2">{{ inactiveUsers || 0 }}<div class="">offline</div></div>
+            <div class="inline-block col-2 px1 py2 bold">{{ totalUsers || 0 }}<div class="">total</div></div>
           </div>
         </div>
       </div>
 
       <!-- RHS: user + share -->
-      <div class="sil-nav-options right-align">
-        <div class="inline-block ml1 relative" ng-show="authenticated">
-          
-          <div class="sil-display-image absolute inline-block border circle blue"></div>
-          <div class="sil-nav-option sil-pointer center p1" ng-click="openUserPageModal()">
-            {{ displayName }}
+      <div class="inline-block mr2 sil-nav-option right-align">
+        <a href="/"><div class="inline-block relative" ng-show="authenticated">
+          <img class="sil-pointer sil-nav-icon" src="/media/user-icon.png"/>
+        </div></a>
+        <div class="inline-block" ng-hide="authenticated">
+          <div class="sil-pointer center" ng-click="openCredentialsModal()">
+            <img class="sil-nav-icon" src="/media/user-icon-offline.png"/>
           </div>
-        </div>
-        <div class="inline-block ml1" ng-hide="authenticated">
-          <div class="sil-nav-option sil-pointer center p1" ng-click="openCredentialsModal()">Login / Signup</div>
         </div>
         <!--
         <div class="inline-block ml1">

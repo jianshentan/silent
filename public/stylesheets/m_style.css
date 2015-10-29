@@ -1,5 +1,4 @@
 body {
-  height: 100vh;
   width: 100vw;
   min-width: inherit;
   min-height: inherit;
@@ -126,14 +125,14 @@ nav {
   height: auto;
 }
 .sil-tab {
-  width: 88vw;
+  width: 100vw;
 }
 .sil-room-nav {
   top: 0px;
   height: 80px;
 }
 .sil-room-tabs {
-  margin-top: 88px;
+  margin-top: 80px;
 }
 .sil-join-tab {
   width: 100%;
@@ -190,9 +189,9 @@ nav {
   width: 100vw;
   max-width: inherit;
 }
-.sil-room-name,
 .sil-nav-options {
   line-height: 80px;
+  width: auto;
 }
 
 

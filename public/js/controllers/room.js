@@ -28,7 +28,7 @@
     $scope.displayName;
     $scope.authenticated = auth.isAuthenticated();
 
-    $scope.activeGuests = 0;
+    $scope.guests = 0;
     $scope.showRoomInfo = false;
 
     /* MODAL BUTTONS =====================================*/
@@ -36,7 +36,6 @@
     // open room info 
     $scope.roomInfo = function() {
       $scope.showRoomInfo = !$scope.showRoomInfo;
-      $rootScope.$emit( 'getUsers' );
     };
 
     // open share modal
@@ -63,7 +62,7 @@
       }
     };
 
-    // logs user out
+    // logs user out TODO: deprecated?
     $scope.logout = function() {
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
@@ -74,13 +73,10 @@
     $rootScope.$on( 'updateUsers', function( event, args ) {
       $scope.activeUsers = args.activeUsers.length + ( auth.isAuthenticated() ? 1 : 0 );
       $scope.inactiveUsers = args.inactiveUsers.length;
-      $scope.totalUsers = $scope.activeUsers + $scope.inactiveUsers;
-    });
-
-    // update active guest count
-    $rootScope.$on( 'guestUpdate', function( event, args ) {
-      var guests = args.guestCount;
-      $scope.activeGuests = guests;
+      $scope.guests = args.guests;
+      $scope.totalUsers = ($scope.activeUsers ? parseInt($scope.activeUsers) : 0 ) + 
+                          ($scope.inactiveUsers ? parseInt($scope.inactiveUsers) : 0 ) + 
+                          ($scope.guests ? parseInt($scope.guests) : 0) ;
     });
 
     // user-update event manager
@@ -181,17 +177,21 @@
     $rootScope.$on( 'userUpdate', function( event, args ) {
     });
 
-    // update active guest count
-    $rootScope.$on( 'guestUpdate', function( event, args ) {
-      var guests = args.guestCount;
-      $scope.activeGuests = guests;
-    });
-
     // update user count 
     $rootScope.$on( 'getUsers', function( event, args ) {
+      // if guest count is passed in, use it, otherwise set to 0
+      var guests = 0;
+      if( args ) {
+        guests = args.guestCount;
+        if( !guests ) {
+          guests = $scope.guests || 0;
+        }
+      } 
+
       $rootScope.$emit( 'updateUsers', { 
         activeUsers: self.getUsers( true ), 
-        inactiveUsers: self.getUsers( false ) 
+        inactiveUsers: self.getUsers( false ),
+        guests: guests
       });
     });
 
@@ -211,10 +211,6 @@
           $rootScope.$emit( 'userUpdate' );
         });
       } 
-      // if is a guest
-      else {
-        $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
-      }
 
       /* receive list of users from socket-connection */
       for( var i in data.users ) {
@@ -237,6 +233,9 @@
       }
 
       self.updateUserList();
+
+      // update user counter in room 
+      $rootScope.$emit( 'getUsers', { guestCount: data.numGuests } );
     });
 
     socket.on( 'visitor entered', function( data ) {
@@ -258,12 +257,20 @@
           active: true
         } ) );
         self.updateUserList();
+
+        // update user counter in room 
+        $rootScope.$emit( 'getUsers' );
+
       } 
       // set user to active
       else {
         self.setActiveState( data.user.userId, true, function() {
           self.updateUserList();
-        } );
+
+          // update user counter in room 
+          $rootScope.$emit( 'getUsers' );
+
+        });
       }
     });
 
@@ -271,17 +278,25 @@
       console.log( 'visitor left:' + data.userId );
       self.setActiveState( data.userId, false, function() {
         self.updateUserList();
+
+        // update user counter in room 
+        $rootScope.$emit( 'getUsers' );
       });
     });
 
     socket.on( 'guest entered', function( data ) {
       console.log( 'guest entered : ' + data.numGuests );
-      $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
+
+      // update user counter in room 
+      $rootScope.$emit( 'getUsers', { guestCount: data.numGuest } );
     });
 
     socket.on( 'guest left', function( data ) {
       console.log( 'guest left : ' + data.numGuests );
-      $rootScope.$emit( 'guestUpdate', { guestCount: data.numGuests } );
+
+      // update user counter in room 
+      $rootScope.$emit( 'getUsers', { guestCount: data.numGuest } );
+
     });
 
   }]);
