@@ -1,5 +1,5 @@
 body {
-  font: 14px "Muli", Helvetica, Arial, sans-serif;
+  font: 14px "Muli";
   min-height: 100%;
   min-width: 560px;
   width: 100%;
@@ -198,7 +198,7 @@ nav {
   width: 100vw;
   height: 86vh;
   max-height: 800px;
-  margin-top: 102px;
+  margin-top: 100px;
   overflow:hidden;
   /* z-index: -1000;*/
 }

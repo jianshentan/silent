@@ -141,6 +141,11 @@ nav {
 .sil-modal-dialog {
   width: 90vw;  
 }
+.sil-modal-overlay {
+  width: 100vw;
+  height: 100vh;
+  min-width: inherit;
+}
 
 /* how it works  */
 .sil-how {

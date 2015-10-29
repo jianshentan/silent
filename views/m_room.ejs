@@ -36,7 +36,7 @@
         <div class="sil-nav-options bold h3" ng-click="roomInfo()">@{{ room }} ({{ totalUsers }})</div>
         <div class="sil-room-info-wrapper sil-fill-width absolute" ng-click="roomInfo()" ng-show="showRoomInfo">
           <div class="sil-room-info bg-white center">
-            <div class="inline-block col-2 px1 py2">{{ guests || 0 }}<div class="">guests</div></div>
+            <div class="inline-block col-2 px1 py2">{{ guests || 0 }}<div class="">ghosts</div></div>
             <div class="inline-block col-2 px1 py2">{{ activeUsers || 0 }}<div class="">active</div></div>
             <div class="inline-block col-2 px1 py2">{{ inactiveUsers || 0 }}<div class="">offline</div></div>
             <div class="inline-block col-2 px1 py2 bold">{{ totalUsers || 0 }}<div class="">total</div></div>
@@ -51,12 +51,13 @@
       </div>
     </nav>
 
-    <div class="sil-room-tabs flex flex-wrap clearfix m2 sil-justify-center" ng-controller="UserListController">
+    <div class="sil-room-tabs flex flex-wrap clearfix sil-justify-center" ng-controller="UserListController">
 
       <!-- user tabs -->
       <sil-join-tab class="sil-pointer" ng-click="openJoinRoomModal()" ng-hide="authenticated"></sil-join-tab>
       <sil-my-user-tab class="sil-pointer" ng-show="authenticated"></sil-my-user-tab>
       <sil-user-tab ng-repeat="user in activeUsers" info="user" class="sil-pointer"></sil-user-tab>
+      <sil-guest-tab ng-repeat="guest in guestsToDisplay() track by $index"></sil-guest-tab>
       <sil-user-tab class="muted sil-pointer" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
 
     </div>
