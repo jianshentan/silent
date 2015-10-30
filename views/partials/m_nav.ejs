@@ -1,17 +1,17 @@
 <nav class="sil-green sil-screen-width flex flex-baseline flex-justify absolute" ng-controller="NavController">
   <!-- LHS: logo -->
   <div class="sil-screeen-width">
-    <div class="sil-search fixed sil-screen-width" ng-class="{ 'bg-white': showSearchResults }">
-      <i class="fa white fa-search sil-search-icon absolute" ng-class="{ 'sil-green': showSearchResults }"></i>
-      <input class="sil-search-input sil-green" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-click="openSearch()" ng-change="updateSearch()" ng-blur="blur()" />
-      <i class="fa fa-times sil-green absolute sil-search-close-icon" ng-show="showSearchResults" ng-click="closeSearch()"></i>
+    <div class="sil-search fixed sil-screen-width" ng-class="{ 'bg-white': showResults }">
+      <i class="fa white fa-search sil-search-icon absolute" ng-class="{ 'sil-green': showResults }"></i>
+      <input class="sil-search-input sil-green" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-click="openSearch()" ng-change="updateSearch()" ng-blur="blur()" ng-click="showTrending()" />
+      <i class="fa fa-times sil-green absolute sil-search-close-icon" ng-show="showResults" ng-click="closeSearch()"></i>
     </div>
-    <div class="sil-search-results-wrapper absolute sil-fill-width sil-shadow" ng-show="showSearchResults" ng-class="{ 'bg-white': showSearchResults }">
+    <div class="sil-search-results-wrapper absolute sil-fill-width sil-shadow" ng-show="showResults" ng-class="{ 'bg-white': showResults }">
       <div class="sil-search-create sil-screen-width rounded-bottom sil-bg-green py2 white h5 sil-pointer" ng-click="enterRoom()">
-        <div class="p2">{{ joinText }} @{{ searchQuery }}</div>
+        <div class="p2">{{ searchText }}<span ng-hide="trendingResults">{{ searchQuery }}</span></div>
       </div>
       <div class="sil-search-results sil-screen-width">
-        <sil-search-result index="{{$index}}" ng-repeat="result in searchResults" info="result"></sil-search-result>
+        <sil-search-result index="{{$index}}" ng-repeat="result in results" info="result"></sil-search-result>
         <sil-search-empty ng-show="searchResults.length == 0"></sil-search-empty>
       </div>
     </div>

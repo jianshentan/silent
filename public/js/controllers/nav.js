@@ -8,15 +8,16 @@
     'HomeServices'
   ]);
 
-  var JOIN_ROOM_TEXT_OPTIONS = {
-    joinAsFirst: "Be the first inside",
-    join: "Join"
+  var SEARCH_TEXT_OPTIONS = {
+    joinAsFirst: "Be the first inside @",
+    join: "Join @",
+    trending: "Type to search for rooms"
   };
 
   /* Nav Controller */
   app.controller( 'NavController',
-      [ '$scope', '$rootScope', '$window', 'auth', 'myUser', '$timeout', 'search',
-      function( $scope, $rootScope, $window, auth, myUser, $timeout, search ) {
+      [ '$scope', '$rootScope', '$window', 'auth', 'myUser', '$timeout', 'search', 'trending',
+      function( $scope, $rootScope, $window, auth, myUser, $timeout, search, trending ) {
 
     $scope.logout = function() {
       myUser.logout( function() {
@@ -26,8 +27,9 @@
     };
 
     $scope.searchQuery = "";
-    $scope.showSearchResults = false;
-    $scope.joinText = JOIN_ROOM_TEXT_OPTIONS.joinAsFirst;
+    $scope.showResults = false;
+    $scope.trendingResults = false;
+    $scope.searchText = SEARCH_TEXT_OPTIONS.trending;
 
     /* Keypress listener 
      * called on keypress
@@ -38,18 +40,55 @@
       }
     };
 
+    /* Show Trending Rooms
+     * called on click
+     */
+    $scope.showTrending = function() {
+      $scope.showResults = true;
+      $scope.trendingResults = true;
+      if( $scope.searchQuery.length < 1 ) {
+        trending.trending( function( results ) {
+
+          /* TODO DELETE once end point is created */
+          var results = [ {
+            room: "room1",
+            activeUsers: 11
+          }, {
+            room: "room2",
+            activeUsers: 12
+          }, {
+            room: "room3",
+            activeUsers: 13
+          }, {
+            room: "room4",
+            activeUsers: 14
+          }, {
+            room: "room5",
+            activeUsers: 15
+          }, {
+            room: "room6",
+            activeUsers: 16
+          }]
+
+          $scope.results = results;
+          $scope.searchText = SEARCH_TEXT_OPTIONS.trending;
+        });
+      }
+    };
+
     /* Update Search
      * called on type inside the search input box
      */
     $scope.updateSearch = function() {
       if( $scope.searchQuery.length < 1 ) {
-        $scope.showSearchResults = false;
+        $scope.showTrending();
       } else {
+        $scope.trendingResults = false;
         search.search( $scope.searchQuery, 
 
           // success
           function( results ) {
-            $scope.searchResults = results;
+            $scope.results = results;
           }, 
 
           // fail
@@ -57,13 +96,14 @@
 
           // forever
           function() {
-            $scope.showSearchResults = true;
+            $scope.showResults = true;
 
             // if query is a subset of searchResults, change Join Text
-            var results = $scope.searchResults;
+            var results = $scope.results;
+            $scope.searchText = SEARCH_TEXT_OPTIONS.joinAsFirst;
             for( var i in results ) {
               if( results[i].room == $scope.searchQuery ) {
-                $scope.joinText = JOIN_ROOM_TEXT_OPTIONS.join;
+                $scope.searchText = SEARCH_TEXT_OPTIONS.join;
               }
             }
           });
@@ -76,7 +116,7 @@
      */
     $scope.blur = function() {
       $timeout( function() {
-        $scope.showSearchResults = false;
+        $scope.showResults = false;
       }, 1000 );
     };
 
@@ -103,7 +143,7 @@
        * called when user clicks on the search bar
        */
       $scope.openSearch = function() {
-        $scope.showSearchResults = true;
+        $scope.showResults = true;
         $scope.$parent.searchIsOpen = true;
       };
 
@@ -111,7 +151,7 @@
        * called when user clicks on close-search
        */
       $scope.closeSearch = function() {
-        $scope.showSearchResults = false;
+        $scope.showResults = false;
         $scope.$parent.searchIsOpen = false;
       };
     }
