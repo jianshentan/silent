@@ -70,22 +70,6 @@ module.exports = function( passport, jwtTokenizer ) {
     }
   });
 
-  router.get( '/trending', function( req, res ) {
-    // currently fake data:
-    res.json([
-      { room: "room1", active: 5254 },
-      { room: "room2", active: 1508 },
-      { room: "room3", active: 987 },
-      { room: "room4", active: 729 },
-      { room: "room5", active: 221 },
-      { room: "room6", active: 85 },
-      { room: "room7", active: 7 },
-      { room: "room8", active: 7 },
-      { room: "room9", active: 7 },
-      { room: "room10", active: 7 }
-    ]);
-  });
-
   /* Search Bar */
   router.get( '/search/:query', function( req, res ) {
     var query = req.params.query;
@@ -93,7 +77,6 @@ module.exports = function( passport, jwtTokenizer ) {
       res.json( roomToCard );
     });
   });
-
 
   // returns true if the caller is a mobile phone (not tablet)
   // compares the user agent of the caller against a regex
