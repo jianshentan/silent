@@ -10,7 +10,9 @@
       <div class="sil-landing-image" src="/media/bg.png"></div>
       <div class="sil-landing-content sil-absolute-center absolute center">
         <img class="sil-landing-logo center" src="/media/logo.png" />
-        <div class="sil-landing-text white h2 center bold">Let your presence speak for itself</div>
+        <div class="sil-landing-text white h2 center bold">Speak with your presence</div>
+
+        <div ng-show="authenticated" class="ml1 mr1 px3 py1 center bold white h3 sil-landing-text">Hello <span class="sil-underline-white">{{ displayName }}</span></div>
         <div ng-click="scrollTo('.sil-how')"class="white sil-pointer inline-block mt2 mr1 ml1 px2 py1 mb2 rounded sil-border-white3 center">
           How do I use Silent? 
         </div>

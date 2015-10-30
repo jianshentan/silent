@@ -7,14 +7,14 @@
   <div class="sil-fill-width flex-auto bold h3 center relative">
     <div class="sil-search rounded bg-darken-1 relative">
       <i class="fa fa-search sil-search-icon absolute"></i>
-      <input class="sil-search-input" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-change="updateSearch()" ng-blur="blur()" />
-      <div class="sil-search-results-wrapper rounded absolute sil-fill-width sil-shadow" ng-show="showSearchResults">
+      <input class="sil-search-input" placeholder="search/create rooms" type="text" ng-model="searchQuery" ng-keypress="onKeyPress($event)" ng-change="updateSearch()" ng-blur="blur()" ng-click="showTrending()"/>
+      <div class="sil-search-results-wrapper rounded absolute sil-fill-width sil-shadow" ng-show="showResults">
         <div class="sil-search-results arrow-up">
-          <sil-search-result index="{{$index}}" ng-repeat="result in searchResults" info="result"></sil-search-result>
-          <sil-search-empty ng-show="searchResults.length == 0"></sil-search-empty>
+          <sil-search-result index="{{$index}}" ng-repeat="result in results" info="result"></sil-search-result>
+          <sil-search-empty ng-show="results.length == 0"></sil-search-empty>
         </div>
         <div class="sil-search-create rounded-bottom sil-bg-green py1 white h5 sil-pointer" ng-click="enterRoom()">
-          <div class="p2">{{ joinText }} @{{ searchQuery }}</div>
+          <div class="p2">{{ searchText }} <span ng-hide="trendingResults">{{ searchQuery }}</span></div>
         </div>
       </div>
     </div>

@@ -67,6 +67,18 @@
       $rootScope.$emit( 'modalSwitch', { modal: 'logout' } );
     };
  
+    // transform a number into an array
+    $scope.arrayify = function( num ) {
+      return num == 0 ? null : new Array( num );
+    };
+
+    $scope.guestsToDisplay = function() {
+      var guests = $scope.guests;
+      return auth.isAuthenticated() ?
+        ( !guests || guests == 0 ? null : new Array(guests) ) :
+        ( !guests || guests == 0 ? null : new Array(guests - 1) );
+    };
+
     /* EVENT MANAGERS =====================================*/
 
     // update users
@@ -183,10 +195,9 @@
       var guests = 0;
       if( args ) {
         guests = args.guestCount;
-        if( !guests ) {
-          guests = $scope.guests || 0;
-        }
-      } 
+      } else {
+        guests = $scope.guests;
+      }
 
       $rootScope.$emit( 'updateUsers', { 
         activeUsers: self.getUsers( true ), 
@@ -288,14 +299,14 @@
       console.log( 'guest entered : ' + data.numGuests );
 
       // update user counter in room 
-      $rootScope.$emit( 'getUsers', { guestCount: data.numGuest } );
+      $rootScope.$emit( 'getUsers', { guestCount: data.numGuests } );
     });
 
     socket.on( 'guest left', function( data ) {
       console.log( 'guest left : ' + data.numGuests );
 
       // update user counter in room 
-      $rootScope.$emit( 'getUsers', { guestCount: data.numGuest } );
+      $rootScope.$emit( 'getUsers', { guestCount: data.numGuests } );
 
     });
 

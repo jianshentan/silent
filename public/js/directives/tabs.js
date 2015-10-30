@@ -3,6 +3,7 @@
   /* TabDirectives []: 
      'silJoinTab' --> join tab 
      'silUserTab' --> other user tab 
+     'silGuestTab' --> guest tab 
      'silMyUserTab' --> my use tab
   */
   var app = angular.module( 'TabDirectives', []);
@@ -40,6 +41,23 @@
         return ( $rootScope.isMobile ) ?
           'templates/m-sil-user-tab.html' :
           'templates/sil-user-tab.html' ;
+      }
+    };
+
+  }]);
+ 
+  app.directive( 'silGuestTab', 
+      [ '$rootScope', function( $rootScope ) {
+
+    return {
+      restrict: 'E',
+      scope: { 
+        info: '='
+      },
+      templateUrl: function() {
+        return ( $rootScope.isMobile ) ?
+          'templates/m-sil-guest-tab.html' :
+          'templates/sil-guest-tab.html' ;
       }
     };
 

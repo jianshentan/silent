@@ -51,12 +51,13 @@
       </div>
     </nav>
 
-    <div class="sil-room-tabs flex flex-wrap clearfix m2 sil-justify-center" ng-controller="UserListController">
+    <div class="sil-room-tabs flex flex-wrap clearfix sil-justify-center" ng-controller="UserListController">
 
       <!-- user tabs -->
       <sil-join-tab class="sil-pointer" ng-click="openJoinRoomModal()" ng-hide="authenticated"></sil-join-tab>
       <sil-my-user-tab class="sil-pointer" ng-show="authenticated"></sil-my-user-tab>
       <sil-user-tab ng-repeat="user in activeUsers" info="user" class="sil-pointer"></sil-user-tab>
+      <sil-guest-tab ng-repeat="guest in guestsToDisplay() track by $index"></sil-guest-tab>
       <sil-user-tab class="muted sil-pointer" ng-repeat="user in inactiveUsers" info="user"></sil-user-tab>
 
     </div>
