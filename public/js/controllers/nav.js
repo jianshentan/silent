@@ -16,8 +16,8 @@
 
   /* Nav Controller */
   app.controller( 'NavController',
-      [ '$scope', '$rootScope', '$window', 'auth', 'myUser', '$timeout', 'search', 'trending',
-      function( $scope, $rootScope, $window, auth, myUser, $timeout, search, trending ) {
+      [ '$scope', '$rootScope', '$window', 'auth', 'myUser', '$timeout', 'search', 
+      function( $scope, $rootScope, $window, auth, myUser, $timeout, search ) {
 
     $scope.logout = function() {
       myUser.logout( function() {
@@ -47,29 +47,7 @@
       $scope.showResults = true;
       $scope.trendingResults = true;
       if( $scope.searchQuery.length < 1 ) {
-        trending.trending( function( results ) {
-
-          /* TODO DELETE once end point is created */
-          var results = [ {
-            room: "room1",
-            activeUsers: 11
-          }, {
-            room: "room2",
-            activeUsers: 12
-          }, {
-            room: "room3",
-            activeUsers: 13
-          }, {
-            room: "room4",
-            activeUsers: 14
-          }, {
-            room: "room5",
-            activeUsers: 15
-          }, {
-            room: "room6",
-            activeUsers: 16
-          }]
-
+        search.search( '', function( results ) {
           $scope.results = results;
           $scope.searchText = SEARCH_TEXT_OPTIONS.trending;
         });
