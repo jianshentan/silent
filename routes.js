@@ -72,8 +72,7 @@ module.exports = function( passport, jwtTokenizer ) {
 
   /* Search Bar */
   router.get( '/search', function( req, res ) {
-    var query = req.query.q;
-    room.match( query, function( err, roomToCard ) {
+    room.match( req.query.q || '', function( err, roomToCard ) {
       res.json( roomToCard );
     });
   });
