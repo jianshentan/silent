@@ -231,6 +231,14 @@ exports.addUserToRoom = function( roomId, userId, cb ) {
   }));
 };
 
+/* jshint multistr: true */
+LUA_INCR_AND_REMOVE_IF_TOO_BIG = '\
+local negActiveUsers = tonumber(redis.call("ZINCRBY", "room-active-users", 1, KEYS[1])) \
+if negActiveUsers >= 0 then \
+   redis.call( "ZREM", "rooms-active-users", KEYS[1] ) \
+end \
+';
+
 /*
  * userId::integer
  * roomId::string
@@ -242,10 +250,14 @@ exports.removeUserFromRoom = function( roomId, userId, cb ) {
   multi.srem( 'user-rooms:' + userId, roomId );
   multi.exec( cbThrow( function( err, results ) {
     if( results[0] == 1 ) {
-      rc.zincrby( 'rooms-active-users', 1, roomId );
+      rc.eval( LUA_INCR_AND_REMOVE_IF_TOO_BIG, 1, roomId, function( err, results ) {
+        if( err ) {
+          console.log( 'LUA_INCR_AND_REMOVE_IF_TOO_BIG err: ' + err );
+        }
+      });
     }
     cb( err );
-  } ) );
+  }));
 };
 
 /*

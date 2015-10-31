@@ -7,7 +7,7 @@
 
     /* queries for search results */
     function search( query, success, fail, finish ) {
-      return $http.get( '/search/' + query )
+      return $http.get( '/search?q=' + query )
         .success( function( data ) {
           if( success ) {
             success( data );
@@ -27,8 +27,7 @@
 
     return {
       search: search
-    };
-
+    }
   }]);
 
 })();
