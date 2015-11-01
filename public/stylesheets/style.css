@@ -311,6 +311,20 @@ nav {
   margin-top: -1px;
 }
 
+/* Notification */
+.sil-notification {
+  line-height: 40px;
+  height: 40px;
+}
+.sil-notification a {
+  text-decoration: underline;
+}
+.sil-close-notification {
+  right: 12px;
+  top: 12px;
+}
+
+
 /* override basscss defaults */
 a {
   color: inherit;

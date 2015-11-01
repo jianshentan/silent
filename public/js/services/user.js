@@ -225,7 +225,9 @@
 
       //TODO 
       this.displayName = user.displayName;
-      this.message = " is present";
+      this.defaultMessage = " is present";
+      this.offlineMessage = " is offline";
+      this.message = "";
 
       /* this.time is used for 'am-time-ago' which updates active 
          state duration in real time */

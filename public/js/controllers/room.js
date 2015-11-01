@@ -33,6 +33,11 @@
 
     /* MODAL BUTTONS =====================================*/
 
+    // close notification
+    $scope.closeNotification = function( $event ) {
+      $( $event.target ).parent().slideUp( 'slow' ); 
+    };
+
     // open room info 
     $scope.roomInfo = function() {
       $scope.showRoomInfo = !$scope.showRoomInfo;
