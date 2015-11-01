@@ -19,7 +19,7 @@
     <div class="px2 table">
       <div class="table-cell align-middle"><img class="sil-tab-icon" src="/media/user-icon.png"/></div>
       <div class="table-cell align-middle">
-        <span class="bold h5">{{ info.displayName }}</span> {{ info.message }} 
+        <span class="bold h5">{{ info.displayName }}</span> {{ info.active ? info.defaultMessage : info.offlineMessage}}
       </div>
     </div>
   </div>
